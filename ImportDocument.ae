@@ -1,0 +1,171 @@
+﻿// Active Elk definition file generated from binary format
+// Date:	2004-06-17 09:37:34
+// User:	admin
+
+library "ImportDocument"
+{
+title(Singular) ENU "Document Import"
+version "1.0"
+uses "Elk9", "stdbaseentities", "Utilities"
+aspect "Elk9.Aspect" "ImportDocument"
+aspect "Ve9.ScriptAspect" "importscripts.xml"
+script VBScript
+<%
+Sub ImportDoc (strPath)
+
+	'Create the record that will hold the details
+    Dim oImportInst
+	Set oImportInst = System.Folders.ImportDocument.CreateNewInstance()
+	
+	' Choose the instance to Import To 
+	Dim lngResult
+	lngResult = System.UT_DoScriptWithObject("Importscripts.importdocument", "Import(strPath)", oImportInst)
+	
+	If oImportInst.Properties("ReadyToImport") = True Then
+		If IsNull(oImportInst.ToInstance) Then
+			MsgBox "Need somewhere to Import to"
+		Else
+		
+			Dim objToClass
+			Set objToClass=System.Classes(oImportInst.ToClass)
+
+			' Get To ClassInst
+			Dim oToInst
+			Set oToInst = objToClass.GetInstance(oImportInst.ToInstance)
+	
+			If oToInst Is Nothing Then
+				MsgBox "Cannot find record"
+				Exit Sub
+			End	If
+			
+            Dim oDocumentInst
+			Set oDocumentInst=oToInst.folders("Documents").CreateNewInstance()
+			
+			If 	oDocumentInst.Embed(strPath) Then
+				oDocumentInst.DocumentDescription=oImportInst.DocDescription
+				oDocumentInst.save
+			End If
+			 
+		End If
+	Else
+		MsgBox "Something hasn't happened"
+	End If
+
+End Sub
+%>
+
+class "ImportDocument"
+{
+	title(Singular) ENU "Import Document"
+	members
+	{
+		"Path" data VarChar(255)
+		{
+			title(Singular) ENU "Path"
+			default "\"\""
+		}
+		"DocDescription" data VarChar(255)
+		{
+			title(Singular) ENU "Description"
+			default "\"\""
+		}
+		"ToInstance" data VarChar(255)
+		{
+			title(Singular) ENU "Instance"
+			default "\"\""
+		}
+		"ToClass" data VarChar(255)
+		{
+			title(Singular) ENU "Class"
+			default "\"\""
+		}
+	}
+	OnNew "OnNew"
+	script VBScript
+<%
+Sub OnNew(hWnd) 
+	This.Properties("ReadyToImport")=""
+End Sub
+
+Sub ImportDoc (strPath)
+	
+	' Choose the instance to Import To 
+	Dim lngResult
+	lngResult = System.UT_DoScriptWithObject("importscripts.importdocument", "Import(strPath)", This)
+	
+	If This.Properties("ReadyToImport") = True Then
+		If not IsNull(This.ToInstance) Then		
+			Dim objToClass
+			Set objToClass=System.Classes(This.ToClass)
+
+			' Get To ClassInst
+			Dim oToInst
+			Set oToInst = objToClass.GetInstance(This.ToInstance)
+	
+			If oToInst Is Nothing Then
+				MsgBox "Cannot find record"
+				Exit Sub
+			End	If
+			
+            Dim oDocumentInst
+			Set oDocumentInst=oToInst.folders("Documents").CreateNewInstance()
+			
+			If 	oDocumentInst.Embed(strPath) Then
+				oDocumentInst.DocumentDescription=This.DocDescription
+				oDocumentInst.save
+			End If
+			 
+		End If
+	End If
+
+End Sub
+%>
+}
+
+
+sysclass "ImportDocument" from "ImportDocument"
+{
+	title(Singular) ENU "ImportDocument"
+	
+	folder "ImportDocument"
+	{
+		title(Singular) ENU "Import Document"
+		properties
+		{
+			"FolderSets" 0
+				properties
+				{
+					"User" 0
+				}
+			"Hidden" "True"
+		}
+	}
+}
+
+
+}
+layout
+<%
+<?xml version="1.0"?>
+
+<AeDesigner_doc version="3">
+	<workspace CurrentView="0">
+		<View Number="0" Type="Class diagram" Name="ImportDocument"/>
+	</workspace>
+	<class_diagram name="ImportDocument" width="1000" height="1000">
+		<Viewport magnificationX="100" magnificationY="100" originX="0" originY="0"/>
+		<class name="ImportDocument" left="159" top="259" right="293" bottom="349">
+			<member name="ToClass" type="data"/>
+			<member name="ToInstance" type="data"/>
+			<member name="DocDescription" type="data"/>
+			<member name="Path" type="data"/>
+			<hide show_base_members="1"/>
+		</class>
+		<note text="This Library makes it possible to embed a document linked to any class that has a top-level folder with a folder set &quot;ImportDocument&quot;.  
+It is intended to be called from a macro in word or excel but possibly could be used for any document.
+It uses a wizard script to choose the instance of where to embed the document and enter a description.  A new document instance is created in the chosen instance's &quot;Documents&quot; subfolder and the path of the document is passed to the &quot;Embed&quot; procedure." left="73" top="0" right="421" bottom="197"/>
+	</class_diagram>
+	<lang_used>1033,0,3079,1078,3076,1031,2057,1029,1036,1028,1042,6153,1053,1034,1054,1057,2052,1040,3081,1041,5129
+	</lang_used>
+</AeDesigner_doc>
+%>

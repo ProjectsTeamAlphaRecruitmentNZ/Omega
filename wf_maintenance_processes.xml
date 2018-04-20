@@ -1,0 +1,232 @@
+<aedata><folder title="Workflow Cleanup Scripts" timestamp="3/5/2009" targetfolder="WF_MaintenanceProcesses">
+		<instance class="WF_Process" key="{A290E692-D1F9-4A1C-903A-01F6A8DBE0E8}">
+			<member name="Active">True</member>
+			<xmlmember name="Defn">
+				<xml>
+					<entryevents>
+						<event id="{C825FBC2-94DA-4A79-931D-C0E666C96188}" progid="AeWorkFlow.Scheduled.Event" schedule="Every 100 minutes" ImpersonationID="" nextid="{46E6F4C9-BF57-4B4C-B8ED-22F24D140CAD}"/>
+						<event id="{FAC890E1-CF74-4E59-8CFF-E1C7AB1761F4}" progid="AeWorkFlow.AbandonedWorkflow.Event" Process="This" Recurse="Fire" ImpersonationID="" nextid="{EEC9A878-69AE-4004-884A-146D7BC81434}"/>
+						<event id="{8D9794E7-D57E-4AE4-80C2-F6BAAED70149}" progid="AeWorkFlow.ErroredWorkflow.Event" Process="This" Recurse="Fire" ImpersonationID="" nextid="{EEC9A878-69AE-4004-884A-146D7BC81434}"/>
+					</entryevents>
+					<actions>
+						<action id="{46E6F4C9-BF57-4B4C-B8ED-22F24D140CAD}" progid="AeWorkFlowDLL.DeleteObject.Action" title="Delete Stale Pending Work" trans="Yes" instance="" treataserror="Info" folder="system.WF_PendingWork" filter="Status = &quot;A&quot; And (IsNull(RecordStamp.WhenUpdate) Or DateDiff(&quot;n&quot;, RecordStamp.WhenUpdate, Now()) &gt; 36000)" ImpersonationID="" instancespertransaction="100"/>
+						<action id="{EEC9A878-69AE-4004-884A-146D7BC81434}" progid="AeWorkFlow.SetProperty.Action" title="Cleanup workflow properties" ImpersonationID="" nextid="{46E6F4C9-BF57-4B4C-B8ED-22F24D140CAD}">
+							<delete name="Object"/>
+						</action>
+					</actions>
+					<layout>
+						<symbols>
+							<symbol type="entry" id="{C825FBC2-94DA-4A79-931D-C0E666C96188}" left="100" top="40" right="116" bottom="56"/>
+							<symbol type="action" id="{46E6F4C9-BF57-4B4C-B8ED-22F24D140CAD}" left="50" top="202" right="166" bottom="253"/>
+							<symbol type="exit" id="{4D88556F-BE56-409A-8DB8-CABB9C4AF529}" left="96" top="324" right="120" bottom="348"/>
+							<symbol type="entry" id="{FAC890E1-CF74-4E59-8CFF-E1C7AB1761F4}" left="220" top="40" right="236" bottom="56"/>
+							<symbol type="entry" id="{8D9794E7-D57E-4AE4-80C2-F6BAAED70149}" left="400" top="40" right="416" bottom="56"/>
+							<symbol type="action" id="{EEC9A878-69AE-4004-884A-146D7BC81434}" left="266" top="118" right="382" bottom="169"/>
+						</symbols>
+						<links>
+							<link id="{F020D1A8-C979-456A-81D2-C07F16602A2C}" source_id="{C825FBC2-94DA-4A79-931D-C0E666C96188}" target_id="{46E6F4C9-BF57-4B4C-B8ED-22F24D140CAD}" source_port="2" target_port="0"/>
+							<link id="{987E231A-B191-41E1-A269-A40771AFBB11}" source_id="{46E6F4C9-BF57-4B4C-B8ED-22F24D140CAD}" target_id="{4D88556F-BE56-409A-8DB8-CABB9C4AF529}" source_port="2" target_port="0"/>
+							<link id="{280625A1-0008-4104-8D0B-CA370AF88231}" source_id="{FAC890E1-CF74-4E59-8CFF-E1C7AB1761F4}" target_id="{EEC9A878-69AE-4004-884A-146D7BC81434}" source_port="2" target_port="3"/>
+							<link id="{134787C1-DEC9-4F84-B3DA-A5E75D1C176E}" source_id="{8D9794E7-D57E-4AE4-80C2-F6BAAED70149}" target_id="{EEC9A878-69AE-4004-884A-146D7BC81434}" source_port="2" target_port="1"/>
+							<link id="{EEC2B596-9969-48AB-B35D-CBAAFDB22C33}" source_id="{EEC9A878-69AE-4004-884A-146D7BC81434}" target_id="{46E6F4C9-BF57-4B4C-B8ED-22F24D140CAD}" source_port="2" target_port="1"/>
+						</links>
+						<Viewport magnificationX="100" magnificationY="100" originX="17" originY="17" canvasSizeX="1000" canvasSizeY="1000"/>
+					</layout>
+				</xml>
+			</xmlmember>
+			<member name="Title">Workflow Cleanup - Stale (Abandoned) Pending Work</member>
+			<member name="MaxRunningProcesses">1</member>
+			<member name="StartWithInst_Class" null=""/>
+			<member name="StartWithInst_FirstStep" null=""/>
+			<member name="WF_ServerGroup" null=""/>
+			<member name="IsMaintenance">True</member>
+			<member name="WF_ProcID" null=""/>
+			<member name="WF_AppPool" null=""/>
+			<member name="EnableLogging">False</member>
+			<member name="Priority">3</member>
+		</instance>
+		<instance class="WF_Process" key="{36C32EC4-160F-4F42-B024-5B4A27FEEE28}">
+			<member name="Active">True</member>
+			<xmlmember name="Defn">
+				<xml>
+					<entryevents>
+						<event id="{9159D8C1-B1CA-413A-A282-15E246D921FC}" progid="AeWorkFlow.Scheduled.Event" schedule="Every 100 minutes" ImpersonationID="" nextid="{93CBCA37-D0A7-4AD3-9FCA-2C888B94E1A7}"/>
+						<event id="{B5FBA25D-3849-44A3-898C-075E06B6A5C0}" progid="AeWorkFlow.AbandonedWorkflow.Event" Process="This" Recurse="Fire" ImpersonationID="" nextid="{EC3112DB-A5FE-4048-9EAF-2D380E349C2F}"/>
+						<event id="{651A5946-1259-4431-AD6D-AC32D9201B14}" progid="AeWorkFlow.ErroredWorkflow.Event" Process="This" Recurse="Fire" ImpersonationID="" nextid="{EC3112DB-A5FE-4048-9EAF-2D380E349C2F}"/>
+					</entryevents>
+					<actions>
+						<action id="{93CBCA37-D0A7-4AD3-9FCA-2C888B94E1A7}" progid="AeWorkFlowDLL.DeleteObject.Action" title="Delete Stale Pending Work" trans="Yes" instance="" treataserror="Info" folder="system.WF_PendingWork" filter="Status = &quot;C&quot; And (IsNull(RecordStamp.WhenUpdate) Or DateDiff(&quot;n&quot;, RecordStamp.WhenUpdate, Now()) &gt; 36000)" ImpersonationID="" instancespertransaction="100"/>
+						<action id="{EC3112DB-A5FE-4048-9EAF-2D380E349C2F}" progid="AeWorkFlow.SetProperty.Action" title="Cleanup workflow properties" ImpersonationID="" nextid="{93CBCA37-D0A7-4AD3-9FCA-2C888B94E1A7}">
+							<delete name="Object"/>
+						</action>
+					</actions>
+					<layout>
+						<symbols>
+							<symbol type="entry" id="{9159D8C1-B1CA-413A-A282-15E246D921FC}" left="100" top="64" right="116" bottom="80"/>
+							<symbol type="action" id="{93CBCA37-D0A7-4AD3-9FCA-2C888B94E1A7}" left="50" top="178" right="166" bottom="229"/>
+							<symbol type="exit" id="{3332C7B8-7149-4355-9F26-C46ECA650C29}" left="96" top="276" right="120" bottom="300"/>
+							<symbol type="entry" id="{B5FBA25D-3849-44A3-898C-075E06B6A5C0}" left="232" top="64" right="248" bottom="80"/>
+							<symbol type="entry" id="{651A5946-1259-4431-AD6D-AC32D9201B14}" left="412" top="64" right="428" bottom="80"/>
+							<symbol type="action" id="{EC3112DB-A5FE-4048-9EAF-2D380E349C2F}" left="266" top="118" right="382" bottom="169"/>
+						</symbols>
+						<links>
+							<link id="{5258C0FE-3DF6-4C10-9B9B-DBE9B6A67A9A}" source_id="{9159D8C1-B1CA-413A-A282-15E246D921FC}" target_id="{93CBCA37-D0A7-4AD3-9FCA-2C888B94E1A7}" source_port="2" target_port="0"/>
+							<link id="{A3AD576F-3044-4EC7-8544-E9BB26CED9D3}" source_id="{93CBCA37-D0A7-4AD3-9FCA-2C888B94E1A7}" target_id="{3332C7B8-7149-4355-9F26-C46ECA650C29}" source_port="2" target_port="0"/>
+							<link id="{5CE419C3-70FF-4E80-8B78-50AEE98D010C}" source_id="{B5FBA25D-3849-44A3-898C-075E06B6A5C0}" target_id="{EC3112DB-A5FE-4048-9EAF-2D380E349C2F}" source_port="2" target_port="3"/>
+							<link id="{F077620D-723A-403B-9CD2-D765A74A75B0}" source_id="{651A5946-1259-4431-AD6D-AC32D9201B14}" target_id="{EC3112DB-A5FE-4048-9EAF-2D380E349C2F}" source_port="2" target_port="1"/>
+							<link id="{5D6490E0-7FE4-4E1D-A3CB-85B9F51DD194}" source_id="{EC3112DB-A5FE-4048-9EAF-2D380E349C2F}" target_id="{93CBCA37-D0A7-4AD3-9FCA-2C888B94E1A7}" source_port="2" target_port="1"/>
+						</links>
+						<Viewport magnificationX="100" magnificationY="100" originX="0" originY="0" canvasSizeX="1000" canvasSizeY="1000"/>
+					</layout>
+				</xml>
+			</xmlmember>
+			<member name="Title">Workflow Cleanup - Stale (Completed) Pending Work</member>
+			<member name="MaxRunningProcesses">1</member>
+			<member name="StartWithInst_Class" null=""/>
+			<member name="StartWithInst_FirstStep" null=""/>
+			<member name="WF_ServerGroup" null=""/>
+			<member name="IsMaintenance">True</member>
+			<member name="WF_ProcID" null=""/>
+			<member name="WF_AppPool" null=""/>
+			<member name="EnableLogging">False</member>
+			<member name="Priority">3</member>
+		</instance>
+		<instance class="WF_Process" key="{2C9DB032-00D5-4A5E-A7CE-BACA1599A1DC}">
+			<member name="Active">True</member>
+			<xmlmember name="Defn">
+				<xml>
+					<entryevents>
+						<event id="{26A7EB77-E20C-40AC-B0EC-CC050F9CA652}" progid="AeWorkFlow.Scheduled.Event" schedule="Every 100 minutes" ImpersonationID="" nextid="{0DC069EF-F27C-402D-AD54-850D2D5E99C2}"/>
+						<event id="{934D8DB2-A447-47B4-8AEE-2A3909CD5F19}" progid="AeWorkFlow.AbandonedWorkflow.Event" Process="This" Recurse="Fire" ImpersonationID="" nextid="{3E6F4386-A127-49CE-B140-462B5E8039AB}"/>
+						<event id="{345CE8E0-0D5A-489D-B4AE-47B355053289}" progid="AeWorkFlow.ErroredWorkflow.Event" Process="This" Recurse="Fire" ImpersonationID="" nextid="{3E6F4386-A127-49CE-B140-462B5E8039AB}"/>
+					</entryevents>
+					<actions>
+						<action id="{0DC069EF-F27C-402D-AD54-850D2D5E99C2}" progid="AeWorkFlowDLL.DeleteObject.Action" title="Delete Stale Pending Work" trans="Yes" instance="" treataserror="Info" folder="system.WF_PendingWork" filter="Status = &quot;E&quot; And (IsNull(RecordStamp.WhenUpdate) Or DateDiff(&quot;n&quot;, RecordStamp.WhenUpdate, Now()) &gt; 36000)" ImpersonationID="" instancespertransaction="100"/>
+						<action id="{3E6F4386-A127-49CE-B140-462B5E8039AB}" progid="AeWorkFlow.SetProperty.Action" title="Cleanup workflow properties" ImpersonationID="" nextid="{0DC069EF-F27C-402D-AD54-850D2D5E99C2}">
+							<delete name="Object"/>
+						</action>
+					</actions>
+					<layout>
+						<symbols>
+							<symbol type="entry" id="{26A7EB77-E20C-40AC-B0EC-CC050F9CA652}" left="88" top="52" right="104" bottom="68"/>
+							<symbol type="action" id="{0DC069EF-F27C-402D-AD54-850D2D5E99C2}" left="38" top="178" right="154" bottom="229"/>
+							<symbol type="exit" id="{0A89C92F-BDC1-493B-B34E-334915B7211A}" left="84" top="276" right="108" bottom="300"/>
+							<symbol type="entry" id="{934D8DB2-A447-47B4-8AEE-2A3909CD5F19}" left="232" top="52" right="248" bottom="68"/>
+							<symbol type="entry" id="{345CE8E0-0D5A-489D-B4AE-47B355053289}" left="400" top="52" right="416" bottom="68"/>
+							<symbol type="action" id="{3E6F4386-A127-49CE-B140-462B5E8039AB}" left="266" top="106" right="382" bottom="157"/>
+						</symbols>
+						<links>
+							<link id="{485CDD62-2435-47A2-8696-FD996E34E13A}" source_id="{26A7EB77-E20C-40AC-B0EC-CC050F9CA652}" target_id="{0DC069EF-F27C-402D-AD54-850D2D5E99C2}" source_port="2" target_port="0"/>
+							<link id="{9A5C6ED9-E45B-4F67-8447-8B6B06E436FD}" source_id="{0DC069EF-F27C-402D-AD54-850D2D5E99C2}" target_id="{0A89C92F-BDC1-493B-B34E-334915B7211A}" source_port="2" target_port="0"/>
+							<link id="{6E3C6872-0A37-4C8D-B14A-110659AF4C88}" source_id="{934D8DB2-A447-47B4-8AEE-2A3909CD5F19}" target_id="{3E6F4386-A127-49CE-B140-462B5E8039AB}" source_port="2" target_port="3"/>
+							<link id="{01E20D61-6036-4BBF-8A05-04CFF5699054}" source_id="{345CE8E0-0D5A-489D-B4AE-47B355053289}" target_id="{3E6F4386-A127-49CE-B140-462B5E8039AB}" source_port="2" target_port="1"/>
+							<link id="{D0DC4C18-CF0A-4219-B7F7-1B3A43717BDB}" source_id="{3E6F4386-A127-49CE-B140-462B5E8039AB}" target_id="{0DC069EF-F27C-402D-AD54-850D2D5E99C2}" source_port="2" target_port="1"/>
+						</links>
+						<Viewport magnificationX="100" magnificationY="100" originX="0" originY="0" canvasSizeX="1000" canvasSizeY="1000"/>
+					</layout>
+				</xml>
+			</xmlmember>
+			<member name="Title">Workflow Cleanup - Stale (Errored) Pending Work</member>
+			<member name="MaxRunningProcesses">1</member>
+			<member name="StartWithInst_Class" null=""/>
+			<member name="StartWithInst_FirstStep" null=""/>
+			<member name="WF_ServerGroup" null=""/>
+			<member name="IsMaintenance">True</member>
+			<member name="WF_ProcID" null=""/>
+			<member name="WF_AppPool" null=""/>
+			<member name="EnableLogging">False</member>
+			<member name="Priority">3</member>
+		</instance>
+		<instance class="WF_Process" key="{0996F8AA-9A6E-428C-B33F-0F055EA9CBF5}">
+			<member name="Active">True</member>
+			<xmlmember name="Defn">
+				<xml>
+					<entryevents>
+						<event id="{52612CA8-74DE-486B-8EEF-ECA00553114F}" progid="AeWorkFlow.Scheduled.Event" schedule="Every 100 minutes" ImpersonationID="" nextid="{9C5B618B-56FA-44C8-BD85-5083B56E64EB}"/>
+						<event id="{0EC9CCE4-552B-4C35-9A67-A82014D55F71}" progid="AeWorkFlow.AbandonedWorkflow.Event" Process="This" Recurse="Fire" ImpersonationID="" nextid="{51B9E881-397B-464D-AEF0-79E2E92EF478}"/>
+						<event id="{2B2E0EE3-2503-4B16-BE08-0C934C7DB299}" progid="AeWorkFlow.ErroredWorkflow.Event" Process="This" Recurse="Fire" ImpersonationID="" nextid="{51B9E881-397B-464D-AEF0-79E2E92EF478}"/>
+					</entryevents>
+					<actions>
+						<action id="{9C5B618B-56FA-44C8-BD85-5083B56E64EB}" progid="AeWorkFlowDLL.DeleteObject.Action" title="Delete Stale Workflow Event Log Entries" trans="Yes" instance="" treataserror="Info" folder="system.WF_LogEvent" filter="DateDiff(&quot;n&quot;, RecordStamp.WhenUpdate, Now()) &gt; 36000" ImpersonationID="" instancespertransaction="100"/>
+						<action id="{51B9E881-397B-464D-AEF0-79E2E92EF478}" progid="AeWorkFlow.SetProperty.Action" title="Cleanup workflow properties" ImpersonationID="" nextid="{9C5B618B-56FA-44C8-BD85-5083B56E64EB}">
+							<delete name="Object"/>
+						</action>
+					</actions>
+					<layout>
+						<symbols>
+							<symbol type="entry" id="{52612CA8-74DE-486B-8EEF-ECA00553114F}" left="172" top="64" right="188" bottom="80"/>
+							<symbol type="action" id="{9C5B618B-56FA-44C8-BD85-5083B56E64EB}" left="122" top="202" right="238" bottom="253"/>
+							<symbol type="exit" id="{45CE7E4F-878E-4237-8A65-B66F6AFC0E4C}" left="168" top="312" right="192" bottom="336"/>
+							<symbol type="entry" id="{0EC9CCE4-552B-4C35-9A67-A82014D55F71}" left="472" top="64" right="488" bottom="80"/>
+							<symbol type="entry" id="{2B2E0EE3-2503-4B16-BE08-0C934C7DB299}" left="292" top="64" right="308" bottom="80"/>
+							<symbol type="action" id="{51B9E881-397B-464D-AEF0-79E2E92EF478}" left="338" top="142" right="454" bottom="193"/>
+						</symbols>
+						<links>
+							<link id="{F315DA26-400C-46CF-9E53-237F700BF1D0}" source_id="{9C5B618B-56FA-44C8-BD85-5083B56E64EB}" target_id="{45CE7E4F-878E-4237-8A65-B66F6AFC0E4C}" source_port="2" target_port="0"/>
+							<link id="{7EE8350B-A6A9-431D-8047-CCB80D28E098}" source_id="{52612CA8-74DE-486B-8EEF-ECA00553114F}" target_id="{9C5B618B-56FA-44C8-BD85-5083B56E64EB}" source_port="2" target_port="0"/>
+							<link id="{D1876E95-586D-424D-A878-F97F6CE4D81E}" source_id="{2B2E0EE3-2503-4B16-BE08-0C934C7DB299}" target_id="{51B9E881-397B-464D-AEF0-79E2E92EF478}" source_port="2" target_port="3"/>
+							<link id="{CC7E41A7-B583-4181-9AB0-DA10A94A5846}" source_id="{0EC9CCE4-552B-4C35-9A67-A82014D55F71}" target_id="{51B9E881-397B-464D-AEF0-79E2E92EF478}" source_port="2" target_port="1"/>
+							<link id="{2DA6C40E-BF1D-44C5-8CE5-FBD008AA31BE}" source_id="{51B9E881-397B-464D-AEF0-79E2E92EF478}" target_id="{9C5B618B-56FA-44C8-BD85-5083B56E64EB}" source_port="2" target_port="1"/>
+						</links>
+						<Viewport magnificationX="100" magnificationY="100" originX="0" originY="0" canvasSizeX="1000" canvasSizeY="1000"/>
+					</layout>
+				</xml>
+			</xmlmember>
+			<member name="Title">Workflow Cleanup - Stale Event Log Entries</member>
+			<member name="MaxRunningProcesses">1</member>
+			<member name="StartWithInst_Class" null=""/>
+			<member name="StartWithInst_FirstStep" null=""/>
+			<member name="WF_ServerGroup" null=""/>
+			<member name="IsMaintenance">True</member>
+			<member name="WF_ProcID" null=""/>
+			<member name="WF_AppPool" null=""/>
+			<member name="EnableLogging">False</member>
+			<member name="Priority">3</member>
+		</instance>
+	<instance class="WF_Process" key="{4A9B812D-1487-4aec-BB28-C6BD868B033B}">
+		<member name="Active">True</member>
+		<xmlmember name="Defn">
+			<xml>
+				<entryevents>
+					<event id="{26A7EB77-E20C-40AC-B0EC-CC050F9CA652}" progid="AeWorkFlow.Scheduled.Event" schedule="Every 100 minutes" ImpersonationID="" nextid="{0DC069EF-F27C-402D-AD54-850D2D5E99C2}"/>
+					<event id="{934D8DB2-A447-47B4-8AEE-2A3909CD5F19}" progid="AeWorkFlow.AbandonedWorkflow.Event" Process="This" Recurse="Fire" ImpersonationID="" nextid="{3E6F4386-A127-49CE-B140-462B5E8039AB}"/>
+					<event id="{345CE8E0-0D5A-489D-B4AE-47B355053289}" progid="AeWorkFlow.ErroredWorkflow.Event" Process="This" Recurse="Fire" ImpersonationID="" nextid="{3E6F4386-A127-49CE-B140-462B5E8039AB}"/>
+				</entryevents>
+				<actions>
+					<action id="{0DC069EF-F27C-402D-AD54-850D2D5E99C2}" progid="AeWorkFlowDLL.DeleteObject.Action" title="Delete Stale Pending Work" trans="Yes" instance="" treataserror="Info" folder="system.WF_PendingWork" filter="Status = &quot;X&quot; And (IsNull(RecordStamp.WhenUpdate) Or DateDiff(&quot;n&quot;, RecordStamp.WhenUpdate, Now()) &gt; 36000)" ImpersonationID="" instancespertransaction="100"/>
+					<action id="{3E6F4386-A127-49CE-B140-462B5E8039AB}" progid="AeWorkFlow.SetProperty.Action" title="Cleanup workflow properties" ImpersonationID="" nextid="{0DC069EF-F27C-402D-AD54-850D2D5E99C2}">
+						<delete name="Object"/>
+					</action>
+				</actions>
+				<layout>
+					<symbols>
+						<symbol type="entry" id="{26A7EB77-E20C-40AC-B0EC-CC050F9CA652}" left="88" top="52" right="104" bottom="68"/>
+						<symbol type="action" id="{0DC069EF-F27C-402D-AD54-850D2D5E99C2}" left="38" top="178" right="154" bottom="229"/>
+						<symbol type="exit" id="{0A89C92F-BDC1-493B-B34E-334915B7211A}" left="84" top="276" right="108" bottom="300"/>
+						<symbol type="entry" id="{934D8DB2-A447-47B4-8AEE-2A3909CD5F19}" left="232" top="52" right="248" bottom="68"/>
+						<symbol type="entry" id="{345CE8E0-0D5A-489D-B4AE-47B355053289}" left="400" top="52" right="416" bottom="68"/>
+						<symbol type="action" id="{3E6F4386-A127-49CE-B140-462B5E8039AB}" left="266" top="106" right="382" bottom="157"/>
+					</symbols>
+					<links>
+						<link id="{485CDD62-2435-47A2-8696-FD996E34E13A}" source_id="{26A7EB77-E20C-40AC-B0EC-CC050F9CA652}" target_id="{0DC069EF-F27C-402D-AD54-850D2D5E99C2}" source_port="2" target_port="0"/>
+						<link id="{9A5C6ED9-E45B-4F67-8447-8B6B06E436FD}" source_id="{0DC069EF-F27C-402D-AD54-850D2D5E99C2}" target_id="{0A89C92F-BDC1-493B-B34E-334915B7211A}" source_port="2" target_port="0"/>
+						<link id="{6E3C6872-0A37-4C8D-B14A-110659AF4C88}" source_id="{934D8DB2-A447-47B4-8AEE-2A3909CD5F19}" target_id="{3E6F4386-A127-49CE-B140-462B5E8039AB}" source_port="2" target_port="3"/>
+						<link id="{01E20D61-6036-4BBF-8A05-04CFF5699054}" source_id="{345CE8E0-0D5A-489D-B4AE-47B355053289}" target_id="{3E6F4386-A127-49CE-B140-462B5E8039AB}" source_port="2" target_port="1"/>
+						<link id="{D0DC4C18-CF0A-4219-B7F7-1B3A43717BDB}" source_id="{3E6F4386-A127-49CE-B140-462B5E8039AB}" target_id="{0DC069EF-F27C-402D-AD54-850D2D5E99C2}" source_port="2" target_port="1"/>
+					</links>
+					<Viewport magnificationX="100" magnificationY="100" originX="0" originY="0" canvasSizeX="1000" canvasSizeY="1000"/>
+				</layout>
+			</xml>
+		</xmlmember>
+		<member name="Title">Worklfow Cleanup - Stale(Cancelled) Pending Work</member>
+		<member name="MaxRunningProcesses">1</member>
+		<member name="StartWithInst_Class" null="" />
+		<member name="StartWithInst_FirstStep" null="" />
+		<member name="WF_ServerGroup" null="" />
+		<member name="IsMaintenance">True</member>
+		<member name="WF_ProcID" null="" />
+		<member name="WF_AppPool" null="" />
+		<member name="EnableLogging">False</member>
+		<member name="Priority">3</member>
+	</instance>
+	</folder></aedata>

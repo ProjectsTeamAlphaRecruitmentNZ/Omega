@@ -1,0 +1,490 @@
+﻿
+
+modify form "Object" for "MergeDoc" as "MergeDoc"
+{
+	before "Tabs" Resize 0,100 Height 17
+	{
+		"Path" edit member "FilePath" 0,0,300(100),15 autohscroll choose sidetag tagset(1)
+		OnChoose "Path_Choose"
+		"CommCtl" control "MSComDlg.CommonDialog.1" license "28C4C820-401A-101B-A3C9-08002B2F49FB" 14,0,26,17
+		{
+			"_ExtentX" = "847"
+			"_ExtentY" = "847"
+			"_Version" = "393216"
+			"CancelError" = "0"
+			"Color" = "0"
+			"Copies" = "1"
+			"DefaultExt" = ""
+			"DialogTitle" = "Choose Document"
+			"FileName" = ""
+			"Filter" = "All Word Documents (*.docx, *.doc, *.rtf)|*.docx;*.doc;*.rtf|Word Documents (*.docx, *.doc)|*.docx;*.doc|Rich Text Format (*.rtf)|*.rtf|All Files (*.*)|*.*||"
+			"FilterIndex" = "0"
+			"Flags" = "0"
+			"FontBold" = "0"
+			"FontItalic" = "0"
+			"FontName" = ""
+			"FontSize" = "8"
+			"FontStrikeThru" = "0"
+			"FontUnderLine" = "0"
+			"FromPage" = "0"
+			"HelpCommand" = "0"
+			"HelpContext" = "0"
+			"HelpFile" = ""
+			"HelpKey" = ""
+			"InitDir" = ""
+			"Max" = "0"
+			"Min" = "0"
+			"MaxFileSize" = "260"
+			"PrinterDefault" = "1"
+			"ToPage" = "0"
+			"Orientation" = "1"
+		}
+	}
+	modify tabset "Tabs"
+	{
+		Insert "Thumbnail" before "ACL"
+			ZHT "縮圖", 
+			ZHS "缩略图", 
+			DEU "Miniaturansicht", 
+			ELL "Μικρογραφία", 
+			ENU "Thumbnail", 
+			FRA "Miniature", 
+			ITA "Anteprima", 
+			JPN "プレビュー", 
+			KOR "미리보기", 
+			PLK "Miniatura", 
+			THA "ภาพย่อ"
+		
+		{
+			"Thumbnail" control "Elk9.DocThumbnail" 0,0,279(100),135(100) bind "FilePath" to "FilePath"
+			{
+			}
+		}
+	}
+	Script VBScript
+<%
+Sub Path_Choose()
+	Dim objCommCtl
+	Set objCommCtl = Form.Controls.CommCtl.Control
+
+	objCommCtl.Filter = "All Word Documents (*.docx, *.doc, *.rtf)|*.docx;*.doc;*.rtf|Word Documents (*.docx, *.doc)|*.docx;*.doc|Rich Text Format (*.rtf)|*.rtf|All Files (*.*)|*.*||"
+	objCommCtl.FilterIndex = 0
+	objCommCtl.CancelError = True
+	
+	Dim bHasFile: bHasFile = False
+	On Error Resume Next
+	Err.Clear
+	objCommCtl.ShowOpen
+	
+	If Err.Number = 0 Then
+		bHasFile = True
+	End If
+	
+	If bHasFile And Len(Trim(objCommCtl.FileName)) > 0 Then
+		Form.Object.FilePath = objCommCtl.FileName
+	End If
+End Sub
+%>
+}
+
+modify form "WF_PendingWorkBase" for "MM_PendingWork" as "MM_PendingWork"
+{
+	modify tabset "Tabset"
+	{
+		Insert "Details" before "ErrorInfo"
+			ZHS "细节", 
+			DEU "Details", 
+			ENU "Details", 
+			FRA "Détails", 
+			ITA "Dettagli", 
+			JPN "詳細", 
+			KOR "상세정보", 
+			PLK "Szczegóły", 
+			THA "รายละเอียด"
+		
+		{
+			"WhenAdded" datetime member "WhenAdded" 0,0,220,14 sidetag tagset(1)
+			"WhenTimeout" datetime member "WhenTimeout" 0,16,220,14 sidetag tagset(1)
+			"Status" combobox member "Status" 0,32,151,14 sidetag tagset(1)
+			"butRestart" button
+				tag 
+					ZHS "重启", 
+					DEU "Neustart", 
+					ENU "Restart", 
+					FRA "Redémarrer", 
+					ITA "Riavvia", 
+					JPN "再起動", 
+					KOR "재시작", 
+					PLK "Zrestartuj", 
+					THA "เริ่มต้นใหม่"
+			 157,32,62,14
+				OnClick "butRestart_Click"
+			"CreatedBy" text
+				tag 
+					ZHS "创建由：", 
+					DEU "&Erstellt von:", 
+					ENU "&Created by:", 
+					FRA "&Créé par:", 
+					ITA "&Creato da:", 
+					JPN "作成者(&C):", 
+					PLK "&Utworzone przez:", 
+					THA "สร้างโดย (&C):"
+			 0,49,82,9
+			"ExecutingUser" combobox member "ExecutingUser" 92,48,100,14
+			"PercentComplete" text
+				tag 
+					ZHS "完成百分比：", 
+					DEU "&Prozent abgeschlossen:", 
+					ENU "&Percent complete:", 
+					FRA "&Pourcentage terminé:", 
+					ITA "&Percentuale completamento:", 
+					JPN "完了パーセント(&P):", 
+					PLK "&Procent ukończenia:", 
+					THA "ร้อยละการเสร็จสิ้น (&P):"
+			 0,66,81,9
+			"ProgressPercentComplete" edit member "ProgressPercentComplete" 92,64,44,13 autohscroll spin tagset(1)
+			"ProgressDescr" edit member "ProgressDescr" 0,80,340(100),46 multiline autovscroll vscroll sidetag tagset(1)
+			OnInit "Details_Init"
+		}
+		Insert "MailMergeDoc"
+			ZHS "合并文档", 
+			DEU "Seriendruckdokument", 
+			ENU "Merge Document", 
+			FRA "Document de publipostage", 
+			ITA "Unisci documento", 
+			JPN "マージ ドキュメント", 
+			PLK "Scal dokument", 
+			THA "รวมเอกสาร"
+		
+		{
+			"ebfrmMMDoc" form member "MergeDoc" 0,0,340(100),170(100) context "MM_PendingWork"
+		}
+	}
+	Script VBScript
+<%
+Sub Details_Init()
+	If Form.Object.Status.Value.Value = "E" or Form.Object.Status.Value.Value = "X" Then
+	    this.butRestart.Enabled = true
+	Else
+		this.butRestart.Enabled = false 
+	End If
+End Sub
+
+Sub butRestart_Click()
+	If Form.Object.Status.Value.Value = "E" or Form.Object.Status.Value.Value = "X" Then
+		System.MMPendingWork_Restart Form.Object
+	End If
+End Sub
+%>
+}
+
+modify form "MergeDoc" for "MergeDoc" as "MergeDoc_Jobs"
+{
+	modify tabset "Tabs"
+	{
+		Insert "Jobs"
+			ZHS "工作", 
+			DEU "Aufträge", 
+			ENU "Jobs", 
+			FRA "Tâches", 
+			ITA "Compiti", 
+			JPN "ジョブ", 
+			KOR "작업", 
+			PLK "Zadania", 
+			THA "งาน"
+		
+		{
+			"MailMergeJobs" control "Elk9.grid" 0,0,280(100),135(100) ENU ""
+			Events
+			{
+				"OnToolbarCommand" "MailMergeJobs_OnToolbarCommand"
+				"OnToolbarStateChange" "MailMergeJobs_OnToolbarStateChange"
+			}
+			{
+				"_cx" = "5080"
+				"_cy" = "5080"
+				"Enabled" = "-1"
+				"FolderName" = "PendingWorkForUser"
+				"ConfirmDelete" = "0"
+				"AllowDelete" = "-1"
+				"AllowSort" = "-1"
+				"AllowOpen" = "-1"
+				"AllowAdds" = "0"
+				"Toolbar" = "-1"
+				"ManualFill" = "0"
+				"Configurable" = "0"
+				"MaxRows" = "0"
+				"PrintButton" = "0"
+				"Collapsable" = "0"
+				"ShowGroupBox" = "0"
+				"OpenOnAdd" = "0"
+				"Filter" = ""
+				"GridID" = "{78B34C06-B55E-4A07-BB06-F0B0A68D6D00}"
+				"BackColor" = "2147483653"
+				"ForeColor" = "4294967295"
+				"BandOnMember" = ""
+				"BandFolder" = ""
+				"ExpandMember" = ""
+				"ExpandExistence" = ""
+				"RowColor" = ""
+				"ShowTooltips" = "-1"
+				"FixedColumnCount" = "0"
+				"SortCol" = "-1"
+				"SortCol2" = "-1"
+				"SortCol3" = "-1"
+				"SortDirection" = "0"
+				"SortDirection2" = "0"
+				"SortDirection3" = "0"
+				"ColumnCount" = "4"
+				"Column1_Expr" = "Descr"
+				"Column1_Flags" = "9"
+				"Column1_Align" = "0"
+				"Column1_Format" = ""
+				"Column1_ColorExpression" = ""
+				"Column2_Expr" = "WhenAdded"
+				"Column2_Caption_StringCount" = "0"
+				"Column2_Flags" = "9"
+				"Column2_Align" = "0"
+				"Column2_Format" = ""
+				"Column2_ColorExpression" = ""
+				"Column3_Expr" = "ProgressPercentComplete"
+				"Column3_Flags" = "9"
+				"Column3_Align" = "0"
+				"Column3_Format" = ""
+				"Column3_ColorExpression" = ""
+				"Column4_Expr" = "Status"
+				"Column4_Caption_StringCount" = "0"
+				"Column4_Flags" = "9"
+				"Column4_Align" = "0"
+				"Column4_Format" = ""
+				"Column4_ColorExpression" = ""
+				"TotalCount" = "1"
+				"Total1_Expr" = "TOTAL"
+				"OpenInDialog" = "-1"
+				"OpenInDouble" = "0"
+				"Reload" = "0"
+				"RowHeight" = "0"
+				"ExtraMembers" = ""
+				"DialogsSave" = "-1"
+				"Caption_String1Lang" = "1033"
+				"Caption_String1Val" = "Pending Merges"
+				"Caption_String2Lang" = "1045"
+				"Caption_String2Val" = "Oczekujące scalenia"
+				"Caption_String3Lang" = "1054"
+				"Caption_String3Val" = "การรวมที่ค้าง"
+				"Caption_String4Lang" = "1041"
+				"Caption_String4Val" = "マージのペンディング"
+				"Caption_String5Lang" = "1042"
+				"Caption_String5Val" = "보류 병합"
+				"Caption_StringCount" = "5"
+				"Column1_Caption_String1Lang" = "1033"
+				"Column1_Caption_String1Val" = "Name"
+				"Column1_Caption_String2Lang" = "1045"
+				"Column1_Caption_String2Val" = "Nazwa"
+				"Column1_Caption_String3Lang" = "1054"
+				"Column1_Caption_String3Val" = "ชื่อ"
+				"Column1_Caption_String4Lang" = "1041"
+				"Column1_Caption_String4Val" = "名前"
+				"Column1_Caption_String5Lang" = "1042"
+				"Column1_Caption_String5Val" = "이름"
+				"Column1_Caption_StringCount" = "5"
+				"Column3_Caption_String1Lang" = "1033"
+				"Column3_Caption_String1Val" = "Percent Complete"
+				"Column3_Caption_String2Lang" = "1045"
+				"Column3_Caption_String2Val" = "Procent ukończenia"
+				"Column3_Caption_String3Lang" = "1054"
+				"Column3_Caption_String3Val" = "ร้อยละการเสร็จสิ้น"
+				"Column3_Caption_String4Lang" = "1041"
+				"Column3_Caption_String4Val" = "完了パーセント"
+				"Column3_Caption_String5Lang" = "1042"
+				"Column3_Caption_String5Val" = "완료율"
+				"Column3_Caption_StringCount" = "5"
+				"Total1_Caption_String1Lang" = "1033"
+				"Total1_Caption_String1Val" = "Total"
+				"Total1_Caption_String2Lang" = "1045"
+				"Total1_Caption_String2Val" = "Łącznie"
+				"Total1_Caption_String3Lang" = "1054"
+				"Total1_Caption_String3Val" = "รวม"
+				"Total1_Caption_String4Lang" = "1041"
+				"Total1_Caption_String4Val" = "合計"
+				"Total1_Caption_String5Lang" = "1042"
+				"Total1_Caption_String5Val" = "총계"
+				"Total1_Caption_StringCount" = "5"
+			}
+			OnInit "Jobs_Init"
+		}
+	}
+	OnInit "Form_Init"
+	OnPostSave "Form_PostSave"
+	Script VBdotNET
+<%
+Imports System.Windows.Forms 
+Imports System.Drawing
+Imports System.IO 
+Imports StayinFront.Engine.Utility
+Imports StayinFront.Engine
+Shared Dim iRefreshButId as Integer = -1
+Shared Dim iRestartButId as Integer = -1
+Shared Dim bWorkDeleted as Boolean = False
+
+Function CreateImageList() as IntPtr
+	Dim mmImgList as ImageList
+	mmImgList = new ImageList
+	
+	Dim resImages() as String = { "MMRefresh", "MMRestart" } 
+	
+	For Each sRes as String In resImages
+		Dim aeRes as IAeResource
+		aeRes = TheSystem.Aspect("ActivElk.Resource").Item(sRes)
+		If Not aeRes Is Nothing Then
+			Dim stm as MemoryStream
+			stm = new MemoryStream(aeRes.Binary)
+			Try
+				Dim img as Image = Bitmap.FromStream(stm)
+				mmImgList.Images.Add(img)
+			Catch e as ArgumentException
+			End Try
+		End If
+	Next
+	
+	Return  mmImgList.Handle
+End Function
+
+Sub Jobs_Init()
+
+	Dim JobsTab as FormForm = Form.Controls.Item("Tabs").Item("Jobs")
+	Dim oGridCtrl as FormControl = JobsTab.Controls.Item("MailMergeJobs")
+	
+	Dim oGrid as IElkGrid178 = oGridCtrl.Control
+	Dim otlbar as IElk9Toolbar
+	otlbar = oGrid.ToolbarControl
+	
+	Dim nOffSet as Integer
+	nOffSet = otlbar.AddImageList("Mail Merge Jobs Images", CreateImageList())
+	
+	Dim sButCap as String 
+	Dim otlbarBut as IElk9ToolbarButton
+	If iRefreshButId = -1 Or otlbar.Item(iRefreshButId) Is Nothing Then	 	
+	 	sButCap = TheSystem.LoadString("RefreshBut_Cap")
+		otlbarBut = otlbar.AddButton(sButCap, , nOffSet, 1)
+		otlbarBut.Type = 0 
+		otlbarBut.Enabled = True
+		otlbarBut.AutoShowCaption = True
+		otlbarBut.AutoSize = True  
+		iRefreshButId = otlbarBut.Id
+	End If
+	
+	If iRestartButId = -1 or otlbar.Item(iRestartButId) is nothing Then
+		sButCap = TheSystem.LoadString("RestartBut_Cap")
+		otlbarBut = otlbar.AddButton(sButCap, , nOffSet + 1, 1)
+		otlbarBut.Type = 0 
+		otlbarBut.Enabled = false
+		otlbarBut.AutoShowCaption = True
+		otlbarBut.AutoSize = True  
+		iRestartButId = otlbarBut.Id
+	End If 
+End Sub
+
+Sub MailMergeJobs_OnToolbarCommand(button as IElk9ToolbarButton, menuItemId as Integer, pHandled as Boolean)
+	
+	Dim JobsTab as FormForm = Form.Controls.Item("Tabs").Item("Jobs")
+	Dim oGridCtrl as FormControl = JobsTab.Controls.Item("MailMergeJobs")
+	Dim oGrid as IElkGrid = oGridCtrl.Control
+	Dim otlbar as IElk9Toolbar
+	otlbar = oGrid.ToolbarControl          
+    
+    pHandled = False      
+	If button.ID = iRefreshButId Then
+		If bWorkDeleted Then
+			If (MessageBox.Show(TheSystem.LoadString("JobGridChanged"), Form.Object.Prompt(""), MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No)
+				bWorkDeleted = False
+			End If
+		End If
+		
+ 		If bWorkDeleted Then
+ 			Dim oFrmtlbar as IElk9Toolbar = Form.Toolbar
+ 			oFrmtlbar.FireStandardCommand(_elkToolbarStandardButton.elkSave) 
+ 		Else
+			oGrid.Refresh()
+		End If
+		pHandled = True
+	ElseIf button.ID = iRestartButId Then
+		Dim iSelRow as Integer
+		iSelRow = oGrid.SelectedRow 
+		If iSelRow > -1 And iSelRow < oGrid.RowCount Then
+			Dim objMMJob as MM_PendingWork
+			objMMJob = oGrid.RowObject(iSelRow)
+			If not objMMJob is nothing Then
+				If objMMJob.Status.Value.Value = "E" or objMMJob.Status.Value.Value = "X" Then
+				    TheSystem.MMPendingWork_Restart(objMMJob) 
+				    objMMJob.Save
+				End If
+			End If
+		End If
+		pHandled = True
+	ElseIf button.ID = _elkToolbarStandardButton.elkDelete Then
+		Dim iSelRow as Integer
+		iSelRow = oGrid.SelectedRow 
+		If iSelRow > -1 And iSelRow < oGrid.RowCount Then
+			bWorkDeleted = True
+		End If
+	End If
+End Sub
+
+Sub MailMergeJobs_OnToolbarStateChange()
+
+	Dim JobsTab as FormForm = Form.Controls.Item("Tabs").Item("Jobs")
+	Dim oGridCtrl as FormControl = JobsTab.Controls.Item("MailMergeJobs")
+	Dim oGrid as IElkGrid = oGridCtrl.Control 
+	
+	Dim otlbar as IElk9Toolbar
+	otlbar = oGrid.ToolbarControl
+	' Enable/disable restart button on toolbar if it exists	
+	If iRestartButId <> -1 And Not otlbar.Item(iRestartButId) Is Nothing Then
+
+		Dim iSelRow as Integer
+		iSelRow = oGrid.SelectedRow 
+		Dim otlbarBut as IElk9ToolbarButton
+		otlbarBut =	otlbar.Item(iRestartButId)
+		If iSelRow > -1 And iSelRow < oGrid.RowCount Then
+			Dim objMMJob as MM_PendingWork
+			objMMJob = oGrid.RowObject(iSelRow)
+			If not objMMJob is nothing Then
+				If objMMJob.Status.Value.Value = "E" Or objMMJob.Status.Value.Value = "X" Then
+ 	            	otlbarBut.Enabled = true
+ 	            Else
+ 	            	otlbarBut.Enabled = false
+				End If 
+			End If
+		Else
+			otlbarBut.Enabled = False
+		End If
+	End If
+End Sub
+
+Sub Form_Init()
+	bWorkDeleted = False
+End Sub
+
+Sub Form_PostSave()
+	bWorkDeleted = False
+End Sub
+%>
+}
+
+component "Elk9.MailMerge" name "MailMerge"
+	ZHT "郵件合併", 
+	ZHS "邮件合并", 
+	DEU "Seriendruck", 
+	ELL "Συγχώνευση  ηλεκτρονικής αλληλογραφίας", 
+	ENU "Mail Merge", 
+	FRA "Fusion/publipostage", 
+	ITA "Stampa unione", 
+	JPN "メールマージ", 
+	KOR "메일 병합", 
+	PLK "Korespondencja seryjna", 
+	THA "จดหมายเวียน"
+ icon "MailMerge.bmp" mask fuchsia visible enabled "!IsWindowsCE"
+{
+	"DocumentFolderName" = "MergeDocs"
+}

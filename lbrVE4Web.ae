@@ -1,0 +1,1440 @@
+﻿// Active Elk definition file generated from binary format
+// Date:	2005-01-11 16:56:29
+// User:	SDS
+
+library "lbrVE4Web"
+{
+version "9.178.27\r\nCopyright (C) StayinFront, Inc 2001-2005"
+stringtable
+{
+	"lbrVE4Web_strAccessTitle"
+		ENU "Access Control for %1",
+		JPN "%1のアクセス コントロール"
+	"lbrVE4Web_strAccessVerifyDelete"
+		ENU "Are you sure you want to remove the selected permissions?",
+		JPN "選択した許可を削除してもよろしいですか？"
+	"lbrVE4Web_strGroups"
+		ENU "Groups",
+		JPN "グループ"
+	"lbrVE4Web_strUser"
+		ENU "User",
+		JPN "ユーザー"
+	"lbrVE4Web_strUsers"
+		ENU "Users",
+		JPN "ユーザー"
+	"lbrVE4Web_strName"
+		ENU "Name",
+		JPN "名前"
+	"lbrVE4Web_strPermission"
+		ENU "Permission",
+		JPN "許可"
+	"lbrVE4Web_strClose"
+		ENU "Close",
+		JPN "閉じる"
+	"lbrVE4Web_strFromFolder"
+		ENU "From Folder or Bucket",
+		JPN "フォルダまたはバケットから"
+	"lbrVE4Web_strItem"
+		ENU "Item",
+		JPN "アイテム"
+	"lbrVE4Web_strEmpty"
+		ENU "Empty",
+		JPN "空にする"
+	"lbrVE4Web_strSelectAll"
+		ENU "Select All",
+		JPN "すべて選択"
+	"lbrVE4Web_strUnselectAll"
+		ENU "Unselect All",
+		JPN "すべての選択をクリア"
+	"lbrVE4Web_strFixAdd"
+		ENU "Add",
+		JPN "追加"
+	"lbrVE4Web_strChooseItem"
+		ENU "Choose Item",
+		JPN "アイテムの選択"
+	"lbrVE4Web_strBucketWizardTitle"
+		ENU "New Bucket Wizard",
+		JPN "新規バケット ウィザード"
+	"lbrVE4Web_strBucketNew1Title1"
+		ENU "Select the Folder",
+		JPN "アイテムタイプの選択"
+	"lbrVE4Web_strBucketNew1Title2"
+		ENU "Select the folder from which the new bucket will list its items, from the list below.",
+		JPN "新規バケットに入れるアイテムのタイプを以下のリストから選択してください。"
+	"lbrVE4Web_strBucketNew1Title3"
+		ENU "Folder:",
+		JPN "アイテムタイプ:"
+	"lbrVE4Web_strBucketNew2Title1"
+		ENU "Enter the Bucket Title",
+		JPN "バケット タイトルの入力"
+	"lbrVE4Web_strBucketNew2Title2"
+		ENU "Enter the title for your bucket.",
+		JPN "バケットのタイトルを入力してください。"
+	"lbrVE4Web_strBucketNew3Title1"
+		ENU "Completing the Bucket Creation Wizard",
+		JPN "バケット作成ウィザードの完了"
+	"lbrVE4Web_strBucketNew3Title2"
+		ENU "You have successfully completed the bucket creation wizard.",
+		JPN "バケット作成ウィザードを無事終了しました。"
+	"lbrVE4Web_strBucketNew3Title3"
+		ENU "When you click Finish, the wizard will close and you can then use or modify your new bucket.",
+		JPN "完了ボタンをクリックすると、ウィザードを終了し、新しいバケットを使用または編集することができます。"
+	"lbrVE4Web_strBucketTitle"
+		ENU "Bucket title:  ",
+		JPN "バケットのタイトル:"
+	"lbrVE4Web_strConditions"
+		ENU "Conditions",
+		JPN "条件"
+	"lbrVE4Web_strBracket"
+		ENU "Bracket",
+		JPN "括弧"
+	"lbrVE4Web_strTable"
+		ENU "Show items from",
+		JPN "検索場所"
+	"lbrVE4Web_strSegmentUserPrompt"
+		ENU "<user entered value %1>",
+		JPN "<ユーザー入力による値 %1>"
+	"lbrVE4Web_strSegment"
+		ENU "Using segment",
+		JPN "使用クライテリア"
+	"lbrVE4Web_strAddUsingWizard" ENU "Add Using Wizard"
+	"lbrVE4Web_strAddUsingText" ENU "Add Using Text"
+	"lbrVE4Web_strEditInWizard" ENU "Edit in Wizard"
+	"lbrVE4Web_strEditText" ENU "Edit Text"
+	"lbrVE4Web_strExpressionEditor" ENU "Expression Editor"
+	"lbrVE4Web_strFilterField"
+		ENU "Where",
+		JPN "使用フィルタ"
+	"lbrVE4Web_strSearchField"
+		ENU "Search Field",
+		JPN "フィールドの検索"
+	"lbrVE4Web_strGo"
+		ENU "Start Searching",
+		JPN "検索開始"
+	"lbrVE4Web_strPleaseEnterCriteria"
+		ENU "Please enter search criteria",
+		JPN "検索クライテリアを入力してください"
+	"lbrVE4Web_strMax"
+		ENU "Maximum",
+		JPN "最大"
+	"lbrVE4Web_strAllRec"
+		ENU "All Records",
+		JPN "すべてのレコード"
+	"lbrVE4Web_strClearSegment"
+		ENU "Clear Segment",
+		JPN "セグメントのクリア"
+	"lbrVE4Web_strNewSegment"
+		ENU "Create New Segment",
+		JPN "新規セグメントの作成"
+	"lbrVE4Web_strChoose"
+		ENU "Choose...",
+		JPN "選択..."
+	"lbrVE4Web_strOpen"
+		ENU "Open",
+		JPN "開く"
+	"lbrVE4Web_strUID"
+		ENU "unique identifier",
+		JPN "固有の識別子"
+	"lbrVE4Web_strNoKeyAlloc"
+		ENU "For new instances of %1, you need to specify the %2 which is assoicated with the %1.  Type in the %2 below.",
+		JPN "%1の新しいインスタンスとして、%1 と関連する %2 を指定する必要があります。以下に %2 を入力してください。"
+	"lbrVE4Web_strDupCreateNew"
+		ENU "Create new",
+		JPN "新規作成"
+	"lbrVE4Web_strDupTitle1"
+		ENU "To ensure that your new %1 does not already exist in the database, you should use the list below to try to find the new %1.",
+		JPN "データベースに%1がないことを確認するため、以下のリストで%1を検索してください。"
+	"lbrVE4Web_strDupTitle2"
+		ENU "If you find the item you are looking for, select it in the list and click Open. Otherwise, click Create new to create a new item.",
+		JPN "検索したアイテムがリストに見つかった場合、選択して開くをクリックします。新規アイテムを作成する場合は新規作成をクリックします。"
+	"lbrVE4Web_strOK"
+		ENU "OK",
+		JPN "OK"
+	"lbrVE4Web_strCancel"
+		ENU "Cancel",
+		JPN "キャンセル"
+	"lbrVE4Web_strYes"
+		ENU "Yes",
+		JPN "はい"
+	"lbrVE4Web_strNo"
+		ENU "No",
+		JPN "いいえ"
+	"lbrVE4Web_strAbort"
+		ENU "Abort",
+		JPN "中止"
+	"lbrVE4Web_strRetry"
+		ENU "Retry",
+		JPN "再試行"
+	"lbrVE4Web_strApply"
+		ENU "Apply",
+		JPN "適用"
+	"lbrVE4Web_strTrue"
+		ENU "True",
+		JPN "True"
+	"lbrVE4Web_strFalse"
+		ENU "False",
+		JPN "False"
+	"lbrVE4Web_strRefresh"
+		ENU "Refresh",
+		JPN "更新"
+	"lbrVE4Web_strAdd"
+		ENU "New",
+		JPN "新規作成"
+	"lbrVE4Web_strLink"
+		ENU "Pick %1",
+		JPN "%1 ピック"
+	"lbrVE4Web_strDelete"
+		ENU "Delete",
+		JPN "削除"
+	"lbrVE4Web_strAnd"
+		ENU "and",
+		JPN "かつ"
+	"lbrVE4Web_strOr"
+		ENU "or",
+		JPN "または"
+	"lbrVE4Web_strHelp"
+		ENU "Help",
+		JPN "ヘルプ"
+	"lbrVE4Web_strLeft"
+		ENU "Left",
+		JPN "左"
+	"lbrVE4Web_strRight"
+		ENU "Right",
+		JPN "右"
+	"lbrVE4Web_strCenter"
+		ENU "Center",
+		JPN "中央"
+	"lbrVE4Web_strBack"
+		ENU "< Back",
+		JPN "< 戻る"
+	"lbrVE4Web_strNext"
+		ENU "Next >",
+		JPN "次へ >"
+	"lbrVE4Web_strFinish"
+		ENU "Finish",
+		JPN "完了"
+	"lbrVE4Web_strTitleBar"
+		ENU "%1 - Visual Elk for Web",
+		JPN "%1 - Visual Elk for Web"
+	"lbrVE4Web_strDatePicker"
+		ENU "Date Selector",
+		JPN "日付の選択"
+	"lbrVE4Web_strDaySun"
+		ENU "Sun",
+		JPN "日"
+	"lbrVE4Web_strDayMon"
+		ENU "Mon",
+		JPN "月"
+	"lbrVE4Web_strDayTue"
+		ENU "Tue",
+		JPN "火"
+	"lbrVE4Web_strDayWed"
+		ENU "Wed",
+		JPN "水"
+	"lbrVE4Web_strDayThu"
+		ENU "Thu",
+		JPN "木"
+	"lbrVE4Web_strDayFri"
+		ENU "Fri",
+		JPN "金"
+	"lbrVE4Web_strDaySat"
+		ENU "Sat",
+		JPN "土"
+	"lbrVE4Web_strMonthJan"
+		ENU "January",
+		JPN "1月"
+	"lbrVE4Web_strMonthFeb"
+		ENU "February",
+		JPN "2月"
+	"lbrVE4Web_strMonthMar"
+		ENU "March",
+		JPN "3月"
+	"lbrVE4Web_strMonthApr"
+		ENU "April",
+		JPN "4月"
+	"lbrVE4Web_strMonthMay"
+		ENU "May",
+		JPN "5月"
+	"lbrVE4Web_strMonthJun"
+		ENU "June",
+		JPN "6月"
+	"lbrVE4Web_strMonthJul"
+		ENU "July",
+		JPN "7月"
+	"lbrVE4Web_strMonthAug"
+		ENU "August",
+		JPN "8月"
+	"lbrVE4Web_strMonthSep"
+		ENU "September",
+		JPN "9月"
+	"lbrVE4Web_strMonthOct"
+		ENU "October",
+		JPN "10月"
+	"lbrVE4Web_strMonthNov"
+		ENU "November",
+		JPN "11月"
+	"lbrVE4Web_strMonthDec"
+		ENU "December",
+		JPN "12月"
+	"lbrVE4Web_strTimestamp"
+		ENU "Timestamp",
+		JPN "タイムスタンプ"
+	"lbrVE4Web_strSave"
+		ENU "Save",
+		JPN "保存"
+	"lbrVE4Web_strSaveandClose"
+		ENU "Save and Close",
+		JPN "保存して閉じる"
+	"lbrVE4Web_strVerifyDelete"
+		ENU "Are you sure you want to delete %1?",
+		JPN "%1を削除してもよろしいですか?"
+	"lbrVE4Web_strVerifyAutoSave"
+		ENU "%1 has been modified.  Click OK to save your changes or Cancel not to.",
+		JPN "%1は変更されています。変更を保存するにはOKボタンをクリックしてください。"
+	"lbrVE4Web_strVerifyAutoSaveMulti"
+		ENU "Information has been modified.  Click OK to save your changes or Cancel not to.",
+		JPN "情報は変更されています。変更を保存するにはOKボタンをクリックしてください。"
+	"lbrVE4Web_strDeleted"
+		ENU "Record has been deleted.",
+		JPN "レコードは削除されました。"
+	"lbrVE4Web_strRecNotFound"
+		ENU "Record was not found.",
+		JPN "レコードが見つかりません。"
+	"lbrVE4Web_strStatus"
+		ENU "Status",
+		JPN "ステータス"
+	"lbrVE4Web_strError"
+		ENU "Error",
+		JPN "エラー"
+	"lbrVE4Web_strErrorDialogTitle"
+		ENU "Form Errors",
+		JPN "フォーム エラー"
+	"lbrVE4Web_strStatusMsgOk"
+		ENU "OK",
+		JPN "OK"
+	"lbrVE4Web_strStatusMsgInfo"
+		ENU "Info",
+		JPN "情報"
+	"lbrVE4Web_strStatusMsgWarning"
+		ENU "Warning",
+		JPN "警告"
+	"lbrVE4Web_strStatusMsgError"
+		ENU "Error",
+		JPN "エラー"
+	"lbrVE4Web_strStatusMsgMemOk"
+		ENU "OK - %1",
+		JPN "OK - %1"
+	"lbrVE4Web_strStatusMsgMemInfo"
+		ENU "Info for %1",
+		JPN "%1の情報"
+	"lbrVE4Web_strStatusMsgMemWarning"
+		ENU "Warning for %1",
+		JPN "%1の警告"
+	"lbrVE4Web_strStatusMsgMemError"
+		ENU "Error in %1",
+		JPN "%1でエラー"
+	"lbrVE4Web_strWWWLaunch"
+		ENU "Open in New Window",
+		JPN "新しいウィンドウで開く"
+	"lbrVE4Web_strEMailLaunch"
+		ENU "Mail To",
+		JPN "メール先"
+	"lbrVE4Web_strDotDotDot"
+		ENU "...",
+		JPN "..."
+	"lbrVE4Web_strNoMatchItems"
+		ENU "No Matching Items",
+		JPN "一致アイテムはありません"
+	"lbrVE4Web_strfieldChooser"
+		ENU "Choose Fields",
+		JPN "フィールドの選択"
+	"lbrVE4Web_strfCCaption"
+		ENU "Field Chooser",
+		JPN "フィールドの選択"
+	"lbrVE4Web_strfCTitle"
+		ENU "Title",
+		JPN "タイトル"
+	"lbrVE4Web_strfCField"
+		ENU "Expression",
+		JPN "式"
+	"lbrVE4Web_strfCAlignment"
+		ENU "Align",
+		JPN "整列"
+	"lbrVE4Web_strfCFormat"
+		ENU "Format",
+		JPN "書式"
+	"lbrVE4Web_strfCTotal"
+		ENU "Total",
+		JPN "合計"
+	"lbrVE4Web_strfCReadOnly"
+		ENU "Read Only",
+		JPN "読み取り専用"
+	"lbrVE4Web_strfCAdd"
+		ENU ">",
+		JPN ">"
+	"lbrVE4Web_strfCRemove"
+		ENU "<",
+		JPN "<"
+	"lbrVE4Web_strfCRemoveAll"
+		ENU "<<",
+		JPN "<<"
+	"lbrVE4Web_strfCRestoreDefaults"
+		ENU "Defaults",
+		JPN "デフォルト"
+	"lbrVE4Web_strOptions"
+		ENU "Options",
+		JPN "オプション"
+	"lbrVE4Web_strChangePassword" ENU "Change Password"
+	"lbrVE4Web_strOldPassword" ENU "Old Password"
+	"lbrVE4Web_strNewPassword" ENU "New Password"
+	"lbrVE4Web_strVerifyNewPassword" ENU "Verify New Password"
+	"lbrVE4Web_strCannotChangePassword" ENU "You are not allowed to change your password."
+	"lbrVE4Web_strOldNewPasswordMismatch" ENU "The new password and new password verification did not match. Please enter them again."
+	"lbrVE4Web_strDateFormat"
+		ENU "Date Format",
+		JPN "日付書式"
+	"lbrVE4Web_strTreeMaxRows"
+		ENU "Tree Max Rows Displayed",
+		JPN "ツリー最大表示件数"
+	"lbrVE4Web_strExportMaxRows"
+		ENU "Max Rows For Export (such as reports)",
+		JPN "エクスポート（レポート形式）の最大行数"
+	"lbrVE4Web_strViewBarSmallIcons"
+		ENU "Show Small Icons in the Viewbar",
+		JPN "ビューバーに小さいアイコンを表示する"
+	"lbrVE4Web_strCriteriaTextLabels"
+		ENU "Show Text Labels it the Criteria Tree",
+		JPN "クライテリアツリーにテキストラベルを表示する"
+	"lbrVE4Web_strHeaderIcon" ENU "Show Icon in Form Header"
+	"lbrVE4Web_strErrorDialog"
+		ENU "Show Validation Errors in Popup Dialog",
+		JPN "バリデーションエラーをポップアップ ダイアログで表示する"
+	"lbrVE4Web_strErrorInHeader"
+		ENU "Show Validation Errors in Pulldown from Form Header",
+		JPN "バリデーションエラーをフォーム ヘッダーからプルダウンで表示する"
+	"lbrVE4Web_strAutoSave"
+		ENU "Automatically save changes when closing a form",
+		JPN "フォーム終了時に変更を自動保存する"
+	"lbrVE4Web_strDirtyDataColor"
+		ENU "Change the color of fields whose data has changed",
+		JPN "データを編集したときフィールドの色を変更する"
+	"lbrVE4Web_strDirtyDataColorOptsNone"
+		ENU "Doesn't Change",
+		JPN "変更しない"
+	"lbrVE4Web_strDirtyDataColorOptsBlue"
+		ENU "Blue",
+		JPN "青"
+	"lbrVE4Web_strDirtyDataColorOptsGreen"
+		ENU "Green",
+		JPN "緑"
+	"lbrVE4Web_strDirtyDataColorOptsGold"
+		ENU "Gold",
+		JPN "ゴールド"
+	"lbrVE4web_strMaxRowsAlert"
+		ENU "A %1 Max Rows Displayed value of %2 is greater than the maximum allowed value. The default maximum value of %3 will be saved.",
+		JPN "%1の最大表示件数%2は許可された数値を超過しています。最大表示件数%3がデフォルトで保存されています。"
+	"lbrVE4web_strInvalidRowsAlert" ENU "A %1 Max Rows Displayed value of %2 is an invalid value. The default maximum value of %3 will be saved."
+	"lbrVE4web_strMaxRowsUserAlert"
+		ENU "This operation will be performed on %1 rows and may impact system performance.  Do you wish to continue?",
+		JPN "この操作は%1行で実行され、システムのパフォーマンスに影響する可能性があります。続行しますか？"
+	"lbrVE4Web_strNoThumbnail"
+		ENU "Thumbnail not available.",
+		JPN "プレビューは無効です。"
+	"lbrVE4Web_strMenuMessage"
+		ENU "Web Works&nbsp;",
+		JPN "Web Works&nbsp;"
+	"lbrVE4Web_strConfigure"
+		ENU "Options",
+		JPN "オプション"
+	"lbrVE4Web_strTools" ENU "Tools"
+	"lbrVE4Web_strMenuSegMan"
+		ENU "Segments",
+		JPN "セグメント"
+	"lbrVE4Web_strMenuBucketMan"
+		ENU "Buckets",
+		JPN "バケット"
+	"lbrVE4Web_strMenuReportMan"
+		ENU "Reports",
+		JPN "レポート"
+	"lbrVE4Web_strMenuMMMan"
+		ENU "MailMerge",
+		JPN "メールマージ"
+	"lbrVE4Web_strWordError"
+		ENU "Error: Intializing Microsoft Word",
+		JPN "エラー: Microsoft Word の初期化"
+	"lbrVE4Web_strActivate"
+		ENU "Activate",
+		JPN "有効にする"
+	"lbrVE4Web_strMMOpen"
+		ENU "Your mail merge is currently open in Microsoft&reg Word&copy. You should not press OK to close this window until you have finished editing the document.",
+		JPN "現在メールマージが Microsoft&reg Word&copyで開いています。ドキュメントの編集を終了してから、OKをクリックしてこのウィンドウを終了します。"
+	"lbrVE4Web_strSaveRec"
+		ENU "If you want to save a record of your mail merge, you can type in the form below.",
+		JPN "メールマージのレコードを保存する場合は、以下のフォームに入力してください。"
+	"lbrVE4Web_strNoObject"
+		ENU "Could not create ActiveX Control.",
+		JPN "ActiveX コントロールを作成できませんでした。"
+	"lbrVE4Web_strNoMergeData"
+		ENU "Cannot perform merge, no merge data available.",
+		JPN "有効なマージデータがないためマージを実行できません。"
+	"lbrVE4Web_strSaveMergeDoc"
+		ENU "Save a copy of the document",
+		JPN "ドキュメントのコピーの保存"
+	"lbrVE4Web_strSaveMergeTN"
+		ENU "Save a thumbnail view of the document",
+		JPN "ドキュメント プレビューの保存"
+	"lbrVE4Web_strSaveMergeRec"
+		ENU "Write a record of this letter with each recipient",
+		JPN "各受領者に対してこのレターのレコードを記録する"
+	"lbrVE4Web_strNotes"
+		ENU "Record notes",
+		JPN "レコードメモ"
+	"lbrVE4Web_strBrowseTemplate"
+		ENU "Browse for a document",
+		JPN "ドキュメントの参照"
+	"lbrVE4Web_strDocType"
+		ENU "Document must be of type .doc, .dot or .rtf",
+		JPN "ドキュメントタイプは .doc、.dot または .rtf のみ有効です。"
+	"lbrVE4Web_strExistTemplate"
+		ENU "You can also choose the document from the list below:",
+		JPN "ドキュメントを以下のリストから選択できます:"
+	"lbrVE4Web_strMerge"
+		ENU "Merge",
+		JPN "マージ"
+	"lbrVE4Web_strMergeDoc"
+		ENU "Merge Documents",
+		JPN "マージ ドキュメント"
+	"lbrVE4Web_strChooseTemplate"
+		ENU "Choose a document",
+		JPN "ドキュメントの選択"
+	"lbrVE4Web_strCreateDoc"
+		ENU "Create a new document",
+		JPN "新規ドキュメントの作成"
+	"lbrVE4Web_strPleaseWait"
+		ENU "Please wait.....",
+		JPN "しばらくお待ちください..."
+	"lbrVE4Web_strFileNotFound"
+		ENU "Error: File not found",
+		JPN "エラー: ファイルが見つかりません"
+	"lbrVE4Web_strLockViolation"
+		ENU "Error: Could not access file",
+		JPN "エラー: ファイルにアクセスできません"
+	"lbrVE4Web_strFileExists"
+		ENU " file exists, overwrite?",
+		JPN "ファイルが存在します。上書きしますか?"
+	"lbrVE4Web_strAllDone"
+		ENU "Your mail merge is currently open in Microsoft&reg Word&copy.",
+		JPN "メールマージは現在 Microsoft&reg Word&copyで開いています。"
+	"lbrVE4Web_strSaveTemplate"
+		ENU "Save changes I have made to the document.",
+		JPN "ドキュメントへの変更を保存する"
+	"lbrVE4Web_strMergeCreateNew"
+		ENU "Create new...",
+		JPN "新規作成..."
+	"lbrVE4Web_strMergeDocWizTitle"
+		ENU "Mail merge document Wizard",
+		JPN "メールマージ ドキュメント ウィザード"
+	"lbrVE4Web_strDocumentTitle"
+		ENU "Document title:",
+		JPN "ドキュメント タイトル:"
+	"lbrVE4Web_strMergeWiz1Title1"
+		ENU "Choose the class",
+		JPN "クラスの選択"
+	"lbrVE4Web_strMergeWiz1Title2"
+		ENU "Select the item type for this document from the list of item types containing mail merge data.",
+		JPN "このドキュメントのアイテムタイプをメールマージ データを格納するアイテムタイプのリストから選択してください。"
+	"lbrVE4Web_strMergeWiz1Title3"
+		ENU "Choose the Visual Elk item type you want this document to be used with:",
+		JPN "このドキュメントに使う Visual Elk アイテムタイプを選択してください:"
+	"lbrVE4Web_strMergeWiz2Title1"
+		ENU "Choose the document path",
+		JPN "ドキュメント パスの選択"
+	"lbrVE4Web_strMergeWiz2Title2"
+		ENU "Now choose the Microsoft&reg Word&copy document that you want to associate with this mail merge.",
+		JPN "このメールマージと結合する Microsoft&reg Word&copyドキュメントを選択してください。"
+	"lbrVE4Web_strMergeWiz2Title3"
+		ENU "If the Microsoft&reg Word&copy document you wish to use already exists, you can either type in its path or choose Browse to search for it.",
+		JPN "使用する Microsoft&reg Word&copyドキュメントがすでにある場合は、そのパスを入力するか、参照ボタンでパスを選択してください。"
+	"lbrVE4Web_strMergeWiz2Title4"
+		ENU "If you want to create a new document, you must first type a document name and path below.  After typing in a document name and path, click Create New to open and edit the document in Microsoft&reg Word&copy.<br><br><br><b>WARNING</b>:  Be sure to SAVE your document in Word&copy when finished editing.  Your filename must have an extension of type .rtf, .doc or .dot before you can perform a merge.",
+		JPN "新規ドキュメントを作成する場合は、最初にドキュメント名とパスを入力します。次に新規作成をクリックすると、Microsoft&reg Word&copyでドキュメントが起動し編集することができます。<br><br><b>警告</b>:  編集の終了時、Word&copyで必ずドキュメントを保存してください。マージを実行するためには、ファイル名の拡張子タイプが .rtf、.doc または .dot である必要があります。"
+	"lbrVE4Web_strMergeWiz3Title1"
+		ENU "Enter the document title",
+		JPN "ドキュメント タイトルの入力"
+	"lbrVE4Web_strMergeWiz3Title2"
+		ENU "Type in the title you want to use for this document.  This is the title that will show in lists in Visual Elk, so you should make it quite descriptive.  ",
+		JPN "このドキュメントのタイトルを入力してください。 Visual Elk のリストに表示されるタイトルです。意味のあるタイトルを入力してください。"
+	"lbrVE4Web_strMergeWiz4Title1"
+		ENU "Completing the New Mail Merge Document Wizard<br><br>",
+		JPN "新規メールマージ ドキュメント ウィザードの完了<br><br>"
+	"lbrVE4Web_strMergeWiz4Title2"
+		ENU "You have successfully completed the New Mail Merge Document Wizard.",
+		JPN "新規メールマージ ドキュメント ウィザードを無事完了しました。"
+	"lbrVE4Web_strMergeWiz4Title3"
+		ENU "When you click Finish, the wizard will close and you can then use or modify your new document.",
+		JPN "完了をクリックすると、プログラムを終了すると、ドキュメントの使用、編集が可能です。"
+	"lbrVE4Web_strInvalidFile"
+		ENU "Invalid file name or format.",
+		JPN "無効なファイル名かフォーマットです。"
+	"lbrVE4Web_strDocTitle"
+		ENU "You must enter a document title.",
+		JPN "ドキュメント タイトルを入力してください。"
+	"lbrVE4Web_strPreviewDoc"
+		ENU "Open Preview",
+		JPN "プレビューを開く"
+	"lbrVE4Web_strPreviewNotAvailable"
+		ENU "Preview Not Available",
+		JPN "プレビューは無効です"
+	"lbrVE4Web_strLoadDoc"
+		ENU "Load Document:",
+		JPN "ロードするドキュメント:"
+	"lbrVE4Web_strViewDoc"
+		ENU "View Document:",
+		JPN "ドキュメントの表示"
+	"lbrVE4Web_strReportsTitle"
+		ENU "Reports:",
+		JPN "レポート:"
+	"lbrVE4Web_strReportItemMulti"
+		ENU "&nbsp;&nbsp;%1",
+		JPN "&nbsp;&nbsp;%1"
+	"lbrVE4Web_strReportItemSingular"
+		ENU "Report: %1",
+		JPN "レポート: %1"
+	"lbrVE4Web_strNewReport"
+		ENU "New Report",
+		JPN "新規レポート"
+	"lbrVE4Web_strBtnUp"
+		ENU "/\\",
+		JPN "/\\"
+	"lbrVE4Web_strBtnDown"
+		ENU "\\/",
+		JPN "\\/"
+	"lbrVE4Web_strNewReportWizTitle"
+		ENU "Report Creation Wizard",
+		JPN "レポート作成ウィザード"
+	"lbrVE4Web_strReportWiz1Title1"
+		ENU "Select the Item Type",
+		JPN "アイテム タイプの選択"
+	"lbrVE4Web_strReportWiz1Title2"
+		ENU "A report is associated with a particular Visual Elk item type.  Choose the item type for your new report from the list below.",
+		JPN "レポートは特定の Visual Elk のアイテムタイプと関連します。新規レポートに使うアイテムタイプを以下のリストから選択してください。"
+	"lbrVE4Web_strReportWiz1Title3"
+		ENU "Choose the entity you want this report to apply to:",
+		JPN "このレポートに適用するエンティティを選択してください:"
+	"lbrVE4Web_strReportWiz1ATitle1" ENU "Select the detail folder"
+	"lbrVE4Web_strReportWiz1ATitle2" ENU "Please choose the sub-folder containing the detail items for this report."
+	"lbrVE4Web_strReportWiz1ATitle3" ENU "Where would you like the detail for this report to come from?"
+	"lbrVE4Web_strReportWiz1ATitle4" ENU "From a folder of %1 (default)"
+	"lbrVE4Web_strReportWiz1ATitle5" ENU "From a sub-folder below %1"
+	"lbrVE4Web_strReportWiz2Title1"
+		ENU "Select Fields",
+		JPN "フィールドの選択"
+	"lbrVE4Web_strReportWiz2Title2"
+		ENU "Choose the fields and expressions you want to appear on your report.",
+		JPN "このレポートに表示するフィールドと式を選択してください。"
+	"lbrVE4Web_strReportWiz3Title1"
+		ENU "Grouping",
+		JPN "グループ化"
+	"lbrVE4Web_strReportWiz3Title2"
+		ENU "Move the available item up and down to modify how the report is to be sorted.  To create a grouping, select the field and press the > button.",
+		JPN "有効なアイテムを上下に移動してレポートのソート方法を編集します。グループ化するには、フィールドを選択して > ボタンをクリックしてださい。"
+	"lbrVE4Web_strReportWiz4Title1"
+		ENU "Name Report",
+		JPN "レポート名"
+	"lbrVE4Web_strReportWiz4Title2"
+		ENU "Enter a name and brief description for the new report.  To see what the report will look like, click on the preview button.",
+		JPN "新規レポートの名前と詳細を入力してください。レポートのプレビューを参照するには、プレビューボタンをクリックしてください。"
+	"lbrVE4Web_strWiz4Title_Name"
+		ENU "Name",
+		JPN "名前"
+	"lbrVE4Web_strWiz4Title_Description"
+		ENU "Description",
+		JPN "詳細"
+	"lbrVE4Web_strWiz4Title_Orientation"
+		ENU "Orientation",
+		JPN "印刷の向き"
+	"lbrVE4Web_strWiz4Title_Portrait"
+		ENU "Portrait",
+		JPN "縦"
+	"lbrVE4Web_strWiz4Title_Landscape"
+		ENU "Landscape",
+		JPN "横"
+	"lbrVE4Web_strWiz4Title_PageNumbers"
+		ENU "Page Numbers",
+		JPN "ページ番号"
+	"lbrVE4Web_strWiz4Title_Preview"
+		ENU "Preview",
+		JPN "プレビュー"
+	"lbrVE4Web_strWiz5Title1"
+		ENU "Completing the Report Creation Wizard",
+		JPN "レポート作成ウィザードの完了"
+	"lbrVE4Web_strWiz5Title2"
+		ENU "You have successfully completed the Report Creation Wizard.",
+		JPN "レポート作成ウィザードを無事完了しました。"
+	"lbrVE4Web_strWiz5Title3"
+		ENU "When you click Finish, the wizard will close and you can then use your new report.",
+		JPN "完了をクリックすると、ウィザードを終了し、新規レポートを使用することができます。"
+	"lbrVE4Web_strSegTitle"
+		ENU "Segment title:  ",
+		JPN "セグメント タイトル:"
+	"lbrVE4Web_strSegWizardTitle"
+		ENU "Choose the %1",
+		JPN "%1の選択"
+	"lbrVE4Web_strSegTitle2"
+		ENU "Please choose a %1 for the new %2.",
+		JPN "新規%2の%1を選択してください。"
+	"lbrVE4Web_strWiz1Title1"
+		ENU "Select the segment",
+		JPN "セグメントの選択"
+	"lbrVE4Web_strWiz1Title2"
+		ENU "Choose the segment you want to use from the list. To continue, click next.",
+		JPN "使用するセグメントを以下のリストから選択してください。続行するには次へをクリックします。"
+	"lbrVE4Web_strWiz2Title1"
+		ENU "Select the Join Path",
+		JPN "結合パスの選択"
+	"lbrVE4Web_strWiz2Title2"
+		ENU "There are more than one equally valid interpretations of the segment you chose. Select the segment that you want to use.",
+		JPN "選択したセグメントには同等に有効な解釈が一つ以上あります。使用するセグメントを選択してください。"
+	"lbrVE4Web_strWiz2Title3" ENU "The segment you chose could mean any of the following. <br> Select the one you want to use."
+	"lbrVE4Web_strWiz3Title1"
+		ENU "Combine with your existing segment",
+		JPN "既存のセグメントとの結合"
+	"lbrVE4Web_strWiz3Title2"
+		ENU "You may wish to combine your new segment with the one you currently have selected. If you wish to combine the segments, click the box and follow the instructions below.",
+		JPN "新規セグメントを現在選択しているセグメントと結合することができます。これらのセグメントを結合する場合、ボックスをクリックして以下のインストラクションにしたがってください。"
+	"lbrVE4Web_strWiz3Title3"
+		ENU "Combine my selected segment with the segment currently showing",
+		JPN "選択したセグメントと現在表示しているセグメントの結合"
+	"lbrVE4Web_strWiz3Title4"
+		ENU "Combining two segments together usually changes the number of records shown in the result list. Depending on the way the two segments are combined, the list may get larger or smaller. Select the behavior you expect.",
+		JPN "二つのセグメントを結合すると、通常リザルトツリーに表示されるレコード数が変わります。結合方法によりますがリストは大きくなるか小さくなります。リストのサイズを選択してください。"
+	"lbrVE4Web_strWiz3Title5"
+		ENU "I expect the list to get larger",
+		JPN "リストのサイズは大きくなる"
+	"lbrVE4Web_strWiz3Title6"
+		ENU "I expect the list to get smaller",
+		JPN "リストのサイズは小さくなる"
+	"lbrVE4Web_strWiz4Title1"
+		ENU "Completing the Segment Wizard",
+		JPN "セグメント ウィザードの完了"
+	"lbrVE4Web_strWiz4Title2"
+		ENU "You have successfully completed the Segment Wizard.",
+		JPN "セグメント ウィザードを無事完了しました。"
+	"lbrVE4Web_strWiz4Title3"
+		ENU "When you click Finish, the wizard will close and the segment you have chosen will be applied.",
+		JPN "完了をクリックすると、ウィザードを終了し、選択したセグメントが適用されます。"
+	"lbrVE4Web_strSegNewWizardTitle"
+		ENU "Segment Creation Wizard",
+		JPN "新規セグメント ウィザード"
+	"lbrVE4Web_strNew1Title1"
+		ENU "Select the class",
+		JPN "クラスの選択"
+	"lbrVE4Web_strNew1Title2"
+		ENU "A segment is associated with a particular Visual Elk item type. Choose the item type for your new segment, from the list below",
+		JPN "セグメントは Visual Elk アイテムタイプと関連します。新規セグメントのアイテムタイプを以下のリストから選択してください。"
+	"lbrVE4Web_strNew1Title3"
+		ENU "Choose the item type you want this segment to apply to:",
+		JPN "このセグメントに適用するアイテムタイプを選択してください:"
+	"lbrVE4Web_strNew2Title1"
+		ENU "Choose the Field or Folder",
+		JPN "フィールドまたはフォルダの選択"
+	"lbrVE4Web_strNew2Title2"
+		ENU "A condition in a segment always involves a field or folder from the entity or a related entity.  Your first step is to choose the item for the segment condition.",
+		JPN "セグメントの条件は常にエンティティのフィールドまたはフォルダ、あるいは関連のあるエンティティを含みます。まずセグメント条件のアイテムを選択します。"
+	"lbrVE4Web_strNew2Title3"
+		ENU "Navigate to the field on which you want to base this condition.",
+		JPN "この条件の基本となるフィールドにナビゲートします。"
+	"lbrVE4Web_strNew2Title4"
+		ENU "After typing in a document name and path, click Create New to open and edit the document in Microsoft&reg Word&copy.<br><br> Be sure to save your document in Word&copy when finished editing.<br><br><b>WARNING</b>:  Your filename must have an extension of type .rtf, .doc or .dot before you can perform a merge.",
+		JPN "ドキュメント名とパスを入力してから、新規作成をクリックし、Microsoft Word でドキュメントを開いて編集します。<br><br>編集を終了するとき、ドキュメントを Word で保存します。<br><br><b>警告</b>: マージを実行する前に、ファイルの拡張子タイプが .rtf、.doc または .dot であることを確認してください。"
+	"lbrVE4Web_strNew3Title1"
+		ENU "Choose the Comparison Type",
+		JPN "比較タイプの選択"
+	"lbrVE4Web_strNew3Title2"
+		ENU "Now you need to choose how you will compare your chosen field to the value ( which you will choose in the next step ).",
+		JPN "選択したフィールドと値を比較する方法を選択します。(値は次のステップで選択します)"
+	"lbrVE4Web_strNew3Title3"
+		ENU "Condition for ",
+		JPN "条件 "
+	"lbrVE4Web_strNew3Title4"
+		ENU "Choose the way you want to test the field, from the list below.",
+		JPN "フィールドのテスト方法を以下のリストから選択してください。"
+	"lbrVE4Web_strNew4_Title1"
+		ENU "Enter the value",
+		JPN "値の入力"
+	"lbrVE4Web_strNew4_Title2"
+		ENU "Now enter the value to which your property will be compared. If you check the 'Ask user' box, then you will asked for the value when the segment is used.",
+		JPN "プロパティと比較する値を入力します。「ユーザーに値を求める」にチェックを入れた場合、セグメント使用時に値を要求されます。"
+	"lbrVE4Web_strNew4_3_Title3"
+		ENU "Select the value you want to compare with:",
+		JPN "比較する値を選択してください:"
+	"lbrVE4Web_strNew4_3_Title4"
+		ENU "Show items from %1:",
+		JPN "%1からアイテムを表示"
+	"lbrVE4Web_strNew5Title1"
+		ENU "Enter the Segment Title",
+		JPN "セグメント タイトルの入力"
+	"lbrVE4Web_strNew5Title2"
+		ENU "Enter the title for your segment. You will see this title when you go to choose the segment, so you should make the title quite descriptive",
+		JPN "セグメントのタイトルを入力してください。セグメントを選択するときに表示されるタイトルですから、意味のあるタイトルを入力します。"
+	"lbrVE4Web_strNew6Title1"
+		ENU "Completing the Segment Creation Wizard",
+		JPN "セグメント作成ウィザードの完了"
+	"lbrVE4Web_strNew6Title2"
+		ENU "You have successfully completed the segment creation wizard.",
+		JPN "セグメント作成ウィザードを無事完了しました。"
+	"lbrVE4Web_strNew6Title3"
+		ENU "When you click Finish, the wizard will close and you can then use or modify your new segment.",
+		JPN "完了ををクリックすると、ウィザードを終了し、新規セグメントを使用または編集することができます。"
+	"lbrVE4Web_strNewParamTitle1"
+		ENU "User-defined Value",
+		JPN "ユーザー定義値"
+	"lbrVE4Web_strNewParamTitle2"
+		ENU "Enter the name that will be displayed to the user when the value is asked for, and optionally the wizard title and text (like this!)",
+		JPN "値をを要求するときにユーザーに表示する名前を入力してください。またオプションとしてウイザード タイトルとテキストも入力できます。"
+	"lbrVE4Web_strZipCodeWizardTitle1"
+		ENU "Choose a City, County and State for this Zip code.",
+		JPN "この郵便コードの国、都道府県および市郡を選択してください。"
+	"lbrVE4Web_strZipCodeWizardTitle2"
+		ENU "Select the item and press finish.",
+		JPN "アイテムを選択して完了をクリックしてください。"
+	"lbrVE4Web_strZipCodeWizardTitle3"
+		ENU "Zip Code Wizard",
+		JPN "郵便コードウィザード"
+	"lbrVE4Web_strZipCodeWizardTitle4"
+		ENU "Find City, State and County for ZIP Code",
+		JPN "郵便コードの国、都道府県および市郡を検索します。"
+	"lbrVE4Web_strValue"
+		ENU "Value:  ",
+		JPN "値:"
+	"lbrVE4Web_strAllClasses"
+		ENU "Show all types",
+		JPN "すべてのタイプを表示"
+	"lbrVE4Web_strMustSelect"
+		ENU "You must select a property",
+		JPN "プロパティを選択してください"
+	"lbrVE4Web_strFoldersOnly"
+		ENU "Show only top-level types",
+		JPN "トップレベル タイプのみ表示"
+	"lbrVE4Web_strEqual"
+		ENU "Is equal to",
+		JPN "に等しい"
+	"lbrVE4Web_strNotEqual"
+		ENU "Is not equal to",
+		JPN "に等しくない"
+	"lbrVE4Web_strIsOneOf"
+		ENU "Is one of",
+		JPN "のひとつ"
+	"lbrVE4Web_strIsNotOneOf"
+		ENU "Is not one of",
+		JPN "のひとつではない"
+	"lbrVE4Web_strIsBetween"
+		ENU "Is between",
+		JPN "の間"
+	"lbrVE4Web_strIsNotBetween"
+		ENU "Is not between",
+		JPN "の範囲外"
+	"lbrVE4Web_strLessThan"
+		ENU "Is less than",
+		JPN "より少ない"
+	"lbrVE4Web_strLessThanEqual"
+		ENU "Is less than or equal to",
+		JPN "以下"
+	"lbrVE4Web_strGreaterThan"
+		ENU "Is greater than",
+		JPN "より大きい"
+	"lbrVE4Web_strGreaterThanEqual"
+		ENU "Is greater than or equal to",
+		JPN "以上"
+	"lbrVE4Web_strBeginsWith"
+		ENU "Begins with",
+		JPN "で始まる"
+	"lbrVE4Web_strDoesNotBeginWith"
+		ENU "Does not begin with",
+		JPN "で始まらない"
+	"lbrVE4Web_strIsOn"
+		ENU "Is on (date)",
+		JPN "その日(日付)"
+	"lbrVE4Web_strIsNotOn"
+		ENU "Is not on (date)",
+		JPN "その日ではない(日付)"
+	"lbrVE4Web_strIsBefore"
+		ENU "Is before",
+		JPN "より前"
+	"lbrVE4Web_strIsOnOrBefore"
+		ENU "Is on or before",
+		JPN "以前"
+	"lbrVE4Web_strIsAfter"
+		ENU "Is after",
+		JPN "より後"
+	"lbrVE4Web_strIsOnOrAfter"
+		ENU "Is on or after",
+		JPN "以降"
+	"lbrVE4Web_strIsEmpty" ENU "Is empty"
+	"lbrVE4Web_strIsNotEmpty" ENU "Is not empty"
+	"lbrVE4Web_strContains" ENU "Contains the text"
+	"lbrVE4Web_strDoesNotContain" ENU "Does not contain the text"
+	"lbrVE4Web_strIsKindOf" ENU "Is a type of"
+	"lbrVE4Web_strIsNotKindOf" ENU "Is not a type of"
+	"lbrVE4Web_strNoSegment"
+		ENU "Sorry, this property cannot be used to create a segment.",
+		JPN "このプロパティはセグメント作成に使用できません。"
+	"lbrVE4Web_strFieldName"
+		ENU "Field Name:",
+		JPN "フィールド名:"
+	"lbrVE4Web_strWizardTitleLabel"
+		ENU "Wizard title:",
+		JPN "ウィザード タイトル:"
+	"lbrVE4Web_strWizardTextLabel"
+		ENU "Wizard text:",
+		JPN "ウィザード テキスト:"
+	"lbrVE4Web_strWizardWelcomeTitle"
+		ENU "Welcome to the %1",
+		JPN "%1へようこそ"
+	"lbrVE4Web_strWizardWelcome_NewWizard"
+		ENU "This wizard will help you create a new %1.",
+		JPN "このウィザードにより新規%1作成のお手伝いをします。"
+	"lbrVE4Web_strWizardWelcome_NewSegment"
+		ENU "This wizard helps you create a new Visual Elk segment.",
+		JPN "このウィザードにより新規Visual Elkセグメント作成のお手伝いをします。"
+	"lbrVE4Web_strWizardWelcome_NewReport"
+		ENU "This wizard helps you create a new Visual Elk report.",
+		JPN "このウィザードにより新規Visual Elkレポート作成のお手伝いをします。"
+	"lbrVE4Web_strWizardWelcome_NewBucket"
+		ENU "This wizard helps you create a new Visual Elk bucket.",
+		JPN "このウィザードにより新規Visual Elkバケット作成のお手伝いをします。"
+	"lbrVE4Web_strWizardWelcomeContinue"
+		ENU "Click Next to begin the wizard.",
+		JPN "次へをクリックしてウィザードを開始します。"
+	"lbrVE4Web_strWizardWelcomeNeverShowAgain"
+		ENU "Do not show this Welcome page again",
+		JPN "次回からウェルカムページを表示しない"
+	"lbrVE4Web_strOpenNewWin"
+		ENU "Open In New Window",
+		JPN "新しいウィンドウで開く"
+	"lbrVE4Web_strAddTitle"
+		ENU "New:",
+		JPN "新規:"
+	"lbrVE4Web_strAddItemMulti"
+		ENU "&nbsp;&nbsp;%1",
+		JPN "&nbsp;&nbsp;%1"
+	"lbrVE4Web_strAddItemSingular"
+		ENU "New %1",
+		JPN "新規%1"
+	"lbrVE4Web_strMailMerge"
+		ENU "Mail Merge",
+		JPN "メールマージ"
+	"lbrVE4Web_strLargeIcons" ENU "Large Icons"
+	"lbrVE4Web_strAddNewGroup"
+		ENU "Add New Group",
+		JPN "新規グループの追加"
+	"lbrVE4Web_strRemoveGroup"
+		ENU "Remove Group",
+		JPN "グループの削除"
+	"lbrVE4Web_strRenameGroup"
+		ENU "Rename Group",
+		JPN "グループ名の変更"
+	"lbrVE4Web_strAccessControl"
+		ENU "Properties",
+		JPN "プロパティ"
+	"lbrVE4Web_strCreateNewShortcut"
+		ENU "Create New View",
+		JPN "新規ビューの作成"
+	"lbrVE4Web_strCreateViewbarView" ENU "Create Viewbar View"
+	"lbrVE4Web_strCreateNewView"
+		ENU "Create New %1",
+		JPN "新規%1の作成"
+	"lbrVE4Web_strSaveViewAs"
+		ENU "Save Current View",
+		JPN "現在のビューを保存"
+	"lbrVE4Web_strRemoveShortcut"
+		ENU "Remove View",
+		JPN "ビューの削除"
+	"lbrVE4Web_strRenameShortcut"
+		ENU "Rename View",
+		JPN "ビュー名の変更"
+	"lbrVE4Web_strUpdateFromView"
+		ENU "Update From Current View",
+		JPN "現在のビューから更新"
+	"lbrVE4Web_strMakeDefaultView"
+		ENU "Make Default View",
+		JPN "デフォルトビューの設定"
+	"lbrVE4Web_strChangeIcon"
+		ENU "Change Icon",
+		JPN "アイコンの変更"
+	"lbrVE4Web_strInvalidView"
+		ENU "Invalid View",
+		JPN "無効なビュー"
+	"lbrVE4Web_strVerifyRemoveGroup"
+		ENU "Are you sure you want to remove the group %1?",
+		JPN "グループ%1を削除してもよろしいですか？"
+	"lbrVE4Web_strVerifyRemoveShortcut"
+		ENU "Are you sure you want to remove the view %1?",
+		JPN "ビュー%1を削除してもよろしいですか？"
+	"lbrVE4Web_strEnterGroupName"
+		ENU "Enter Group Name",
+		JPN "グループ名の入力"
+	"lbrVE4Web_strEnterShortcutName"
+		ENU "Enter View Name",
+		JPN "ビュー名の入力"
+	"lbrVE4Web_strNameTooLong"
+		ENU "A view name longer than the maximum allowable numbers of characters has been entered.",
+		JPN "最大許可数より長いビュー名が入力されています。"
+	"lbrVE4Web_strVisualElkView"
+		ENU "Visual Elk View",
+		JPN "Visual Elk ビュー"
+	"lbrVE4Web_strWebView"
+		ENU "Web View",
+		JPN "Web ビュー"
+	"lbrVE4Web_strWebViewTitle"
+		ENU "Web View",
+		JPN "Web ビュー"
+	"lbrVE4Web_strWebViewIcon"
+		ENU "Default",
+		JPN "デフォルト"
+	"lbrVE4Web_strURL"
+		ENU "URL:",
+		JPN "URL:"
+	"lbrVE4Web_strSelectAnIcon"
+		ENU "Select an Icon",
+		JPN "アイコンの選択"
+	"lbrVE4Web_strNewGroupName"
+		ENU "New Group",
+		JPN "新規グループ"
+	"lbrVE4Web_strNewShortcut"
+		ENU "New Shortcut",
+		JPN "新規ショートカット"
+	"lbrVE4Web_strDelGrid"
+		ENU "Delete Options",
+		JPN "オプションの削除"
+	"lbrVE4Web_strDelShow"
+		ENU "Show Delete Column",
+		JPN "削除カラムの表示"
+	"lbrVE4Web_strDelHide"
+		ENU "Hide Delete Column",
+		JPN "削除カラムの非表示"
+	"lbrVE4Web_strDelCommit"
+		ENU "Delete Checked Items",
+		JPN "チェックしたアイテムの削除"
+	"lbrVE4Web_strDelRevert"
+		ENU "Cancel Deletes",
+		JPN "削除のキャンセル"
+	"lbrVE4Web_strConfirmDel"
+		ENU "Are you sure you want to delete all checked items?",
+		JPN "チェックしたアイテムをすべて削除してもよろしいですか？"
+	"lbrVE4Web_strConfirmOneDel"
+		ENU "Are you sure you want to delete the selected item?",
+		JPN "選択したアイテムを削除してもよろしいですか？"
+	"lbrVE4Web_strExpand"
+		ENU "Expand Group",
+		JPN "グループの展開"
+	"lbrVE4Web_strExpandAll"
+		ENU "Expand All Groups",
+		JPN "グループをすべて展開"
+	"lbrVE4Web_strCollapse"
+		ENU "Collapse Group",
+		JPN "グループの省略"
+	"lbrVE4Web_strCollapseAll"
+		ENU "Collapse All Groups",
+		JPN "グループをすべて省略"
+	"lbrVE4Web_strGroupBy"
+		ENU "%1 by %2",
+		JPN "カラム%2による%1"
+	"lbrVE4Web_strPrintGrid"
+		ENU "Print",
+		JPN "印刷"
+	"lbrVE4Web_strPrintHeader"
+		ENU "Print / Export",
+		JPN "印刷/エクスポート"
+	"lbrVE4Web_strExportCSV"
+		ENU "Export to CSV",
+		JPN "CSV にエクスポート"
+	"lbrVE4Web_strExportXML"
+		ENU "Export to XML",
+		JPN "XML にエクスポート"
+	"lbrVE4Web_strPrintTitle"
+		ENU "'%1' printed on: %2 by %3",
+		JPN "'%1'の印刷:%1 %2"
+	"lbrVE4Web_strGroupByBoxText"
+		ENU "Drag a column header here to group by that column",
+		JPN "カラムヘッダをここにドラッグして、このカラムでグループ化する"
+	"lbrVE4Web_strPropTrue"
+		ENU "The property is TRUE",
+		JPN "プロパティはTRUE"
+	"lbrVE4Web_strPropFalse"
+		ENU "The property is FALSE",
+		JPN "プロパティはFALSE"
+	"lbrVE4Web_strYesterday"
+		ENU "Yesterday",
+		JPN "昨日"
+	"lbrVE4Web_strToday"
+		ENU "Today",
+		JPN "今日"
+	"lbrVE4Web_strTomorrow"
+		ENU "Tomorrow",
+		JPN "明日"
+	"lbrVE4Web_strThisDate"
+		ENU "This Date",
+		JPN "日付指定"
+	"lbrVE4Web_strAM"
+		ENU "AM",
+		JPN "午前"
+	"lbrVE4Web_strPM"
+		ENU "PM",
+		JPN "午後"
+	"lbrVE4Web_strInvalidTime"
+		ENU "Invalid time format",
+		JPN "無効なな日付フォーマットです"
+	"lbrVE4Web_strAskUser"
+		ENU "Ask the user for the value when the segment is used.",
+		JPN "セグメント使用時にユーザーに値を求める"
+	"lbrVE4Web_strMustSelectEntry"
+		ENU "You must select an entry in the list.",
+		JPN "エントリをリストから選択してください。"
+	"lbrVE4Web_strWizardTitle"
+		ENU "New Wizard",
+		JPN "新規ウィザード"
+	"lbrVE4Web_strWhere"
+		ENU "Where:",
+		JPN "場所:"
+	"lbrVE4Web_strBegins"
+		ENU "Begins with:",
+		JPN "開始する値:"
+	"lbrVE4Web_strSearch"
+		ENU "Search",
+		JPN "検索"
+	"lbrVE4Web_strTitle"
+		ENU "Choose the %1",
+		JPN "%1の選択"
+	"lbrVE4Web_strTitle2"
+		ENU "Please choose a %1 for the new %2.",
+		JPN "新規%2の%1を選択してください。"
+	"lbrVE4Web_strFinishTitle1"
+		ENU "New %1 wizard",
+		JPN "新規%1ウイザード"
+	"lbrVE4Web_strFinishTitle2"
+		ENU "You have now completed the new %1.",
+		JPN "新規%1を完了しました。"
+	"lbrVE4Web_strFinishTitle3"
+		ENU "Click Finish to continue editing the new %1.",
+		JPN "新規%1の編集を続行するには完了ボタンをクリックしてください。"
+	"lbrVE4Web_strChooseExisting"
+		ENU "Choose an existing %1",
+		JPN "既存の%1の選択"
+	"lbrVE4Web_strCreateNew"
+		ENU "Create a new %1",
+		JPN "新規%1の作成"
+	"lbrVE4Web_str4_0_Title4"
+		ENU "Enter the range of numbers you want to search for",
+		JPN "検索する数値の範囲を入力してください"
+	"lbrVE4Web_str4_1_Title4"
+		ENU "Select multiple values by holding down the CTRL key",
+		JPN "CTRL キーを押すことにより複数の値を選択してください"
+	"lbrVE4Web_str4_Date_Title4"
+		ENU "Enter the range of dates you want to search for",
+		JPN "検索する日付の範囲を入力してください"
+	"lbrVE4Web_str4_Date_Title5"
+		ENU "Between: ",
+		JPN "間:"
+	"lbrVE4Web_str4_Date_Title6"
+		ENU "And: ",
+		JPN "と:"
+	"lbrVE4Web_strReportManagerTitle"
+		ENU "Report Manager",
+		JPN "レポート マネージャ"
+	"lbrVE4Web_strBucketManagerTitle"
+		ENU "Bucket Manager",
+		JPN "バケットマネージャ"
+	"lbrVE4Web_strMailMergeManagerTitle"
+		ENU "Mail Merge Manager",
+		JPN "メールマージ マネージャ"
+	"lbrVE4Web_strSegmentManagerTitle"
+		ENU "Segment Manager",
+		JPN "セグメント マネージャ"
+	"lbrVE4Web_strErrObjDelete"
+		ENU "The object was deleted by you or another user.  Please refresh and try again.",
+		JPN "このオブジェクトは削除されています。更新してから再試行してください。"
+	"lbrVE4Web_strErrMsg"
+		ENU "The request did not finish.  Details of the problem can be found by hitting the detail button below.",
+		JPN "リクエストは完了しませんでした。詳細ボタンをクリックすると問題の詳細が表示されます。"
+	"lbrVE4Web_strBudgetGridUnit"
+		ENU "Units",
+		JPN "ユニット"
+	"lbrVE4Web_strBudgetGridValue"
+		ENU "Value",
+		JPN "価格"
+	"lbrVE4Web_strBudgetGridVariance"
+		ENU "Variance",
+		JPN "差異"
+	"lbrVE4Web_strBudgetGridExtended"
+		ENU "Extended",
+		JPN "合計"
+	"lbrVE4Web_strBudgetGridActual"
+		ENU "Actual",
+		JPN "実際"
+	"lbrVE4Web_strBudgetGrid"
+		ENU "Budget",
+		JPN "予算"
+	"lbrVE4Web_strAbout"
+		ENU "About",
+		JPN "詳細"
+	"lbrVE4Web_strAboutTitle"
+		ENU "About %1 And Visual Elk For Web",
+		JPN "%1 と Visual Elk For Web について"
+	"lbrVE4Web_strVersion"
+		ENU "Version",
+		JPN "バージョン"
+	"lbrVE4Web_strSystemPoolReport"
+		ENU "System Pool Info.",
+		JPN "システムプール情報"
+	"lbrVE4Web_strWindowsSystemReport"
+		ENU "System Info.",
+		JPN "システム情報"
+	"lbrVE4Web_strDetailVersionInfo"
+		ENU "Detail Version Info",
+		JPN "バージョン情報詳細"
+	"lbrVE4Web_strVE4WebVer"
+		ENU "Visual Elk For Web Version",
+		JPN "Visual Elk For Web バージョン"
+	"lbrVE4Web_strFormConversionVer"
+		ENU "Form Conversion Version",
+		JPN "フォーム変更バージョン"
+	"lbrVE4Web_strVerMismatch"
+		ENU "Mismatched Version Issues",
+		JPN "一致しないバージョンによるエラー"
+	"lbrVE4Web_strVE4Web"
+		ENU "Visual Elk for Web 9.2",
+		JPN "Visual Elk for Web 9.2"
+	"lbrVE4Web_strPoweredBy"
+		ENU "Powered By WebWorks and Active Elk",
+		JPN "Powered By WebWorks and Active Elk"
+	"lbrVE4Web_strActivElkVer"
+		ENU "Active Elk Version",
+		JPN "Active Elk バージョン"
+	"lbrVE4Web_strWebWorksVer"
+		ENU "WebWorks Version",
+		JPN "Web Works バージョン"
+	"lbrVE4Web_strElk9Ver" ENU "Visual Elk Core Version"
+	"lbrVE4Web_strOSVer"
+		ENU "Web Server OS",
+		JPN "Web サーバー OS"
+	"lbrVE4Web_strBrowserVersion"
+		ENU "Browser Version",
+		JPN "ブラウザ バージョン"
+	"lbrVE4Web_strCR_IE_NS_Moz" ENU "Internet Explorer and IIS are copyright Microsoft Corporation<br>Firefox and Mozilla are copyright Contributors to the Mozilla codebase<br>Netscape is copyright Netscape Communications Corporation"
+	"lbrVE4Web_strIISVer"
+		ENU "IIS Version",
+		JPN "IIS バージョン"
+	"lbrVE4Web_strCRWarning"
+		ENU "Warning: this software is protected by copyright law and international treaties. Unauthorized reproduction or distribution of this program, or any portion of it, may result in severe civil and criminal penalties, and will be prosecuted to the maximum extent possible under the law.",
+		JPN "警告:このソフトウェアは、著作権法および国際条約によって保護されています。このプログラムの全部または一部を無断で複製したり、無断で複製物を頒布することは法律によって禁止されています。"
+	"lbrVE4Web_strSupportBrowser" ENU "Your browser version is not supported. Please upgrade to Firefox 1.0, Internet Explorer 6.0, Mozilla 1.7 or Netscape 7.2 or later."
+	"lbrVE4Web_strSupportScriptEngine" ENU "Your browser configuration contains version %1 of the scripting engine. Please use the link below to upgrade to version 5.6 or greater."
+	"lbrVE4Web_strPDASync"
+		ENU "PDA Sync",
+		JPN "PDA シンク"
+	"lbrVE4Web_strPDASyncTitle"
+		ENU "PDA Synchronization Setup Wizard",
+		JPN "PDA シンクロナイゼーション セットアップ ウィザード"
+	"lbrVE4Web_strPDASyncWiz1Title1"
+		ENU "Choose the Entites and PDA",
+		JPN "エンティティとPDAを選択してください。"
+	"lbrVE4Web_strPDASyncWiz1Title2"
+		ENU "Choose the Visual Elk entities and the PDA to be synchronized",
+		JPN "シンクする Visual Elk と PDA を選択してください。"
+	"lbrVE4Web_strPDASyncWiz1Text1"
+		ENU "Enter a name for this Synchronize task.",
+		JPN "このシンクロナイゼーション タスクの名前を入力してください。"
+	"lbrVE4Web_strPDASyncWiz1Text2"
+		ENU "Select the PDA with which you wish to synchronize.",
+		JPN "シンクする PDA を選択してください。"
+	"lbrVE4Web_strPDASyncErrorText1"
+		ENU "The PDA %1 is not available for use.",
+		JPN "PDA %1 は使用できません。"
+	"lbrVE4Web_strPDASyncWiz1Text3"
+		ENU "Select the entity types you wish to synchronize.",
+		JPN "シンクするエンティティを選択してください。"
+	"lbrVE4Web_strPDASyncWiz2Title2"
+		ENU "Please read the following carefully before proceeding",
+		JPN "プロセスを継続する前に以下の事項を読んでください。"
+	"lbrVE4Web_strPDASyncWiz3Title1"
+		ENU "Choose the Folder to be synchronized",
+		JPN "シンクするフォルダを選択してください。"
+	"lbrVE4Web_strPDASyncWiz3Title2"
+		ENU "Select the folder you wish to synchronize with from the tree below.",
+		JPN "以下のツリーからシンクするフォルダを選択してください。"
+	"lbrVE4Web_strPDASyncWiz3Text1"
+		ENU "Select the %1 %2 folder you wish to synchronize",
+		JPN "シンクする %1 %2フォルダを選択してください。"
+	"lbrVE4Web_strPDASyncWiz4Title1"
+		ENU "Completing the PDA Synchronization Setup Wizard",
+		JPN "PDA シンクロナイゼーション セットアップ ウィザードの完了"
+	"lbrVE4Web_strPDASyncWiz4Title2"
+		ENU "You have successfully completed the PDA Synchronization Setup Wizard.",
+		JPN "PDA シンクロナイゼーション セットアップ ウィザードを無事完了しました。"
+	"lbrVE4Web_strPDASyncWiz4Title3"
+		ENU "When you click Finish the wizard will close and your new sync task can be started.",
+		JPN "完了ボタンをクリックすると、ウィザードが終了し、新しいシンク タスクを実行できます。"
+	"lbrVE4Web_strPDASyncWizNewTitle1"
+		ENU "Enter the PDA Sync Title",
+		JPN "PDA シンク タイトルの入力"
+	"lbrVE4Web_strPDASyncWizNewTitle2"
+		ENU "Enter the title for your PDA Synchronization.",
+		JPN "PDA シンクロナイゼーション のタイトルを入力してください。"
+	"lbrVE4Web_strPDASyncWizNewText1"
+		ENU "PDA Synchronization Title:",
+		JPN "PDA シンクロナイゼーション タイトル:"
+	"lbrVE4Web_strPDASyncRunText1"
+		ENU "Run Synchronization Task",
+		JPN "シンクロナイゼーション タスクの実行"
+	"lbrVE4Web_strPDASyncConfigureText1"
+		ENU "Configure",
+		JPN "シンクロナイゼーション タスクの設定"
+	"lbrVE4Web_strEvWiz1Title1"
+		ENU "Select Invitation Status.",
+		JPN "招待ステータスの選択"
+	"lbrVE4Web_strEVWiz1Title2"
+		ENU "The update will include all invitees with the selected status and optionally change the status to the new value when completed.",
+		JPN "この更新により、選択したステータスですべての参加者が含まれます。またオブションとして完了時にステータスを新しい値に変更します。"
+	"lbrVE4Web_strEVTitle"
+		ENU "Event Management Update",
+		JPN "イベント管理の更新"
+	"lbrVE4Web_strEvWiz1Text1"
+		ENU "Update invitees with status:",
+		JPN "参加者のステータスを更新:"
+	"lbrVE4Web_strEvWiz1Text2"
+		ENU "New status:",
+		JPN "新規ステータス:"
+	"lbrVE4Web_strEvWiz2Title1"
+		ENU "Select the Document",
+		JPN "ドキュメントの選択"
+	"lbrVE4Web_strEVWiz2Title2"
+		ENU "Select the document to be used for the merge.",
+		JPN "マージに使用するドキュメントを選択してください。"
+	"lbrVE4Web_strEvWiz3Title1"
+		ENU "Completing the Event Merge",
+		JPN "イベントマージの完了"
+	"lbrVE4Web_strEvWiz3Title2"
+		ENU "You have successfully completed the Event update wizard.  Click Finish to process.",
+		JPN "イベント更新ウィザードを無事完了しました。完了ボタンをクリックしてプロセスを続行します。"
+	"lbrVE4Web_strForecastGridHeading"
+		ENU "Revenue Forecast",
+		JPN "歳入予測"
+	"lbrVE4Web_strForecastGridSubHeading1"
+		ENU "Period Ending",
+		JPN "期間終止"
+	"lbrVE4Web_strForecastGridSubHeading2"
+		ENU " (Local)",
+		JPN "(ローカル)"
+	"lbrVE4Web_strForecastGridSubHeading3"
+		ENU " Base",
+		JPN "ベース"
+	"lbrVE4Web_strForecastGridSubHeading4"
+		ENU "Prob %",
+		JPN "可能性 %"
+	"lbrVE4Web_strForecastGridSubHeading5"
+		ENU "Comments",
+		JPN "コメント"
+	"lbrVE4Web_strForecastGridSubHeading6"
+		ENU "Grand Total",
+		JPN "総合計"
+	"lbrVE4Web_strAutoTextMenu"
+		ENU "Show expanded",
+		JPN "展開して表示"
+	"lbrVE4Web_strMinutes"
+		ENU "minutes",
+		JPN "分"
+	"lbrVE4Web_strHour"
+		ENU "hour",
+		JPN "時間"
+	"lbrVE4Web_strHours"
+		ENU "hours",
+		JPN "時間"
+	"lbrVE4Web_strHalfDay"
+		ENU "half day",
+		JPN "半日"
+	"lbrVE4Web_strDay"
+		ENU "day",
+		JPN "日"
+	"lbrVE4Web_strDays"
+		ENU "days",
+		JPN "日"
+	"lbrVE4Web_strWeek"
+		ENU "week",
+		JPN "週"
+	"lbrVE4Web_strWeeks"
+		ENU "weeks",
+		JPN "週"
+	"lbrVE4Web_strValueNotBlank"
+		ENU "The value must not be blank.",
+		JPN "値を入力してください"
+	"lbrVE4Web_PDASyncSourceError"
+		ENU "Synchronization requires the following source to exist, but it cannot be found. Please create this source and then re-configure the synchronization task.",
+		JPN "シンクロナイゼーションには以下のソースが必要ですが見つかりませんでした。このソースを作成して、シンクロナイゼーション タスクを設定してください。"
+	"lbrVE4Web_strSupportXMLParser"
+		ENU "Please update your Microsoft XML Parser to version 3.0 before running PDA Sync.",
+		JPN "PDA シンクを実行する前に、Microsoft XML Parser をバージョン 3.0 に更新してください"
+	"lbrVE4Web_strBeginCurrent"
+		ENU "Begin Current",
+		JPN "現行を開始"
+	"lbrVE4Web_strCombineSegments"
+		ENU "Combine Segments...",
+		JPN "セグメントの結合..."
+	"lbrVE4Web_strQuickSegment"
+		ENU "Quick Segment...",
+		JPN "クイックセグメント..."
+	"lbrVE4Web_strCombineQuickSegment"
+		ENU "Combine Quick Segment...",
+		JPN "クイックセグメントの結合..."
+	"lbrVE4Web_strMore"
+		ENU "More...",
+		JPN "その他..."
+	"lbrVE4Web_strPDAAuthVar"
+		ENU "The authentication variable ",
+		JPN "認証変数"
+	"lbrVE4Web_strPDAVarExists"
+		ENU "  does not exists",
+		JPN " は存在しません"
+	"lbrVE4Web_strComplete"
+		ENU " complete",
+		JPN "　完了"
+	"lbrVE4Web_strPDASyncError"
+		ENU "Synchronisation Error:",
+		JPN "シンクロナイゼーション エラー:"
+	"lbrVE4Web_strPDANotAvailable"
+		ENU "Unable to run Synchronization because the PDA cound not be located.",
+		JPN "PDA を見つからないため、シンクロナイゼーションを実行できません。"
+	"lbrVE4Web_strPDATask"
+		ENU " Task Progress - ",
+		JPN " タスクの進行状況 - "
+	"lbrVE4Web_strPDAComplete"
+		ENU "%1 Complete",
+		JPN "%1 完了"
+	"lbrVE4Web_strCriteria" ENU "Criteria"
+	"lbrVE4Web_strTreeShowCount" ENU "Click here to show total counts for %1."
+	"lbrVE4Web_strTreeNoShowCount" ENU "Click here to no longer show total counts for %1."
+	"lbrVE4Web_strEnterQuickBucketName" ENU "Enter Quick Bucket Name"
+	"lbrVE4Web_strParamWizTitle1" ENU "Enter the Segment Parameters"
+	"lbrVE4Web_strParamWizTitle2" ENU "The segment you have chosen requires further information. Enter or select the values you want in the fileds below."
+	"lbrVE4Web_strSegmentParameters" ENU "Segment Parameters"
+	"lbrVE4Web_strParamWizDontAsk" ENU "Don't Ask Again"
+}
+
+
+
+}
+layout
+<%
+<?xml version="1.0"?>
+
+<AeDesigner_doc version="3">
+	<workspace CurrentView="0">
+		<View Number="0" Type="Class diagram" Name="lbrVE4Web"/>
+	</workspace>
+	<class_diagram name="lbrVE4Web" width="1000" height="1000">
+		<Viewport magnificationX="100" magnificationY="100" originX="0" originY="0"/>
+	</class_diagram>
+	<lang_used>1041,1033,3076,5129,0,2052,3081,1028,1029,2057,1031,1057,1036,1042,3079,1078,1053,6153,1034,1054,1040
+	</lang_used>
+</AeDesigner_doc>
+%>

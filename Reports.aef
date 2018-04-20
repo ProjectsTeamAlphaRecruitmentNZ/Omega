@@ -1,0 +1,141 @@
+﻿
+
+modify form "Object" for "Report" as "Report"
+{
+	modify tabset "Tabs"
+	{
+		Insert "Editor"
+			ZHT "編輯器", 
+			ZHS "编辑器", 
+			DEU "Bearbeiter", 
+			ELL "Επεξεργαστής", 
+			ENU "Editor", 
+			FRA "Editeur", 
+			ITA "Editore", 
+			JPN "エディタ", 
+			KOR "편집기", 
+			PLK "Edytor", 
+			THA "โปรแกรมแก้ไข"
+		
+		{
+			"Definition" control "Elk9.ReportEditor.1" 2,1,277(100),134(100) bind "xml" to "Definition"
+			Events
+			{
+				"OnEditSubreport" "Definition_OnEditSubreport"
+			}
+$
+	00030000d8130000d8130000
+$
+			OnInit "Editor_Init"
+		}
+	}
+	OnInit "Form_Init"
+	Script VBScript
+<%
+Sub Form_Init()
+
+	DoDefault()
+
+	If not IsNull(System.Aspect("Elk9.Aspect").Properties("WebWorks")) Then
+
+		Set AeTabStrip = Form.Controls.Tabs
+
+		On Error Resume Next
+
+		AeTabStrip.Item("Editor").Enabled = False
+
+		On Error goto 0     
+
+	End If
+
+End Sub
+
+Sub Definition_OnEditSubreport(Subreport)   
+
+	Set objGhost = system.folders.reports.CreateGhostInstance()
+	objGhost.definition = Subreport.xml
+
+	Set objNewWindow = CreateObject("Elk9.Dialog")
+	With objNewWindow
+		.AeSystem = System
+		.aeObject = objGhost
+		.FormName = "subreport"
+		.Buttons = 3        
+		.title = system.loadstring("ReportsSubreportWindow")                  
+	End With
+           	
+	If objNewWindow.DoModal()= 1 Then
+		Subreport.loadxml objNewWindow.FormForm.definition.control.xml
+	End If
+		
+End Sub
+
+Sub Editor_Init() 
+
+	On Error Resume Next
+	Definition.control.EnableEditInNewWindow = true
+	On Error Goto 0   
+	
+End Sub
+%>
+}
+
+form "Subreport" for "Report" 392,269
+{
+	"Definition" control "Elk9.ReportEditor.1" 0,2,392(100),267(100) Format "" ENU "" bind "xml" to "Definition"
+	Events
+	{
+		"OnEditSubreport" "Definition_OnEditSubreport"
+	}
+	{
+	}
+	OnInit "Form_Init"
+	Script VBScript
+<%
+Sub Form_Init()   
+
+	On Error Resume Next
+	Definition.control.EnableEditInNewWindow = true
+	On Error Goto 0   
+	
+End Sub
+          
+Sub Definition_OnEditSubreport(Subreport)   
+
+	Set objGhost = system.folders.reports.CreateGhostInstance()
+	objGhost.definition = Subreport.xml
+
+	Set objNewWindow = CreateObject("Elk9.Dialog")
+	With objNewWindow
+		.AeSystem = System
+		.aeObject = objGhost
+		.FormName = "subreport"
+		.Buttons = 3        
+		.title = system.loadstring("ReportsSubreportWindow")                  
+	End With
+           	
+	If objNewWindow.DoModal()= 1 Then
+		Subreport.loadxml objNewWindow.FormForm.definition.control.xml
+	End If
+		
+End Sub
+%>
+}
+
+component "Elk9.Reports" name "Reports"
+	ZHT "報表", 
+	ZHS "报表", 
+	DEU "Berichte", 
+	ELL "Αναφορές", 
+	ENU "Reports", 
+	FRA "Rapports", 
+	ITA "I Report", 
+	JPN "レポート", 
+	KOR "보고", 
+	PLK "Raporty",
+	THA "รายงาน"
+ icon "Reports.bmp" mask fuchsia visible enabled "!IsWindowsCE"
+{
+	"UseInfoSystem" = "true"
+	"ReportFolderName" = "Reports"
+}

@@ -1,0 +1,211 @@
+﻿
+
+form "Timesheet" for "Timesheet" 499,252
+{
+	"MondayDate" date member "MondayDate" 51,9,69,14
+	"TuesdayDate" date member "TuesdayDate" 51,25,69,14
+	"WednesdayDate" date member "WednesdayDate" 51,41,69,14
+	"ThursdayDate" date member "ThursdayDate" 51,57,69,14
+	"FridayDate" date member "FridayDate" 51,73,69,14
+	"SaturdayDate" date member "SaturdayDate" 51,89,69,14
+	"SundayDate" date member "SundayDate" 51,104,69,14
+	"MondayStartTime" time member "MondayStartTime" 121,9,64,14
+	"MondayBreakStart" time member "MondayBreakStart" 186,9,64,14
+	"MondayBreakFinish" time member "MondayBreakFinish" 253,9,64,14
+	"MondayFinishTime" time member "MondayFinishTime" 319,9,64,14
+	"TuesdayStartTime" time member "TuesdayStartTime" 121,25,64,14
+	"TuesdayBreakStart" time member "TuesdayBreakStart" 186,25,64,14
+	"TuesdayBreakFinish" time member "TuesdayBreakFinish" 253,25,64,14
+	"TuesdayFinishTime" time member "TuesdayFinishTime" 319,25,64,14
+	"WednesdayStartTime" time member "WednesdayStartTime" 121,41,64,14
+	"WednesdayBreakStart" time member "WednesdayBreakStart" 186,41,64,14
+	"WednesdayBreakFinish" time member "WednesdayBreakFinish" 253,41,64,14
+	"WednesdayFinishTime" time member "WednesdayFinishTime" 319,41,64,14
+	"ThursdayStartTime" time member "ThursdayStartTime" 121,57,64,14
+	"ThursdayBreakStart" time member "ThursdayBreakStart" 186,57,64,14
+	"ThursdayBreakFinish" time member "ThursdayBreakFinish" 253,57,64,14
+	"ThursdayFinishTime" time member "ThursdayFinishTime" 319,57,64,14
+	"FridayStartTime" time member "FridayStartTime" 121,73,64,14
+	"FridayBreakStart" time member "FridayBreakStart" 186,73,64,14
+	"FridayBreakFinish" time member "FridayBreakFinish" 253,73,64,14
+	"FridayFinishTime" time member "FridayFinishTime" 319,73,64,14
+	"SaturdayStartTime" time member "SaturdayStartTime" 121,89,64,14
+	"SaturdayBreakStart" time member "SaturdayBreakStart" 186,89,64,14
+	"SaturdayBreakFinish" time member "SaturdayBreakFinish" 253,89,64,14
+	"SaturdayFinishTime" time member "SaturdayFinishTime" 319,89,64,14
+	"SundayStartTime" time member "SundayStartTime" 121,104,64,14
+	"SundayBreakStart" time member "SundayBreakStart" 186,104,64,14
+	"SundayBreakFinish" time member "SundayBreakFinish" 253,104,64,14
+	"SundayFinishTime" time member "SundayFinishTime" 319,104,64,14
+	"MondayTotal" edit member "MondayTotal" 385,9,36,14 autohscroll
+	"TuesdayTotal" edit member "TuesdayTotal" 385,25,36,14 autohscroll
+	"WednesdayTotal" edit member "WednesdayTotal" 385,41,36,14 autohscroll
+	"ThursdayTotal" edit member "ThursdayTotal" 385,57,36,14 autohscroll
+	"FridayTotal" edit member "FridayTotal" 385,73,36,14 autohscroll
+	"SaturdayTotal" edit member "SaturdayTotal" 385,89,36,14 autohscroll
+	"SundayTotal" edit member "SundayTotal" 385,104,36,14 Format "" autohscroll
+	"WeekTotal" edit member "WeekTotal" 385,121,36,14 Format "" autohscroll
+	"Gethours" button tag ENU "Calculate Hours" 321,139,100,15
+		OnClick "Gethours_Click"
+	"MondayLeave" combobox member "MondayLeave" 422,9,76(100),14
+	"TuesdayLeave" combobox member "TuesdayLeave" 422,25,76(100),14
+	"WednesdayLeave" combobox member "WednesdayLeave" 422,41,76(100),14
+	"ThursdayLeave" combobox member "ThursdayLeave" 422,57,76(100),14
+	"FridayLeave" combobox member "FridayLeave" 422,73,77(100),14
+	"SaturdayLeave" combobox member "SaturdayLeave" 422,89,76(100),14
+	"SundayLeave" combobox member "SundayLeave" 422,104,76(100),14
+	"TempComments" edit member "TempComments" 0,157,378,45 multiline autohscroll autovscroll vscroll toptag
+	"ClientComments" edit member "ClientComments" 0,204,378,45 multiline autohscroll autovscroll vscroll toptag
+	"MondayLbl" text tag ENU "Monday" 0,11,50,9
+	"TuesdayLbl" text tag ENU "Tuesday" 0,27,50,9
+	"WednesdayLbl" text tag ENU "Wednesday" 0,43,50,9
+	"ThursdayLbl" text tag ENU "Thursday" 0,60,50,9
+	"FridayLbl" text tag ENU "Friday" 0,75,50,9
+	"SaturdayLbl" text tag ENU "Saturday" 0,92,50,9
+	"SundayLbl" text tag ENU "Sunday" 0,107,50,9
+	"WeekTotalLbl" text tag ENU "Total for Week:" 319,123,64,9
+	"DayTotalLbl" text tag ENU "Total" 386,0,36,9
+	"DayDateLbl" text tag ENU "Date" 57,0,74,9
+	"StartTimeLbl" text tag ENU "Start" 122,0,68,9
+	"BreakStartLbl" text tag ENU "Break Start" 187,0,68,9
+	"BreakFinishLbl" text tag ENU "Break Finish" 253,0,68,9
+	"FinishTimeLbl" text tag ENU "Finish" 320,0,56,9
+	"LeaveReasonLbl" text tag ENU "Leave Reason" 426,0,62,9
+	Script VBScript
+<%
+Sub Gethours_Click()    
+	Dim NumWeekTotal
+	
+	Form.object.weektotal=NULL
+	NumWeekTotal=0
+	
+	If not IsNull(Form.mondayStartTime) and not IsNull(Form.mondayFinishTime) Then
+		If not IsNull(Form.mondayBreakStart) and not IsNull(Form.mondayBreakFinish) Then
+			firstperiodTotal=DateDiff("n", Form.mondayStartTime, Form.mondayBreakStart) 
+			secondperiodTotal=DateDiff("n", Form.mondayBreakFinish, Form.mondayFinishTime)
+			NumMondayTotal=(firstperiodTotal+secondperiodTotal)/60
+		Else
+			firstperiodTotal=DateDiff("n", Form.mondayStartTime,  Form.mondayFinishTime) 
+			NumMondayTotal=firstperiodTotal/60
+		End If
+				
+		Form.object.mondayTotal=NumMondayTotal   
+	End If                                       
+	
+	If not IsNull(Form.object.mondayTotal) Then
+		NumWeekTotal=NumWeekTotal+Form.object.mondayTotal	
+	End If
+	
+	If not IsNull(Form.tuesdayStartTime) and not IsNull(Form.tuesdayFinishTime) Then
+		If not IsNull(Form.tuesdayBreakStart) and not IsNull(Form.tuesdayBreakFinish) Then
+			firstperiodTotal=DateDiff("n", Form.tuesdayStartTime, Form.tuesdayBreakStart) 
+			secondperiodTotal=DateDiff("n", Form.tuesdayBreakFinish, Form.tuesdayFinishTime)
+			NumtuesdayTotal=(firstperiodTotal+secondperiodTotal)/60
+		Else
+			firstperiodTotal=DateDiff("n", Form.tuesdayStartTime,  Form.tuesdayFinishTime) 
+			NumtuesdayTotal=firstperiodTotal/60
+		End If
+				
+		Form.object.tuesdayTotal=NumtuesdayTotal   
+	End If 
+	
+		If not IsNull(Form.object.tuesdayTotal) Then
+		NumWeekTotal=NumWeekTotal+Form.object.tuesdayTotal	
+	End If
+
+
+	If not IsNull(Form.wednesdayStartTime) and not IsNull(Form.wednesdayFinishTime) Then
+		If not IsNull(Form.wednesdayBreakStart) and not IsNull(Form.wednesdayBreakFinish) Then
+			firstperiodTotal=DateDiff("n", Form.wednesdayStartTime, Form.wednesdayBreakStart) 
+			secondperiodTotal=DateDiff("n", Form.wednesdayBreakFinish, Form.wednesdayFinishTime)
+			NumwednesdayTotal=(firstperiodTotal+secondperiodTotal)/60
+		Else
+			firstperiodTotal=DateDiff("n", Form.wednesdayStartTime,  Form.wednesdayFinishTime) 
+			NumwednesdayTotal=firstperiodTotal/60
+		End If
+				
+		Form.object.wednesdayTotal=NumwednesdayTotal 
+	End If  
+	
+	If not IsNull(Form.object.wednesdayTotal) Then
+		NumWeekTotal=NumWeekTotal+Form.object.wednesdayTotal	
+	End If
+
+
+	If not IsNull(Form.thursdayStartTime) and not IsNull(Form.thursdayFinishTime) Then
+		If not IsNull(Form.thursdayBreakStart) and not IsNull(Form.thursdayBreakFinish) Then
+			firstperiodTotal=DateDiff("n", Form.thursdayStartTime, Form.thursdayBreakStart) 
+			secondperiodTotal=DateDiff("n", Form.thursdayBreakFinish, Form.thursdayFinishTime)
+			NumthursdayTotal=(firstperiodTotal+secondperiodTotal)/60
+		Else
+			firstperiodTotal=DateDiff("n", Form.thursdayStartTime,  Form.thursdayFinishTime) 
+			NumthursdayTotal=firstperiodTotal/60
+		End If
+				
+		Form.object.thursdayTotal=NumthursdayTotal  
+	End If   
+	
+	If not IsNull(Form.object.thursdayTotal) Then
+		NumWeekTotal=NumWeekTotal+Form.object.thursdayTotal	
+	End If
+
+
+	If not IsNull(Form.fridayStartTime) and not IsNull(Form.fridayFinishTime) Then
+		If not IsNull(Form.fridayBreakStart) and not IsNull(Form.fridayBreakFinish) Then
+			firstperiodTotal=DateDiff("n", Form.fridayStartTime, Form.fridayBreakStart) 
+			secondperiodTotal=DateDiff("n", Form.fridayBreakFinish, Form.fridayFinishTime)
+			NumfridayTotal=(firstperiodTotal+secondperiodTotal)/60
+		Else
+			firstperiodTotal=DateDiff("n", Form.fridayStartTime,  Form.fridayFinishTime) 
+			NumfridayTotal=firstperiodTotal/60
+		End If
+				
+		Form.object.fridayTotal=NumfridayTotal 
+	End If  
+	
+	If not IsNull(Form.object.thursdayTotal) Then
+		NumWeekTotal=NumWeekTotal+Form.object.thursdayTotal	
+	End If
+
+
+	If not IsNull(Form.saturdayStartTime) and not IsNull(Form.saturdayFinishTime) Then
+		If not IsNull(Form.saturdayBreakStart) and not IsNull(Form.saturdayBreakFinish) Then
+			firstperiodTotal=DateDiff("n", Form.saturdayStartTime, Form.saturdayBreakStart) 
+			secondperiodTotal=DateDiff("n", Form.saturdayBreakFinish, Form.saturdayFinishTime)
+			NumsaturdayTotal=(firstperiodTotal+secondperiodTotal)/60
+		Else
+			firstperiodTotal=DateDiff("n", Form.saturdayStartTime,  Form.saturdayFinishTime) 
+			NumsaturdayTotal=firstperiodTotal/60
+		End If
+				
+		Form.object.saturdayTotal=NumsaturdayTotal
+	End If
+           
+   	If not IsNull(Form.object.saturdayTotal) Then
+		NumWeekTotal=NumWeekTotal+Form.object.saturdayTotal	
+	End If
+
+           
+	If not IsNull(Form.sundayStartTime) and not IsNull(Form.sundayFinishTime) Then
+		If not IsNull(Form.sundayBreakStart) and not IsNull(Form.sundayBreakFinish) Then
+			firstperiodTotal=DateDiff("n", Form.sundayStartTime, Form.sundayBreakStart) 
+			secondperiodTotal=DateDiff("n", Form.sundayBreakFinish, Form.sundayFinishTime)
+			NumsundayTotal=(firstperiodTotal+secondperiodTotal)/60
+		Else
+			firstperiodTotal=DateDiff("n", Form.sundayStartTime,  Form.sundayFinishTime) 
+			NumsundayTotal=firstperiodTotal/60
+		End If
+				
+		Form.object.sundayTotal=NumsundayTotal  		
+	End If
+	
+	If not IsNull(Form.object.sundayTotal) Then
+		NumWeekTotal=NumWeekTotal+Form.object.sundayTotal	
+	End If
+
+    If NumWeekTotal>0 Then
+		Form.object.weektotal=NumWeekTotal				
+	End If
+End Sub
+%>
+}

@@ -1,0 +1,31 @@
+<script id="{20D65FC3-CBA1-4FF3-88C9-CB69AE9BB554}" version="1" description="Import Wizard" language="VBScript" startpage="{7C02D1A6-1411-4C0C-B632-D7690BE582A4}" allowdebug="False">
+   <notes/>
+   <pages>
+	<page id="{7C02D1A6-1411-4C0C-B632-D7690BE582A4}" pagetype="Form" form="ChooseTo" title="Choose the object that you want to import to." description="Select the item and press next." nextenabled="True" canfinish="False">
+		<script>
+		Sub PageFinish
+			if Not Script.ActiveForm.FormForm.Controls("List").Control.SelectedItem is Nothing then
+				Script.AeObject.ToInstance	= Script.ActiveForm.FormForm.Controls("List").Control.SelectedItem.Key
+				Script.AeObject.ToClass 		= Script.ActiveForm.FormForm.Controls("List").Control.SelectedItem.Class.Name
+				Script.Properties("SelectedOption") = true
+			else
+				Script.Properties("SelectedOption") = False
+			end if
+		End Sub
+		</script>
+		<branches>
+			<branch nextpage="{7C02D1A6-1411-4C0C-B632-D7690BE582A4}" expression="Script.Properties(&quot;SelectedOption&quot;)=False" />
+			<branch nextpage="{472FAD6A-87B1-4DD7-BB74-F7B0C56ECC66}" expression="Script.Properties(&quot;SelectedOption&quot;)=True" />
+		</branches>
+	</page>
+	<page id="{472FAD6A-87B1-4DD7-BB74-F7B0C56ECC66}" pagetype="Form" form="EnterDescription" title="Please enter a Description for the Document." description="Enter a Description then press finish to start the import." canfinish="True">
+		<script>
+		Sub PageFinish
+			Script.AeObject.DocDescription	= Script.ActiveForm.FormForm.Controls("DocDescription").value
+			Script.AeObject.Properties("ReadyToImport") = True
+		End Sub
+		</script>
+	<branches/>
+	</page>
+   </pages>
+</script>

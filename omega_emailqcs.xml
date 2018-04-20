@@ -1,0 +1,32 @@
+<script id="{ACDD9786-8529-4AFD-A314-28AB2A546C3E}" version="1" description="Email QCs Wizard" language="VBScript" startpage="{88C49D72-B734-408E-AE6E-146A941D2621}" allowdebug="False">
+   <notes/>
+   <pages>
+	<page id="{88C49D72-B734-408E-AE6E-146A941D2621}" pagetype="Form" form="QCBatchScan" title="Search for Assignments" description="Enter the required conditions and then click &quot;Search&quot;.  Items can be removed from the list by unticking &quot;Send QC&quot;.  Clicking &quot;Next&quot; will start the emailing process." nextenabled="True" backenabled="false" canfinish="False">
+		<script>
+
+		Sub PageFinish
+			if Script.ActiveForm.FormForm.Controls("grdTarget").Control.Rowcount>0 then
+				Script.ActiveForm.FormForm.SaveGridChanges(True)
+				Script.Properties("Advance") = True
+				MsgBox "A Microsoft Outlook warning may appear when emailing the QCs, click Yes to continue sending.", vbOKOnly + vbInformation, Script.aeSystem.Title
+				Script.AeObject.ProcessQCs
+			else	
+				MsgBox "There are no Assignments needing QCs", vbOKOnly + vbExclamation, Script.aeSystem.Title		
+				Script.Properties("Advance") = False
+			end if
+		End Sub	
+	
+		</script>
+
+		<branches>
+			<branch nextpage="{88C49D72-B734-408E-AE6E-146A941D2621}" expression="Script.Properties(&quot;Advance&quot;)=False" />
+			<branch nextpage="{C45078A7-86F1-4A2A-880C-005FF28DFCD3}" expression="Script.Properties(&quot;Advance&quot;)=True" />
+		</branches>
+	</page>
+	<page id="{C45078A7-86F1-4A2A-880C-005FF28DFCD3}" pagetype="Form" form="QCBatchResults" title="QCs created and emailed" description="This is the list of QCs created and their status." canfinish="True" backenabled="False">
+		
+		<script/>
+	<branches/>
+	</page>
+   </pages>
+</script>

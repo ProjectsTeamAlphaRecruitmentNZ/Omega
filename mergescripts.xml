@@ -1,0 +1,4 @@
+<scripts>
+  <script file="mergegeneric.xml" id="mergegeneric" description="Perform a merge" persist="1" /> 
+  <script file="mergegenericnofrom.xml" id="mergegenericnofrom" description="Perform a merge" persist="1" /> 
+</scripts>

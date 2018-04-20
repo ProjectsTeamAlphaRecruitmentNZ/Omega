@@ -1,0 +1,3682 @@
+﻿// Active Elk definition file generated from binary format
+// Date:	2011-07-12 11:37:30
+// User:	build
+
+library "stdbaseentities"
+{
+/* Application Shell - CRM12 12.0.2.patch */
+version "12.2.122\r\nCopyright (C) StayinFront, Inc 2001-2011"
+uses "stdbasecomponents", "stdminentities"
+aspect "Elk9.Aspect" "stdbaseentities"
+script VBScript
+<%
+Dim g_ConfigurationKey
+Dim g_ConfigurationCls
+
+Function Configuration()
+	Dim oConfiguration
+	If System.User.Object.IsNull Then
+		If IsEmpty(g_ConfigurationKey) Then
+			Set oConfiguration=System.GetConfiguration
+			g_ConfigurationKey=oConfiguration.Key
+			g_ConfigurationCls=oConfiguration.Class.Name
+		Else
+			Set oConfiguration=System.Classes(g_ConfigurationCls).GetInstance(g_ConfigurationKey)
+		End If
+	Else
+		If Not system.User.Object.Properties.Exists("stdConfiguration") Then
+			Set oConfiguration=System.GetConfiguration
+			Set system.User.Object.Properties("stdConfiguration") = oConfiguration
+		Else
+			Set oConfiguration = system.User.Object.Properties.Item("stdConfiguration").value
+		End If
+	End If
+	Set Configuration=oConfiguration
+End Function
+
+
+Function GetConfiguration()
+	Dim oScan
+	Set oScan=System.Configurations.Scan
+	If oScan.EndOfScan Then
+		Set oConfiguration=System.Configurations.CreateNewInstance
+		oConfiguration.Save
+	Else
+		Set oConfiguration=oScan.Fetch
+	End If
+	Set GetConfiguration = oConfiguration
+End Function
+%>
+
+class "stdOrganization" from "minOrganization" embedded
+{
+	properties
+	{
+		"Forms" "'stdOrganization'"
+		"search" 0
+			properties
+			{
+				"Name" "UCase(Name) @ UCase(value)"
+					title(Singular)
+						ZHT "名稱",
+						DEU "Name",
+						ELL "Όνομα",
+						ENU "Name",
+						ESP "Nombre",
+						FRA "Nom",
+						ITA "Nome",
+						JPN "名前",
+						KOR "이름",
+						PLK "Nazwa",
+						THA "ชื่อ",
+						ZHS "名称"
+					properties
+					{
+						"Incremental" True
+						"icon" "stdOrganization"
+						"hotkey" 0
+							title(Singular) ENU "N"
+					}
+			}
+		"MergeData" 0
+			properties
+			{
+				"Columns" 0
+					properties
+					{
+						"Name" 0
+							title(Singular) ENU "Name"
+						"Address" 0
+							title(Singular) ENU "Address.Prompt"
+						"Phone" 0
+							title(Singular) ENU "Phone.Prompt"
+						"Fax" 0
+							title(Singular) ENU "Fax.Prompt"
+						"WWW" 0
+							title(Singular) ENU "WWW.Prompt"
+					}
+			}
+		"Windows Search" True
+			properties
+			{
+				"Columns" False
+					properties
+					{
+						"Phone" "Phone.Prompt"
+						"Fax" "Fax.Prompt"
+						"WWW" "WWW.Prompt"
+						"Address" "Address.Prompt"
+					}
+			}
+	}
+	virtual "Class"
+	stamp "LastMod"
+	members
+	{
+		"Phone" class "stdPhoneNumber" embedded
+		{
+			title(Singular)
+				ZHT "電話",
+				DEU "Telefonnummer",
+				ELL "Τηλέφωνο",
+				ENU "Phone",
+				ESP "Teléfono",
+				FRA "Téléphone",
+				ITA "Telefono",
+				JPN "電話番号",
+				KOR "전화",
+				PLK "Telefon",
+				THA "โทรศัพท์",
+				ZHS "电话"
+			gender DEU feminine,FRA masculine
+			properties
+			{
+				"Hotkey" 0
+					title(Singular)
+						DEU "F",
+						ENU "P",
+						ESP "T",
+						FRA "T",
+						ITA "F",
+						PLK "T"
+			}
+		}
+		"Fax" class "stdPhoneNumber" embedded
+		{
+			title(Singular)
+				ZHT "傳真",
+				DEU "Faxnummer",
+				ELL "Τηλεομοιότυπο",
+				ENU "Fax",
+				FRA "Fax",
+				ITA "Fax",
+				JPN "ファックス",
+				KOR "팩스",
+				PLK "Faks",
+				THA "โทรสาร",
+				ZHS "传真"
+			gender DEU feminine
+			properties
+			{
+				"Hotkey" 0
+					title(Singular)
+						DEU "X",
+						ENU "F",
+						FRA "X",
+						ITA "X"
+			}
+		}
+		"WWW" class "stdWWWAddress" embedded
+		{
+			title(Singular)
+				ZHT "網址",
+				DEU "WWW",
+				ENU "WWW",
+				FRA "WWW"
+			properties
+			{
+				"Hotkey" 0
+					title(Singular)
+						DEU "W",
+						ENU "W",
+						FRA "W"
+			}
+		}
+		"Address" class "stdAddress" embedded
+		{
+			title(Singular)
+				ZHT "地址",
+				DEU "Adresse",
+				ELL "Διεύθυνση",
+				ENU "Address",
+				ESP "Dirección",
+				FRA "Adresse",
+				ITA "Indirizzo",
+				JPN "住所",
+				KOR "주소",
+				PLK "Adres",
+				THA "ที่อยู่",
+				ZHS "地址"
+			gender DEU feminine,FRA feminine
+			properties
+			{
+				"Hotkey" 0
+					title(Singular)
+						DEU "A",
+						ENU "A",
+						FRA "A",
+						ITA "I"
+			}
+		}
+	}
+	index "A"
+		on "Name"
+		configurations
+		{
+			"Server" include
+		}
+	index "B"
+		on "UCase(Name)"
+		configurations
+		{
+			"Server" include
+		}
+	prompt "Address"
+		ENU "Address.Prompt"
+	prompt "AddressLine"
+		ENU "Address.Prompt('Line')"
+}
+
+class "stdActivity" from "minActivity" embedded
+{
+	properties
+	{
+		"Forms" "'stdActivity'"
+		"Elk9 Calendar" 0
+			properties
+			{
+				"Description" "Notes"
+				"StartTime" "stdTimeStamp.Start"
+				"EndTime" "stdTimeStamp.Finish"
+				"CreatedBy" ""
+				"AssignedTo" ""
+				"UserAttendeeFilter" "Attendees.Exists (Who.Key = \"%1\")"
+			}
+		"search" 0
+			properties
+			{
+				"date" "stdTimestamp.start >= value and stdTimestamp.start < DateAdd('d',1,Value)"
+					title(Singular)
+						ZHT "日期",
+						DEU "Aktivitätsdatum",
+						ELL "Ημερομηνία Δραστηριότητας",
+						ENU "Activity date",
+						ESP "Fecha de la actividad",
+						FRA "Date d'activité",
+						ITA "Data",
+						JPN "日付",
+						KOR "날짜",
+						PLK "Data działania",
+						THA "วันที่กิจกรรม",
+						ZHS "活动日期"
+					gender DEU neuter,FRA feminine
+					properties
+					{
+						"Incremental" False
+						"datatype" 10
+						"hotkey" 0
+							title(Singular) ENU "D"
+					}
+			}
+	}
+	virtual "Class"
+	stamp "LastMod"
+	cancreatenew "False"
+	members
+	{
+		"CalBackColor" class "stdColor" embedded
+		{
+			title(Singular)
+				DEU "Kalenderhintergrundfarbe",
+				ELL "ΧρώμαΥπόβαθρου Ημερολογίου",
+				ENU "Calendar backcolor",
+				ESP "Color de fondo del calendario",
+				FRA "Couleur d'arrière-plan du calendrier",
+				ITA "Colore sfondo calendario",
+				JPN "カレンダー背景色",
+				KOR "달력 배경색",
+				PLK "Kolor tła kalendarza",
+				THA "สีพื้นหลังของปฏิทิน",
+				ZHS "日历背景颜色"
+			gender DEU feminine,FRA feminine
+			properties
+			{
+				"Default Color" 16777215.000000
+					title(Singular)
+						DEU "Standardfarbe",
+						ELL "Προεπιλεγμένο Χρώμα",
+						ENU "Default Color",
+						ESP "Color predeterminado",
+						FRA "Couleur par défaut",
+						ITA "Colore predefinito",
+						JPN "デフォルト値",
+						PLK "Kolor domyślny",
+						THA "สีเริ่มต้น",
+						ZHS "默认颜色"
+					gender DEU feminine,FRA feminine
+				"Hidden" "TRUE"
+			}
+		}
+		"CalForeColor" class "stdColor" embedded
+		{
+			title(Singular)
+				DEU "Kalendervordergrundfarbe",
+				ELL "Χρώμα Πρώτου Πλάνου Ημερολογίου",
+				ENU "Calendar forecolor",
+				ESP "Color de texto del calendario",
+				FRA "Couleur de premier plan du calendrier",
+				ITA "Colore primo piano calendario",
+				JPN "カレンダー前景色",
+				KOR "달력 전경색",
+				PLK "Kolor pierwszego planu kalendarza",
+				THA "สีพื้นหน้าของปฏิทิน",
+				ZHS "日历前景颜色"
+			gender DEU feminine,FRA feminine
+			properties
+			{
+				"Default Color" 0.000000
+					title(Singular)
+						DEU "Standardfarbe",
+						ELL "Προεπιλεγμένο Χρώμα",
+						ENU "Default Color",
+						ESP "Color predeterminado",
+						FRA "Couleur par défaut",
+						ITA "Colore predefinito",
+						JPN "デフォルト値",
+						PLK "Kolor domyślny",
+						THA "สีเริ่มต้น",
+						ZHS "默认颜色"
+					gender DEU feminine,FRA feminine
+				"Hidden" "TRUE"
+			}
+		}
+		"CalBarColor" class "stdColor" embedded
+		{
+			title(Singular)
+				DEU "Kalenderbalkenfarbe",
+				ELL "Χρώμα γραμμής ημερολογίου",
+				ENU "Calendar bar color",
+				ESP "Color de la barra del calendario",
+				FRA "Couleur de la barre du calendrier",
+				ITA "Colore barra calendario",
+				JPN "カレンダーバー配色",
+				KOR "달력 바 색상",
+				PLK "Kolor paska kalendarza",
+				THA "สีของแถบปฏิทิน",
+				ZHS "日历条码颜色"
+			gender DEU feminine,FRA feminine
+			properties
+			{
+				"Default Color" 16711680.000000
+					title(Singular)
+						DEU "Standardfarbe",
+						ELL "Προεπιλεγμένο χρώμα",
+						ENU "Default Color",
+						ESP "Color predeterminado",
+						FRA "Couleur par défaut",
+						ITA "Colore predefinito",
+						JPN "デフォルト値",
+						PLK "Kolor domyślny",
+						THA "สีเริ่มต้น",
+						ZHS "默认颜色"
+					gender DEU feminine,FRA feminine
+				"Hidden" "TRUE"
+			}
+		}
+	}
+	index "A"
+		on "stdTimeStamp.Start Then stdTimeStamp.Finish"
+		configurations
+		{
+			"Server" include
+		}
+	index "B"
+		on "stdTimeStamp.Start"
+		configurations
+		{
+			"Server" include
+		}
+	prompt ""
+		ENU "'(' + Class.Title +') '+FormatDateTime(stdTimeStamp.Start,2)+ ' ' + FormatDateTime(stdTimeStamp.Start,4) + ' ' + Notes"
+}
+
+class "stdPerson" from "minPerson" embedded
+{
+	properties
+	{
+		"Forms" ""
+		"DropSource" 0
+			properties
+			{
+				"stdActivity" "Calls.stdActivity"
+			}
+		"search" 0
+			properties
+			{
+				"last" "UCase(Name.LastName) @ UCase(value)"
+					title(Singular)
+						ZHT "姓",
+						DEU "Nachname",
+						ELL "Επώνυμο",
+						ENU "Last name",
+						ESP "Apellido",
+						FRA "Nom",
+						ITA "Cognome",
+						JPN "姓",
+						KOR "성",
+						PLK "Nazwisko",
+						THA "นามสกุล",
+						ZHS "姓"
+					properties
+					{
+						"Incremental" True
+						"icon" "Contact"
+						"hotkey" 0
+							title(Singular)
+								ENU "N",
+								ITA "C"
+					}
+				"first" "UCase(Name.FirstName) @ UCase(value)"
+					title(Singular)
+						ZHT "名",
+						DEU "Vorname",
+						ELL "Όνομα",
+						ENU "First name",
+						ESP "Nombre",
+						FRA "Prénom",
+						ITA "Nome",
+						JPN "名",
+						KOR "이름",
+						PLK "Imię",
+						THA "ชื่อ",
+						ZHS "名"
+					properties
+					{
+						"Incremental" True
+						"icon" "Contact"
+						"hotkey" 0
+							title(Singular)
+								DEU "V",
+								ENU "N",
+								FRA "P"
+					}
+				"both" "UCase(Name.FirstName) @ UCase(iif(InStr(value,' ')=0,value,Left(value,instr(value,' ')-1))) and UCase(Name.LastName) @ UCase(iif(InStr(value,' ')=0,'',Mid(value,instr(value,' ')+1)))"
+					title(Singular)
+						ZHT "名和姓",
+						DEU "Vorname und Nachname",
+						ELL "Επώνυμο και όνομα",
+						ENU "First name and last name",
+						ESP "Nombre y apellido",
+						FRA "Prénom et nom ",
+						ITA "Nome e cognome",
+						JPN "姓名",
+						KOR "이름과 성",
+						PLK "Imię i nazwisko",
+						THA "ชื่อและนามสกุล",
+						ZHS "名与姓"
+					properties
+					{
+						"Incremental" True
+						"icon" "Contact"
+						"hotkey" 0
+							title(Singular) ENU "N"
+					}
+				"firstlast" "UCase(Name.LastName) @ UCase(value) or UCase(Name.FirstName) @ UCase(value)"
+					title(Singular)
+						ZHT "名或姓",
+						DEU "Vorname oder Nachname",
+						ELL "Επώνυμο ή όνομα",
+						ENU "First name or last name",
+						ESP "Nombre o apellido",
+						FRA "Prénom ou nom",
+						ITA "Nome o cognome",
+						JPN "姓または名",
+						KOR "이름 또는 성",
+						PLK "Imię lub nazwisko",
+						THA "ชื่อหรือนามสกุล",
+						ZHS "名或姓"
+					properties
+					{
+						"Incremental" True
+						"icon" "Contact"
+						"hotkey" 0
+							title(Singular) ENU "N"
+					}
+			}
+		"MergeData" 0
+			properties
+			{
+				"Columns" 0
+					properties
+					{
+						"~Name" "Name"
+						"Address" 0
+							title(Singular) ENU "Prompt('Address')"
+						"EMail" 0
+							title(Singular) ENU "EMailAddress.Prompt"
+						"Phone" 0
+							title(Singular) ENU "Phone.Prompt"
+						"Fax" 0
+							title(Singular) ENU "Fax.Prompt"
+						"Mobile" 0
+							title(Singular) ENU "Mobile.Prompt"
+						"User Name" 0
+							title(Singular) ENU "User.Object.Prompt"
+					}
+			}
+		"Windows Search" True
+			properties
+			{
+				"Columns" False
+					properties
+					{
+						"System.Contact.PrimaryTelephone" "Phone.Prompt"
+						"System.Contact.MobileTelephone" "Mobile.Prompt"
+						"System.Contact.BusinessFaxNumber" "Fax.Prompt"
+						"System.Contact.EmailAddress" "eMailAddress.Prompt"
+						"System.Contact.PrimaryAddressStreet" "Address.Address"
+						"System.Contact.PrimaryAddressCity" "Address.City"
+						"System.Contact.PrimaryAddressState" "Address.State.Prompt"
+						"System.Contact.PrimaryAddressPostalCode" "Address.PostCode"
+						"System.Contact.PrimaryAddressCountry" "Address.Country.Prompt"
+						"Address" "Address.Prompt"
+						"Phone" "Phone.Prompt"
+						"Fax" "Fax.Prompt"
+						"Mobile" "Mobile.Prompt"
+						"Email" "EmailAddress.Prompt"
+					}
+			}
+	}
+	virtual "Class"
+	stamp "LastMod"
+	members
+	{
+		"Address" class "stdAddress" embedded
+		{
+			title(Singular)
+				ZHT "地址",
+				DEU "Adresse",
+				ELL "Διεύθυνση",
+				ENU "Address",
+				ESP "Dirección",
+				FRA "Adresse",
+				ITA "Indirizzo",
+				JPN "住所",
+				KOR "주소",
+				PLK "Adres",
+				THA "ที่อยู่",
+				ZHS "地址"
+			gender DEU feminine,FRA feminine
+			properties
+			{
+				"Hotkey" 0
+					title(Singular)
+						DEU "A",
+						ENU "A",
+						FRA "A",
+						ITA "I"
+			}
+		}
+		"Phone" class "stdPhoneNumber" embedded
+		{
+			title(Singular)
+				ZHT "電話",
+				DEU "Telefonnummer",
+				ELL "Τηλέφωνο",
+				ENU "Phone",
+				ESP "Teléfono",
+				FRA "Téléphone",
+				ITA "Telefono",
+				JPN "電話",
+				KOR "전화",
+				PLK "Telefon",
+				THA "โทรศัพท์",
+				ZHS "电话"
+			gender DEU feminine,FRA masculine
+			properties
+			{
+				"Hotkey" 0
+					title(Singular)
+						DEU "F",
+						ENU "P",
+						ESP "T",
+						FRA "T",
+						ITA "F",
+						PLK "T"
+			}
+		}
+		"Fax" class "stdPhoneNumber" embedded
+		{
+			title(Singular)
+				ZHT "傳真",
+				DEU "Faxnummer",
+				ELL "Τηλεομοιότυπο",
+				ENU "Fax",
+				FRA "Fax",
+				ITA "Fax",
+				JPN "ファックス",
+				KOR "팩스",
+				PLK "Faks",
+				THA "โทรสาร",
+				ZHS "传真"
+			gender DEU feminine
+			properties
+			{
+				"Hotkey" 0
+					title(Singular)
+						DEU "X",
+						ENU "F",
+						FRA "F",
+						ITA "X"
+			}
+		}
+		"Mobile" class "stdPhoneNumber" embedded
+		{
+			title(Singular)
+				ZHT "行動電話",
+				DEU "Mobiltelefon",
+				ELL "Κινητό",
+				ENU "Mobile",
+				ESP "Teléfono móvil",
+				FRA "Portable",
+				ITA "Cellulare",
+				JPN "携帯",
+				KOR "휴대폰",
+				PLK "Tel. kom.",
+				THA "มือถือ",
+				ZHS "手机"
+			gender DEU neuter
+			properties
+			{
+				"Hotkey" 0
+					title(Singular)
+						DEU "M",
+						ENU "M",
+						FRA "P",
+						ITA "C"
+			}
+		}
+		"eMailAddress" class "stdeMailAddress" embedded
+		{
+			title(Singular)
+				ZHT "電子郵件網址",
+				DEU "E-Mail-Adresse",
+				ELL "Διεύθυνση Ηλεκτρονικής Αλληλογραφίας",
+				ENU "Email address",
+				ESP "Dirección de correo electrónico",
+				FRA "Adresse e-mail",
+				ITA "Indirizzo posta elettronica",
+				JPN "Eメールアドレス",
+				KOR "이메일 주소",
+				PLK "Adres e-mail",
+				THA "ที่อยู่อีเมล",
+				ZHS "电子邮件地址"
+			gender DEU feminine,FRA feminine
+			properties
+			{
+				"Hotkey" 0
+					title(Singular)
+						DEU "E",
+						ENU "E",
+						FRA "E"
+			}
+		}
+		"DontMail" data Bit
+		{
+			title(Singular)
+				ZHT "別寄出",
+				DEU "Nicht emailen",
+				ELL "Μην στείλετε μήνυμα",
+				ENU "Don't mail",
+				ESP "No enviar correo postal",
+				FRA "Ne pas envoyer",
+				ITA "Non inviare",
+				JPN "メールしない",
+				KOR "메일 안됨",
+				PLK "Nie wysyłać korespondencji",
+				THA "ไม่ส่งอีเมล",
+				ZHS "不发邮件"
+			properties
+			{
+				"Hotkey" 0
+					title(Singular)
+						DEU "K",
+						ENU "D",
+						FRA "N",
+						ITA "N"
+			}
+		}
+	}
+	index "A"
+		on "Name.LastName Then Name.FirstName"
+		configurations
+		{
+			"Server" include
+		}
+	index "B"
+		on "UCase(Name.FirstName) Then UCase(Name.LastName)"
+		configurations
+		{
+			"Server" include
+		}
+	index "C"
+		on "UCase(Name.FirstName)"
+		configurations
+		{
+			"Server" include
+		}
+	index "D"
+		on "UCase(Name.LastName)"
+		configurations
+		{
+			"Server" include
+		}
+	prompt "Address"
+		ENU "Address.Prompt"
+	prompt "AddressLine"
+		ENU "Address.Prompt('Line')"
+}
+
+class "stdUser" from "stdPerson"
+{
+	title(Singular)
+		ZHT "使用者",
+		DEU "Benutzer",
+		ELL "Χρήστης",
+		ENU "User",
+		ESP "Usuario",
+		FRA "Utilisateur",
+		ITA "Utente",
+		JPN "ユーザー",
+		KOR "사용자",
+		PLK "Użytkownik",
+		THA "ผู้ใช้",
+		ZHS "用户"
+	properties
+	{
+		"Forms" "'stdUser'"
+		"FolderSets" 0
+			properties
+			{
+				"Attendees" 0
+			}
+		"CanUIModify" "User.Object.IsAdmin or UCase(ID)=UCase(User.ID)"
+		"Menus" ""
+	}
+	candelete "User.Object.IsAdmin"
+	members
+	{
+		"ID" data VarChar(30)
+		{
+			title(Singular)
+				DEU "ID",
+				ELL "Αναγνωριστικό",
+				ENU "ID",
+				FRA "ID",
+				JPN "ID",
+				KOR "아이디",
+				ZHS "标识符"
+			gender DEU feminine,FRA masculine
+			properties
+			{
+				"Hotkey" 0
+					title(Singular)
+						DEU "D",
+						ENU "D",
+						FRA "I"
+			}
+			default "\"\""
+			validate
+			{
+				"{07DF8E79-79B7-4477-801B-0740ED1E2974}" validError "LEN(ID)  > 0" 
+				DEU "ID darf nicht leer sein",
+				ELL "Το αναγνωριστικό δεν μπορεί να είναι κενό",
+				ENU "ID cannot be blank.",
+				ESP "El ID no puede estar en blanco.",
+				FRA "L'ID ne peut pas être vide.",
+				ITA "L’ID non può essere lasciato in bianco.",
+				JPN "ID を入力してください",
+				KOR "ID는 비워둘 수 없습니다.",
+				PLK "ID nie może być pusty.",
+				THA "ID จะต้องไม่เว้นว่าง",
+				ZHS "标识符不能为空。"
+			}
+		}
+		"IsAdmin" data Bit
+		{
+			title(Singular)
+				ZHT "管理員",
+				DEU "Administrator",
+				ELL "Διαχειριστής",
+				ENU "Administrator",
+				ESP "Administrador",
+				FRA "Administrateur",
+				ITA "Amministratore",
+				JPN "管理者",
+				KOR "관리자",
+				THA "ผู้ดูแลระบบ",
+				ZHS "管理员"
+			gender DEU masculine
+			properties
+			{
+				"Hotkey" 0
+					title(Singular)
+						DEU "A",
+						ENU "A",
+						FRA "A"
+			}
+			default "IsNull(User.Object)"
+			canmodify "User.Object.IsAdmin"
+		}
+		"Password" data VarChar(64)
+		{
+			title(Singular)
+				ZHT "密碼",
+				DEU "Kennwort",
+				ELL "Κωδικός πρόσβασης",
+				ENU "Password",
+				ESP "Contraseña",
+				FRA "Mot de passe",
+				ITA "Password",
+				JPN "パスワード",
+				KOR "암호",
+				PLK "Hasło",
+				THA "รหัสผ่าน",
+				ZHS "密码"
+			gender DEU neuter
+			properties
+			{
+				"Hotkey" 0
+					title(Singular)
+						DEU "K",
+						ENU "P",
+						FRA "M"
+				"Windows Search" False
+			}
+		}
+	}
+	prompt ""
+		ENU "IIF(LEN(Name.Prompt)=0, ID, Name.Prompt)"
+	icon ""
+		ENU "\"stdUser\""
+	defaulticon ""
+		ENU "stdUser"
+	OnValidate "OnValidate"
+	script VBScript
+<%
+Sub OnValidate(Validation)
+	DoDefault(Validation)
+	'Check duplicated ID
+	If this.isnew or this.ID.IsDirty Then
+		IF System.folders.Users.Exists("ID='" & This.ID & "' And Key <> '" & This.Key & "'") Then
+	        Validation.add System.FormatString("#SBE_IDAlreadyExists",This.ID), 3, this
+        End If                                                                 
+	End If
+End Sub
+%>
+}
+
+class "stdEmailActivity" from "stdCallActivity"
+{
+	title(Singular)
+		ZHT "電子郵件",
+		DEU "E-Mail",
+		ELL "Ηλεκτρονική Αλληλογραφία",
+		ENU "eMail",
+		ESP "Correo electrónico",
+		FRA "E-mail",
+		ITA "Postaelettronica",
+		JPN "Eメール",
+		KOR "이메일",
+		PLK "E-mail",
+		ZHS "电子邮件"
+	gender DEU feminine
+	properties
+	{
+		"Forms" "'stdEmailActivity'"
+	}
+	cancreatenew "True"
+	icon ""
+		ENU "\"stdActivity-eMail\""
+	defaulticon ""
+		ENU "stdActivity-eMail"
+}
+
+class "stdPhoneCallActivity" from "stdCallActivity"
+{
+	title(Singular)
+		ZHT "電話",
+		DEU "Anruf",
+		ELL "Τηλεφωνική Κλήση",
+		ENU "Phone Call",
+		ESP "Llamada telefónica",
+		FRA "Appel",
+		ITA "Telefonata",
+		JPN "電話",
+		KOR "전화 접촉",
+		PLK "Rozmowa tel.",
+		THA "การโทรศัพท์",
+		ZHS "电话"
+	gender DEU masculine
+	properties
+	{
+		"Forms" "'stdPhoneCallActivity'"
+	}
+	cancreatenew "True"
+	members
+	{
+		"PhoneCallType" enum "stdPhoneCall_PhoneCallType" forced
+		{
+			title(Singular)
+				ZHT "拜訪型態",
+				DEU "Anruftyp",
+				ELL "Τύπος κλήσης",
+				ENU "Call type",
+				ESP "Tipo de llamada",
+				FRA "Type d'appel",
+				ITA "Tipo di telefonata",
+				JPN "コンタクトタイプ",
+				KOR "접촉 유형",
+				PLK "Typ kontaktu",
+				THA "ประเภทการโทรศัพท์",
+				ZHS "呼叫类型"
+			gender DEU masculine
+			properties
+			{
+				"Hotkey" 0
+					title(Singular)
+						DEU "A",
+						ENU "T",
+						FRA "T"
+			}
+			default "'Phone Out'"
+		}
+	}
+	icon ""
+		ENU "\"stdActivity-Phone\""
+	defaulticon ""
+		ENU "stdActivity-Phone"
+	PreSave "PreSave"
+	script VBScript
+<%
+Sub PreSave(Transaction)
+	DoDefault(Transaction)  
+    If This.stdTimeStamp.Start.IsDirty Then
+      '-- by default, finish time should be equal to start time
+		This.stdTimeStamp.Finish=This.stdTimeStamp.Start
+    End If
+	
+End Sub
+%>
+}
+
+class "stdMeetingActivity" from "stdCallActivity"
+{
+	title(Singular)
+		ZHT "會議",
+		DEU "Besprechung",
+		ELL "Συνάντηση",
+		ENU "Meeting",
+		ESP "Reunión",
+		FRA "Réunion",
+		ITA "Riunione",
+		JPN "ミーティング",
+		KOR "모임",
+		PLK "Spotkanie",
+		THA "การประชุม",
+		ZHS "会议"
+	gender DEU feminine,FRA feminine
+	properties
+	{
+		"Forms" "'stdMeetingActivity'"
+	}
+	cancreatenew "True"
+	members
+	{
+		"MeetingType" enum "stdMeeting_MeetingType" forced
+		{
+			title(Singular)
+				ZHT "會議類型",
+				DEU "Art der Besprechung",
+				ELL "Τύπος Συνάντησης",
+				ENU "Meeting type",
+				ESP "Tipo de reunión",
+				FRA "Type de réunion",
+				ITA "Tipo di riunione",
+				JPN "ミーティング タイプ",
+				KOR "모임 유형",
+				PLK "Typ spotkania",
+				THA "ประเภทการประชุม",
+				ZHS "会议类型"
+			gender DEU feminine
+			properties
+			{
+				"Hotkey" 0
+					title(Singular)
+						DEU "A",
+						ENU "T",
+						FRA "T"
+			}
+			default "'Meeting'"
+		}
+	}
+	icon ""
+		ENU "'stdActivity-Meeting'"
+	defaulticon ""
+		ENU "stdActivity-Meeting"
+}
+
+class "stdTaskActivity" from "stdActivity"
+{
+	title(Singular)
+		ZHT "工作",
+		DEU "Aufgabe",
+		ELL "Εργασία",
+		ENU "Task",
+		ESP "Tarea",
+		FRA "Tâche",
+		ITA "Compito",
+		JPN "タスク",
+		KOR "태스크",
+		PLK "Zadanie",
+		THA "งาน",
+		ZHS "任务"
+	gender DEU feminine,FRA feminine
+	properties
+	{
+		"Forms" "'stdTaskActivity'"
+		"Search" 0
+			properties
+			{
+				"DueDate" "Due.Start >= value and Due.Start < DateAdd('d',1,Value)"
+					title(Singular)
+						DEU "Fälligkeitsdatum",
+						ELL "Ημερομηνία Λήξης",
+						ENU "Due date",
+						ESP "Fecha de vencimiento",
+						FRA "Echéance",
+						ITA "Scadenza",
+						JPN "期限",
+						KOR "만기 일자",
+						PLK "Termin",
+						THA "วันที่ครบกำหนด",
+						ZHS "到期日"
+					gender DEU neuter,FRA feminine
+					properties
+					{
+						"DataType" 10
+					}
+			}
+	}
+	cancreatenew "True"
+	members
+	{
+		"Complete" data Bit
+		{
+			title(Singular)
+				ZHT "完成",
+				DEU "Abgeschlossen",
+				ELL "Ολοκλήρωση",
+				ENU "Complete",
+				ESP "Finalizado",
+				FRA "Terminé",
+				ITA "Completa",
+				JPN "完了",
+				KOR "완성",
+				PLK "Zakończone",
+				THA "เสร็จสิ้น",
+				ZHS "完成"
+			properties
+			{
+				"Hotkey" 0
+					title(Singular)
+						DEU "K",
+						ENU "C",
+						FRA "T"
+			}
+		}
+		"Result" data LongVarChar
+		{
+			title(Singular)
+				ZHT "結果",
+				DEU "Ergebnis",
+				ELL "Αποτέλεσμα",
+				ENU "Result",
+				ESP "Resultado",
+				FRA "Résultat",
+				ITA "Risultato",
+				JPN "結果",
+				KOR "결과",
+				PLK "Wynik",
+				THA "ผลลัพธ์",
+				ZHS "结果"
+			gender DEU neuter
+			properties
+			{
+				"Hotkey" 0
+					title(Singular)
+						DEU "E",
+						ENU "R",
+						FRA "R",
+						PLK "W"
+			}
+			default "\"\""
+		}
+		"Priority" enum "stdTask_Priority" forced
+		{
+			title(Singular)
+				ZHT "優先次序",
+				DEU "Priorität",
+				ELL "Προτεραιότητα",
+				ENU "Priority",
+				ESP "Prioridad",
+				FRA "Priorité",
+				ITA "Priorità",
+				JPN "優先度",
+				KOR "우선 순위",
+				PLK "Priorytet",
+				THA "ลำดับความสำคัญ",
+				ZHS "优先权"
+			gender DEU feminine,FRA feminine
+			properties
+			{
+				"Hotkey" 0
+					title(Singular)
+						ENU "P",
+						FRA "P"
+			}
+			default "'B'"
+		}
+		"Status" enum "stdTask_Status" forced
+		{
+			title(Singular)
+				ZHT "狀態",
+				DEU "Status",
+				ELL "Κατάσταση",
+				ENU "Status",
+				ESP "Estado",
+				FRA "Etat",
+				ITA "Stato",
+				JPN "進行状況",
+				KOR "상황",
+				THA "สถานะ",
+				ZHS "状态"
+			gender DEU masculine
+			properties
+			{
+				"Hotkey" 0
+					title(Singular)
+						DEU "S",
+						ENU "S",
+						FRA "E"
+			}
+			default "'A'"
+			onchange "Status_OnChange"
+		}
+		"Percent" data Numeric(3,0)
+		{
+			title(Singular)
+				ZHT "完成百分比",
+				DEU "% abgeschlossen",
+				ELL "% Ολοκλήρωση",
+				ENU "% Complete",
+				ESP "% finalizado",
+				FRA "% terminé",
+				ITA "% Completa",
+				JPN "% 完了",
+				KOR "완성도%",
+				PLK "% ukończenia",
+				THA "% เสร็จสิ้น",
+				ZHS "%完成"
+			gender DEU masculine
+			properties
+			{
+				"Hotkey" 0
+					title(Singular)
+						DEU "K",
+						ENU "E",
+						FRA "M"
+			}
+		}
+		"Due" class "stdTimeStamp" embedded
+		{
+			title(Singular)
+				ZHT "到期日",
+				DEU "Fällig",
+				ELL "Λήξη",
+				ENU "Due",
+				ESP "Vencido",
+				FRA "Echéance",
+				ITA "Scadenza",
+				JPN "期限",
+				KOR "만료일",
+				PLK "Termin",
+				THA "ครบกำหนด",
+				ZHS "到期"
+			gender FRA feminine
+			properties
+			{
+				"Hotkey" 0
+					title(Singular)
+						DEU "F",
+						ENU "D",
+						FRA "E",
+						PLK "T"
+				"AdjustDate" 0
+			}
+		}
+		modify "stdTimeStamp" class "stdTimeStamp"
+		{
+			title(Singular)
+				ZHT "開始",
+				DEU "Start",
+				ELL "Εκκίνηση",
+				ENU "Start",
+				ESP "Inicio",
+				FRA "Début",
+				ITA "Avvia",
+				JPN "開始",
+				KOR "시작",
+				PLK "Początek",
+				THA "เริ่มต้น",
+				ZHS "开始"
+		}
+	}
+	index "C" ordered
+		on "Due.Start then Due.Finish"
+		configurations
+		{
+			"Server" include
+		}
+	sort [ENU] 
+		"Due" asc,
+		"stdTimeStamp" asc
+	icon ""
+		ENU "\"stdActivity-Task\""
+	defaulticon ""
+		ENU "stdActivity-Task"
+	PreSave "PreSave"
+	script VBScript
+<%
+Sub Status_OnChange()
+	If Members.Status.Value = "C" Then
+		Percent.Value = 100  
+		Complete=true
+	End If
+End Sub
+
+Sub PreSave(Transaction)
+	DoDefault(Transaction)  
+    If stdTimeStamp.Start.IsDirty Then
+      '-- by default, Date Due should not be before Call Date
+  	  If stdTimeStamp.Start > Due.Start Then
+	    Due.Start=stdTimeStamp.Start
+	  End If  
+    End If
+	
+End Sub
+%>
+}
+
+class "stdLetter" from "stdCallActivity"
+{
+	title(Singular)
+		ZHT "信件",
+		DEU "Brief",
+		ELL "Γράμμα",
+		ENU "Letter",
+		ESP "Carta",
+		FRA "Lettre",
+		ITA "Lettera",
+		JPN "手紙",
+		KOR "서신",
+		PLK "List",
+		THA "จดหมาย",
+		ZHS "信"
+	gender FRA feminine
+	properties
+	{
+		"Forms" ""
+	}
+	cancreatenew "True"
+	members
+	{
+		"Thumbnail" data LongVarBinary
+		{
+			title(Singular)
+				ZHT "縮圖",
+				DEU "Miniaturansicht",
+				ELL "Μικρογραφία",
+				ENU "Thumbnail",
+				ESP "Vista en miniatura",
+				FRA "Miniature",
+				ITA "Anteprima",
+				JPN "プレビュー",
+				KOR "간결",
+				PLK "Miniatura",
+				THA "ภาพย่อ",
+				ZHS "缩略图"
+			gender DEU feminine,FRA feminine
+			properties
+			{
+				"Hotkey" 0
+					title(Singular)
+						DEU "M",
+						ENU "T",
+						FRA "M"
+			}
+		}
+		"Document" class "stdDocument"
+		{
+			title(Singular)
+				ZHT "文件",
+				DEU "Dokument",
+				ELL "Έγγραφο",
+				ENU "Document",
+				ESP "Documento",
+				FRA "Document",
+				ITA "Documento",
+				JPN "ドキュメント",
+				KOR "서류",
+				PLK "Dokument",
+				THA "เอกสาร",
+				ZHS "文件"
+			gender DEU neuter
+			properties
+			{
+				"Hotkey" 0
+					title(Singular)
+						DEU "D",
+						ENU "D",
+						FRA "D"
+				"Windows Search" True
+			}
+		}
+	}
+	icon ""
+		ENU "\"stdActivity-Letter\""
+	defaulticon ""
+		ENU "stdActivity-Letter"
+	OnNew "OnNew"
+	script VBScript
+<%
+Sub OnNew(hWnd)
+	DoDefault(hWnd)
+
+	Document.Create
+End Sub
+
+'#notCE
+
+Sub UpdateMerge(MergeRec)
+	System.Trace "UpdateMerge"	
+	On Error Resume Next
+		bIsWeb = MergeRec.IsWeb
+	On Error GoTo 0
+	If IsEmpty(bIsWeb) Then
+		On Error Resume Next
+			Notes.Value = MergeRec.Data
+			If Err.Number <> 0 Or IsNull(Notes.Value) Then
+				Notes.Value = MergeRec.Form.FormForm.Notes.Value	
+			end if
+		On Error GoTo 0			
+	Else
+		Notes.Value = MergeRec.Notes
+	End If
+
+	If not IsEmpty(MergeRec.DocumentContent) Then		
+		Dim objMimeDocument 
+		Set objMimeDocument = CreateObject("Elk9Utl.MimeDocument") 
+		objMimeDocument.Content = MergeRec.DocumentContent	
+		On Error Resume Next
+		Document.Content = objMimeDocument.GetContent(True)
+		On Error GoTo 0
+
+		Document.Compressed = True
+		GetMimeTypeAndName MergeRec.WordDocument
+	End If
+	
+	Thumbnail = MergeRec.DocumentThumbnail
+	Save MergeRec.Transaction
+End Sub
+
+Sub GetMimeTypeAndName(wordDoc)
+	FileExtension = ""
+	MimeType = ""
+	Select Case wordDoc.SaveFormat
+		Case 0				'wdFormatDocument 
+			MimeType = "application/msword"
+			FileExtension = ".doc"
+		Case 2,3,7			'wdFormatText wdFormatUnicodeText wdFormatTextLineBreaks
+			MimeType = "text/plain"
+			FileExtension = ".txt"
+		Case 6				'wdFormatRTF		
+			MimeType = "application/msword"
+			FileExtension = ".rtf"	
+		Case 8				'wdFormatHTML 
+			MimeType = "text/html"
+			FileExtension = ".html"	
+		Case 11				'wdFormatXML 
+			MimeType = "text/xml"
+			FileExtension = ".xml"	
+		Case 12 			'wdFormatXMLDocument
+			MimeType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+			FileExtension = ".docx"
+		Case 17				'wdFormatPDF 
+			MimeType = "application/pdf"
+			FileExtension = ".pdf"	
+		Case Else
+			MimeType = "application/msword" 	'Set to original mime type and name for any un-identified formats.
+	End Select
+	Document.MimeType = MimeType
+	Document.Name = "Mail Merge Document" & FileExtension
+End Sub
+%>
+}
+
+class "stdFaxActivity" from "stdCallActivity"
+{
+	title(Singular)
+		ZHT "傳真",
+		DEU "Fax",
+		ELL "Τηλεομοιότυπο",
+		ENU "Fax",
+		FRA "Fax",
+		ITA "Fax",
+		JPN "ファックス",
+		KOR "팩스",
+		PLK "Faks",
+		THA "โทรสาร",
+		ZHS "传真"
+	gender DEU neuter
+	properties
+	{
+		"Forms" "'stdFaxActivity'"
+	}
+	cancreatenew "True"
+	members
+	{
+		"FaxCallType" enum "stdFaxActivity_FaxCallType" forced
+		{
+			title(Singular)
+				ZHT "接收傳真/撥出傳真",
+				DEU "Fax Eingang/Ausgang",
+				ELL "Τηλεομοιότυπο εισαγωγή/εξαγωγή",
+				ENU "Fax in/out",
+				ESP "Entrada y salida de fax",
+				FRA "Fax reçu/envoyé",
+				ITA "Fax ricevi/spedisci",
+				JPN "ファックス着/発",
+				KOR "팩스 수신/송신",
+				PLK "Faks przych./wych.",
+				THA "โทรสารเข้า-ออก",
+				ZHS "传真接收/发出"
+			properties
+			{
+				"Hotkey" 0
+					title(Singular)
+						DEU "G",
+						ENU "O",
+						FRA "X",
+						ITA "S"
+			}
+			default "'Fax Out'"
+		}
+	}
+	icon ""
+		ENU "\"stdActivity-Fax\""
+	defaulticon ""
+		ENU "stdActivity-Fax"
+}
+
+class "stdConfiguration"
+{
+	title(Singular)
+		ZHT "組態",
+		DEU "Konfiguration",
+		ELL "Επιβεβαίωση",
+		ENU "Configuration",
+		ESP "Configuración",
+		FRA "Configuration",
+		ITA "Configurazione",
+		JPN "設定",
+		KOR "형태",
+		PLK "Konfiguracja",
+		THA "การกำหนดค่า",
+		ZHS "配置"
+	gender DEU feminine,FRA feminine
+	properties
+	{
+		"Forms" "'stdConfiguration'"
+	}
+	candelete "False"
+	canmodify "True"
+	members
+	{
+		"Notes" data LongVarChar
+		{
+			title(Singular)
+				ZHT "附註",
+				DEU "Notizen",
+				ELL "Σημειώσεις",
+				ENU "Notes",
+				ESP "Notas",
+				FRA "Notes",
+				ITA "Appunti",
+				JPN "メモ",
+				KOR "특이사항",
+				PLK "Uwagi",
+				THA "หมายเหตุ",
+				ZHS "注释"
+			gender DEU feminine,FRA feminine
+			default "\"\""
+		}
+	}
+	prompt ""
+		ELL "\"Επιβεβαίωση Λετουργικής Μονάδας\"",
+		ENU "\"Module Configuration\"",
+		JPN "\"モジュールの設定\"",
+		KOR "\"모듈 설정\""
+	icon ""
+		ENU "'stdConfiguration'"
+	defaulticon ""
+		ENU "stdConfiguration"
+}
+
+class "stdOpportunity" from "stdProject" embedded
+{
+	members
+	{
+		"LikelyCloseDate" data Date
+		{
+			title(Singular)
+				ZHT "可能完成日",
+				DEU "Wahrscheinliches Enddatum",
+				ELL "Ενδεχόμενη μέρα κλεισίματος",
+				ENU "Likely close date",
+				ESP "Fecha de cierre probable",
+				FRA "Date probable de conclusion",
+				ITA "Data di chiusura probabile",
+				JPN "予想成約日",
+				KOR "대략 종결일",
+				PLK "Data prawdopodobnego zamknięcia",
+				THA "วันที่คาดว่าจะปิดได้",
+				ZHS "可能的结束日期"
+			gender DEU neuter,FRA feminine
+			properties
+			{
+				"Hotkey" 0
+					title(Singular)
+						DEU "D",
+						ENU "D",
+						FRA "D"
+				"AdjustDate" 0
+			}
+			default "Now()+100"
+		}
+		"Probability" data SmallInt
+		{
+			title(Singular)
+				ZHT "機率",
+				DEU "Wahrscheinlichkeit",
+				ELL "Πιθανότητα",
+				ENU "Probability",
+				ESP "Probabilidad",
+				FRA "Probabilité",
+				ITA "Probabilità",
+				JPN "見込み",
+				KOR "가능성",
+				PLK "Prawdopodobieństwo",
+				THA "ความน่าจะเป็น",
+				ZHS "可能性"
+			gender DEU feminine,FRA feminine
+			properties
+			{
+				"Hotkey" 0
+					title(Singular)
+						DEU "W",
+						ENU "P",
+						FRA "P"
+			}
+		}
+		"Notes" data LongVarChar
+		{
+			title(Singular)
+				ZHT "附註",
+				DEU "Notizen",
+				ELL "Σημειώσεις",
+				ENU "Notes",
+				ESP "Notas",
+				FRA "Notes",
+				ITA "Appunti",
+				JPN "メモ",
+				KOR "특이사항",
+				PLK "Uwagi",
+				THA "หมายเหตุ",
+				ZHS "注释"
+			gender DEU feminine,FRA feminine
+			properties
+			{
+				"Hotkey" 0
+					title(Singular)
+						DEU "N",
+						ENU "N",
+						FRA "N",
+						ITA "A"
+			}
+		}
+		"Value" data Numeric(12,2)
+		{
+			title(Singular)
+				ZHT "值",
+				DEU "Wert",
+				ELL "Τιμή",
+				ENU "Value",
+				ESP "Valor",
+				FRA "Valeur",
+				ITA "Valore",
+				JPN "見込み価格",
+				KOR "내용",
+				PLK "Wartość",
+				THA "ค่า",
+				ZHS "值"
+			gender FRA feminine
+			properties
+			{
+				"Hotkey" 0
+					title(Singular)
+						DEU "R",
+						ENU "V",
+						FRA "V"
+			}
+		}
+	}
+	index "A"
+		on "Title"
+		configurations
+		{
+			"Server" include
+		}
+}
+
+class "stdProduct" from "minProduct" embedded
+{
+	members
+	{
+		"UnitCost" data Numeric(12,2)
+		{
+			title(Singular)
+				ZHT "產品定價",
+				DEU "Kosten pro Einheit",
+				ELL "Κόστος μονάδας",
+				ENU "Unit cost",
+				ESP "Coste unitario",
+				FRA "Coût unitaire",
+				ITA "Costo per unità",
+				JPN "仕入単価",
+				KOR "단위 원가",
+				PLK "Koszt jednostkowy",
+				THA "ต้นทุนต่อหน่วย",
+				ZHS "单位成本"
+			gender DEU feminine
+			properties
+			{
+				"Hotkey" 0
+					title(Singular)
+						DEU "K",
+						ENU "C",
+						FRA "C"
+			}
+			formatstring
+				ENU "##########.00",
+				JPN "##########",
+				ZHS "##########.00"
+		}
+		"UnitPrice" data Numeric(12,2)
+		{
+			title(Singular)
+				ZHT "產品售價",
+				DEU "Preis pro Einheit",
+				ELL "Τιμή μονάδας",
+				ENU "Unit price",
+				ESP "Precio unitario",
+				FRA "Prix unitaire",
+				ITA "Prezzo per unità",
+				JPN "販売単価",
+				KOR "단가 ",
+				PLK "Cena jednostkowa",
+				THA "ราคาต่อหน่วย",
+				ZHS "单价"
+			gender DEU masculine
+			properties
+			{
+				"Hotkey" 0
+					title(Singular)
+						DEU "P",
+						ENU "P",
+						FRA "P"
+			}
+			formatstring
+				ENU "##########.00",
+				JPN "##########",
+				ZHS "##########.00"
+		}
+		"SKU" data Char(10)
+		{
+			title(Singular)
+				DEU "SKU",
+				ENU "SKU",
+				FRA "UGS"
+			gender DEU feminine,FRA feminine
+			properties
+			{
+				"Hotkey" 0
+					title(Singular)
+						DEU "U",
+						ENU "U",
+						FRA "U"
+			}
+		}
+		modify "Descr" data 
+		{
+			validate
+			{
+				"{3CDC9209-C2ED-450E-A57A-8B151ACD6EEA}" validError "not IsEmpty(Descr)" 
+				ZHT "產品說明欄不可空白",
+				DEU "Produktbeschreibung darf nicht leer sein.",
+				ELL "Η περιγραφή του ονόματος δεν μπορεί να είναι κενή.",
+				ENU "Product description cannot be blank.",
+				ESP "La descripción del producto no puede estar en blanco.",
+				FRA "La description du produit ne peut pas être vide.",
+				ITA "Descrizione prodotto non può non esssere elencato",
+				JPN "製品の詳細を入力してください。",
+				KOR "제품 설명은 비워둘 수 없습니다.",
+				PLK "Opis produktu nie może być pusty.",
+				THA "คำอธิบายสินค้าจะต้องไม่เว้นว่าง",
+				ZHS "产品描述不能为空置"
+			}
+		}
+	}
+	index "A"
+		on "SKU"
+		configurations
+		{
+			"Server" include
+		}
+	index "B"
+		on "Descr"
+		configurations
+		{
+			"Server" include
+		}
+	sort [ENU] "SKU" asc
+	prompt ""
+		ENU "RTrim(SKU)+\" \"+Descr"
+}
+
+class "stdProject" from "minProject" embedded
+{
+	members
+	{
+		modify "Title" data 
+		{
+			validate
+			{
+				"{FD3C20CC-A0A2-432B-8567-65E6CEA7C8F5}" validError "not IsEmpty(title)" 
+				ZHT "職稱欄不可空白",
+				DEU "Titel darf nicht leer sein.",
+				ELL "Ο τίτλος δεν μπορεί να είναι κενός",
+				ENU "Title cannot be blank.",
+				ESP "El título no puede estar en blanco",
+				FRA "Le titre ne peut pas être vide.",
+				ITA "Titolo non può  essere non elencato",
+				JPN "タイトルを入力してください。",
+				KOR "타이틀란은 비워둘 수 없습니다.",
+				PLK "Tytuł nie może być pusty.",
+				THA "คำนำหน้าชื่อจะต้องไม่เว้นว่าง",
+				ZHS "标题不能为空置。"
+			}
+		}
+	}
+	index "A"
+		on "Title"
+		configurations
+		{
+			"Server" include
+		}
+}
+
+class "stdCallActivity" from "stdActivity"
+{
+	title(Plural) PLK "Działanie dot. kontaktów"
+	title(Singular)
+		ZHT "拜訪活動",
+		DEU "Anrufaktivität",
+		ELL "Δραστηριότητα Κλήσης",
+		ENU "Call activity",
+		ESP "Actividad de visita",
+		FRA "Activité lors du démarchage",
+		ITA "Chiamata attività",
+		JPN "コンタクト活動",
+		KOR "접촉 활동",
+		PLK "Działanie dot. kontaktu",
+		THA "กิจกรรมการนัดพบ",
+		ZHS "呼叫活动"
+	gender DEU feminine,FRA feminine
+	properties
+	{
+		"Forms" "'stdActivity'"
+	}
+}
+
+class "stdDiaryActivity"
+{
+	title(Singular)
+		DEU "Kalenderaktivität",
+		ELL "Δραστηριότητα ημερολογίου",
+		ENU "Diary activity",
+		ESP "Actividad diaria",
+		FRA "Activité d'agenda",
+		ITA "Attività in agenda",
+		JPN "ダイアリアクティビティ",
+		PLK "Działanie w dzienniczku",
+		THA "กิจกรรมสมุดบันทึก",
+		ZHS "日记活动"
+	gender DEU feminine,FRA feminine
+	properties
+	{
+		"Hidden" "TRUE"
+		"Elk9 Calendar" 0
+			title(Singular)
+				ELL "Elk9Ημερολόγιο",
+				ENU "Elk9 Calendar",
+				ESP "Calendario Elk9",
+				FRA "Calendrier Elk9",
+				ITA "Calendario Elk9 ",
+				PLK "Kalendarz Elk9",
+				THA "ปฏิทิน ELK9",
+				ZHS "Elk9日历"
+			properties
+			{
+				"StartTime" "stdTimeStamp.Start"
+					title(Singular)
+						ELL "Ώρα Εκκίνησης",
+						ENU "StartTime",
+						FRA "Heure de début"
+					gender FRA feminine
+				"EndTime" "stdTimeStamp.Finish"
+					title(Singular)
+						ELL "ΏραΛήξης",
+						ENU "EndTime",
+						FRA "Heure de fin"
+					gender FRA feminine
+				"AppointBackColor" "iif(isnull(calBackColor.ColorValue.value),16777215, iif(calBackColor.ColorValue.value=0,16777215,calBackColor.ColorValue.value))"
+					title(Singular)
+						ELL "ΚαθορισμόςΧρώματοςΥπόβαθρου",
+						ENU "AppointBackColor"
+			}
+	}
+	virtual "Class"
+	cancreatenew "False"
+	members
+	{
+		"stdTimeStamp" class "stdTimeStamp" embedded
+		{
+			title(Singular)
+				DEU "Startzeit",
+				ELL "Ώρα εκκίνησης",
+				ENU "Start Time",
+				ESP "Hora de inicio",
+				FRA "Heure de début",
+				ITA "Ora inizio",
+				JPN "開始時間",
+				KOR "시작 시간",
+				PLK "Czas rozpocz.",
+				THA "เวลาเริ่มต้น",
+				ZHS "开始时间"
+			gender DEU feminine,FRA feminine
+		}
+		"CalBackColor" class "stdColor" embedded
+		{
+			title(Singular)
+				DEU "Kalenderhintergrundfarbe",
+				ELL "Χρώμα υπόβαθρου ημερολογίου",
+				ENU "Calendar backcolor",
+				ESP "Color de fondo del calendario",
+				FRA "Couleur d'arrière-plan du calendrier",
+				ITA "Colore sfondo calendario",
+				JPN "カレンダー配色",
+				KOR "달력 배경색",
+				PLK "Kolor tła kalendarza",
+				THA "สีพื้นหลังของปฏิทิน",
+				ZHS "日历背景颜色"
+			gender DEU feminine,FRA feminine
+			properties
+			{
+				"Default Color" 16777215.000000
+					title(Singular)
+						DEU "Standardfarbe",
+						ELL "Προεπιλεγμένο χρώμα",
+						ENU "Default Color",
+						ESP "Color predeterminado",
+						FRA "Couleur par défaut",
+						ITA "Colore predefinito",
+						JPN "デフォルト配色",
+						PLK "Kolor domyślny",
+						THA "สีเริ่มต้น",
+						ZHS "默认颜色"
+					gender DEU feminine,FRA feminine
+			}
+		}
+		"CalForecolor" class "stdColor" embedded
+		{
+			title(Singular)
+				DEU "Kalendervordergrundfarbe",
+				ELL "Χρώμα Πρώτου Πλάνου Ημερολογίου",
+				ENU "Calendar forecolor",
+				ESP "Color de texto del calendario",
+				FRA "Couleur de premier plan du calendrier",
+				ITA "Colore primo piano calendario",
+				JPN "カレンダー前景色",
+				KOR "달력 전경색",
+				PLK "Kolor pierwszego planu kalendarza",
+				THA "สีพื้นหน้าของปฏิทิน",
+				ZHS "日历前景颜色"
+			gender DEU feminine,FRA feminine
+		}
+		"CalBarcolor" class "stdColor" embedded
+		{
+			title(Singular)
+				DEU "Kalenderbalkenfarbe",
+				ELL "Χρώμα γραμμής Ημερολογίου",
+				ENU "Calendar bar color",
+				ESP "Color de la barra del calendario",
+				FRA "Couleur de la barre du calendrier",
+				ITA "Colore barra calendario",
+				JPN "カレンダーバー配色",
+				KOR "달력 바 색상",
+				PLK "Kolor paska kalendarza",
+				THA "สีของแถบปฏิทิน",
+				ZHS "日历条码颜色"
+			gender DEU feminine,FRA feminine
+			properties
+			{
+				"Default Color" 16777215.000000
+					title(Singular)
+						DEU "Standardfarbe",
+						ELL "Προεπιλεγμένο Χρώμα",
+						ENU "Default Color",
+						ESP "Color predeterminado",
+						FRA "Couleur par défaut",
+						ITA "Colore predefinito",
+						JPN "デフォルト配色",
+						PLK "Kolor domyślny",
+						THA "สีเริ่มต้น",
+						ZHS "默认颜色"
+					gender DEU feminine,FRA feminine
+			}
+		}
+		"Description" data LongVarChar
+		{
+			title(Singular)
+				DEU "Beschreibung",
+				ELL "Περιγραφή",
+				ENU "Description",
+				ESP "Descripción",
+				FRA "Description",
+				ITA "Descrizione",
+				JPN "詳細",
+				KOR "설명",
+				PLK "Opis",
+				THA "คำอธิบาย",
+				ZHS "描述"
+			gender DEU feminine,FRA feminine
+		}
+		"stdUser" join "stdUser"
+		{
+			title(Singular)
+				DEU "Vertreter",
+				ELL "Επαν",
+				ENU "Rep",
+				ESP "Rep.",
+				FRA "Commercial",
+				ITA "Rappresentante",
+				JPN "レップ",
+				KOR "담당자",
+				PLK "Przedstawiciel",
+				ZHS "代表"
+			ontargetdelete delete
+			
+			folder "DiaryActivities" class "TOT_Activity"
+			{
+				title(Singular)
+					DEU "Time-Off Aktivität",
+					ELL "Δραστηριότητα Τερματισμού",
+					ENU "Time Off Activity",
+					ESP "Actividad de tiempo libre",
+					FRA "Activité pendant absence",
+					ITA "Attività non lavorativa",
+					JPN "タイムオフアクティビティ",
+					PLK "Działanie w czasie wolnym",
+					THA "กิจกรรมในเวลาพัก",
+					ZHS "通话终止时间活动"
+				gender DEU neuter,FRA feminine
+			}
+			choose folder 
+			{
+				title(Singular)
+					ELL "stdΧρήστη",
+					ENU "stdUser"
+			}
+		}
+	}
+	index "A"
+		on "stdUser"
+		configurations
+		{
+			"Server" include
+		}
+	sort [ENU] "stdTimeStamp.Start" desc
+}
+
+class "stdCalendarYear"
+{
+	title(Singular)
+		DEU "Kalenderjahr",
+		ELL "Ετήσιο Ημερολόγιο",
+		ENU "Calendar Year",
+		ESP "Año natural",
+		FRA "Année civile",
+		ITA "Anno civile",
+		JPN "暦年",
+		KOR "달력 연도",
+		PLK "Rok kalendarzowy",
+		THA "ปีปฏิทิน",
+		ZHS "日历年"
+	gender DEU neuter,FRA feminine
+	properties
+	{
+		"Forms" "'stdCalendarYear'"
+	}
+	key
+	{
+		field "YearNo"
+		nokeyalloc Char(4)
+	}
+	sort [ENU] "KEY" desc
+	prompt ""
+		ENU "Key"
+	icon ""
+		ENU "\"calendar\""
+	defaulticon ""
+		ENU "calendar"
+}
+
+enum "stdTask_Priority" VarChar(1)
+{
+	values
+	{
+		value "A"
+		{
+			ZHT "高",
+			DEU "Hohe",
+			ELL "Υψηλό",
+			ENU "High",
+			ESP "Alta",
+			FRA "Elevée",
+			ITA "Alto",
+			JPN "高",
+			KOR "높음",
+			PLK "Wysoki",
+			THA "สูง",
+			ZHS "高"
+		}
+		value "B"
+		{
+			ZHT "中",
+			DEU "Mittlere",
+			ELL "Μεσαίο",
+			ENU "Medium",
+			ESP "Mediana",
+			FRA "Moyenne",
+			ITA "Medio",
+			JPN "中",
+			KOR "중간",
+			PLK "Średni",
+			THA "ปานกลาง",
+			ZHS "中"
+		}
+		value "C"
+		{
+			ZHT "低",
+			DEU "Niedrige",
+			ELL "Χαμηλό",
+			ENU "Low",
+			ESP "Baja",
+			FRA "Faible",
+			ITA "Basso",
+			JPN "低",
+			KOR "낮음",
+			PLK "Niski",
+			THA "ต่ำ",
+			ZHS "低"
+		}
+	}
+}
+
+enum "stdTask_Status" VarChar(2)
+{
+	values
+	{
+		value "A"
+		{
+			ZHT "尚未開始",
+			DEU "Nicht gestartet",
+			ELL "Δεν εκκινήθηκε",
+			ENU "Not started",
+			ESP "No iniciado",
+			FRA "Non commencé",
+			ITA "Non avviata",
+			JPN "未開始",
+			KOR "시작 안됨",
+			PLK "Nierozpoczęte",
+			THA "ไม่ได้เริ่มต้น",
+			ZHS "未开始"
+		}
+		value "B"
+		{
+			ZHT "進行中",
+			DEU "In Bearbeitung",
+			ELL "Σε εξέλλιξη",
+			ENU "In progress",
+			ESP "En curso",
+			FRA "En cours",
+			ITA "In progresso",
+			JPN "進行中",
+			KOR "진행중",
+			PLK "W toku",
+			THA "กำลังดำเนินการ",
+			ZHS "正在进行"
+		}
+		value "C"
+		{
+			ZHT "完成",
+			DEU "Abgeschlossen",
+			ELL "Ολοκληρώθηκε",
+			ENU "Completed",
+			ESP "Finalizado",
+			FRA "Terminé",
+			ITA "Completato",
+			JPN "完了",
+			KOR "완성됨",
+			PLK "Zakończone",
+			THA "เสร็จสิ้น",
+			ZHS "已完成"
+		}
+		value "D"
+		{
+			ZHT "等候他人",
+			DEU "Warten auf jemand anderen",
+			ELL "Αναμονή κάποιου άλλου",
+			ENU "Waiting on someone else",
+			ESP "Esperando a alguien más",
+			FRA "Attente de quelqu'un d'autre",
+			ITA "Aspetta qualcun altro",
+			JPN "ペンディング",
+			KOR "다른 사람을 기다리는 중",
+			PLK "Oczekiwanie na inną osobę",
+			THA "กำลังรอใครบางคน",
+			ZHS "正在等其他人"
+		}
+		value "E"
+		{
+			ZHT "延期",
+			DEU "Verschoben",
+			ELL "Αναβολή",
+			ENU "Deferred",
+			ESP "Aplazado",
+			FRA "Différé",
+			ITA "Rinviato",
+			JPN "延期",
+			KOR "연기됨",
+			PLK "Opóźnione",
+			THA "เลื่อน",
+			ZHS "已推迟"
+		}
+	}
+}
+
+enum "stdMeeting_MeetingType" VarChar(10)
+{
+	values
+	{
+		value "Meeting"
+		{
+			ZHT "會議",
+			DEU "Besprechung",
+			ELL "Συνάντηση",
+			ENU "Meeting",
+			ESP "Reunión",
+			FRA "Réunion",
+			ITA "Riunione",
+			JPN "ミーティング",
+			KOR "모임",
+			PLK "Spotkanie",
+			THA "การประชุม",
+			ZHS "会议"
+		}
+	}
+}
+
+enum "stdPhoneCall_PhoneCallType" VarChar(10)
+{
+	values
+	{
+		value "Phone In"
+		{
+			ZHT "接到電話",
+			DEU "Anruf erhalten",
+			ELL "Εισαγόμενη κλήση",
+			ENU "Phone in",
+			ESP "Entrada de teléfono",
+			FRA "Appel reçu",
+			ITA "Ricevi telefonata",
+			JPN "着信電話",
+			KOR "수신 전화",
+			PLK "Tel. przych.",
+			THA "โทรศัพท์เข้า",
+			ZHS "打入电话"
+		}
+		value "Phone Out"
+		{
+			ZHT "撥出電話",
+			DEU "Anruf getätigt",
+			ELL "Εξαγόμενη κλήση",
+			ENU "Phone out",
+			ESP "Salida de teléfono",
+			FRA "Appel effectué",
+			ITA "Invia telefonata",
+			JPN "発信電話",
+			KOR "송신 전화",
+			PLK "Tel. wych.",
+			THA "โทรศัพท์ออก",
+			ZHS "打出电话"
+		}
+	}
+}
+
+enum "stdFaxActivity_FaxCallType" VarChar(10)
+{
+	values
+	{
+		value "Fax In"
+		{
+			ZHT "接收傳真",
+			DEU "Fax erhalten",
+			ELL "Εισαγόμενο τηλεομοιότυπο",
+			ENU "Fax in",
+			ESP "Entrada de fax",
+			FRA "Fax reçu",
+			ITA "Ricevi fax",
+			JPN "着信ﾌファックス",
+			KOR "팩스 수신",
+			PLK "Faks przych.",
+			THA "โทรสารเข้า",
+			ZHS "传真收到"
+		}
+		value "Fax Out"
+		{
+			ZHT "撥出傳真",
+			DEU "Fax gesendet",
+			ELL "Εξαγόμενο τηλεομοιότυπο",
+			ENU "Fax out",
+			ESP "Salida de fax",
+			FRA "Fax envoyé",
+			ITA "Spedisci fax",
+			JPN "発信ファックス",
+			KOR "팩스 송신",
+			PLK "Faks wych.",
+			THA "โทรสารออก",
+			ZHS "传真发出"
+		}
+	}
+}
+
+icon "stdUser"
+{
+	large16
+$
+	4752454154454C4B000A0010410410010682004010B83801010E88C4A26007FC
+	5A2A804001DF90401BE23AF08EB8245240000E47269449E4B2B864A0032F98C2
+	A5007940FE46077FC8C1EFF9087DFF1C9FC7E8400A2519FF43A4516953F8E0FE
+	80003FC58031681C160F09864224D0E08452BF077FC12C515B0C5E2D62B4456C
+	F6CB4DB6D7648200A0E068382A0E0B83826E907015AAFB768385A0E22838B20E
+	32C461B0982C0DCAD590B7E46DD94B843AE7040441C23070DC1C4B0716C1C5F0
+	715E7E0E1D838560E17838AA0E42839420E56839636DB4D96C20F56000360F54
+	C970B2B7F8201337071341C77072541CA5B98215E0E55E7C1C99BB82107642B1
+	40A8FC441F9093E502513D67E5F390C7C42500A44C2841C1CCB073041C915883
+	8172796FE7140071D0460D040D10713907174400940122C540C002280640E402
+	2CC4B0AC0225A0A0048C051791C1F341C610F83A0F4911A8631A0EB2047A5489
+	A250983FCA2274A03FCA9290A83FC98248963FC801E47E3FC6A188683B03C0DC
+	3B2590714DBC41C087F9C343A01002030003811828008801DC4400CCE2305000
+	CFF2645D044FF8441A3FCAC1BC263FC9F18C183FC9B178123FE5F98480124033
+	8866104152F0781C0763FCC02F0BE3FCC9318C89989B27E3D8FCFF21C81214FF
+	39CE6398FF394E438CFF2DCB32D4FF1DC6F1D4FF0C42E0C06D7E5C693DC445D0
+	7039881B83F008B524455938AF1D42D3FCCD24C4E3FCCF25450AEC92130FF32C
+	8E1268722C453FCC7220413FCC52143E3FCB21C8293FC901A4423FC95240943F
+	CE6A64FF1F8771F23924E3C27C9A274FF1C0681B8FF2ECB82E66224C97A82A23
+	FC761BC743FC531345292602702AB7F6AD410171F44700CC5AD4093FC9E18C19
+	3FCD326C573FCD126053AFEC1B0EC5B1EC9326CBB36CFB46D33FCC32083AA707
+	C0F4FF1D4691A8FF298A1290FF2107D208FF294A1288FF24C8E246EEBC28E548
+	A9296382208221CFF1B4661ACF5098230945F41C19C16507F082128032689A18
+	015A0C88B7312C5316C631AC72C0B08CDB12C6B22CAB32CEB42D2B532ACB0C11
+	F8363FCAB1DADCCC733BBEF11E071A08A127234D2238E2234E1682E0CFF17C58
+	174CF6E90408DFAC19FC9D8FF3409A15AD123847C4713C5717C671BC776DDBF2
+	1DCB25DD728DE3381B860D12F11F49B200FF13CB4168FFE34FFE3EE41C86FF00
+	8B1CAC62A2821DC6DF1B4FD45D10002E5DB9B5BF9D368A518BA2E9366E9F69EA
+	B6CC7F70C8B24DD327DDF2BCC0691AEF68C0761DAA31C4911A3C0232A332CAB1
+	E8FF384BA900708BC7763845E8814EA1F439BB71FE0B01482B0F641C1C907020
+	F58CABD87B4C544E8581FE2FC4314F6D0EA5B5B1E6DCC81B8B236E6C99BB3297
+	D4211DAAE40E61C47F8CC15A900710BE1063FC710BF5263886034D1C6304448F
+	F1C6308450FF1C8310460FF1542592039108A1002189D20E114C141332D055ED
+	8D81441787F8D613C16DEFC1F756F8DD7425760FA214B2C856ED84307981038C
+	61C481C83144744518C2414C0C7124A60642E01CA3251E0E6196BE0608AD890E
+	442D0540B23150310703C41D30B5A22E224270031A63184784A1FF1662DC5D8B
+	F079B5462844B34450441FE2B8388281FE2D03B2BA850ECC49872742E44730CA
+	5F12044CAE119A26D4A0CE5DA39C67A8D1D0340508FF1D0348518FF1B23184F4
+	094849108385435C9362A8889283124BC999371722F460940F8864BA34721720
+	90AC106AF84905A4E82D83B82F8D09883A31C7223A068B3F98CCDC748D414C3F
+	C748D54703A46B0AA1FE3A86B8ACA04360575021B42C1E106F792E4409812026
+	7D88203120E0326A4D69B126A2D4DB93CEA26F31E1309916A88D0BA3FC790F31
+	E63FC5C8970D8F01D33B313C1D427C091A630E620EA1B22BC7F8EB1B42C69E0D
+	C1663FC760DD53E3B06F0B7A8637D7A8ED1C22EC7F88F10CCEDC884A08A1243C
+	907048F56489629AA00E6BC98A372726E49F7542B83982A4DA1BC18527A535B6
+	950D91955244B85A01D3B856879598E44668C19F43B4700BA1FF5345E5821C6A
+	18770E41803FC6F0D5A9233C6350815E29E5C09011021266A4312E5E247C5592
+	600C61D1A9B5276300C911EB25CE8DF1A831AB7DAC1D83A4722754C15DEBCC09
+	15E2991859246027C4BC74B2B65DC8DC068B704370EF7062FDC1BBBAB8C1CB10
+	8A09E00C60DA1A3968E0F0A60D608692526A514AAED5ACBB8E75D9B7A6F970E0
+	486F0CE1B471383181721C1870706101C1C12B95154B527613E2CC3D032AC547
+	6300740B80B87F8571274FC16080A77813036051FE1444B584BFB7FEF037B668
+	1D5660880B375C3603E00492C82006BE77CB0FC144C00813B0EF1641E6B60CC1
+	294D06536F0B81A02C8FF084250638FF0C02C4750FF0C22CC768FF0BC2CB1E03
+	E1256AF176301781EC198FF17B91C7F89C4E63FEE68031A4E6B105CBCAB87956
+	1624ED88D3009F116980780860A75D81907D66E140510D61FE18C5A8EEC738EF
+	1EE3F1FE11C4E0D21FF9919B8840C4AE9CEA780062B43303A00405B2BE56CA9A
+	10FE1070240983809916C0FC488C31FE1985B66DCD79B71D63CC7D8F02D8B1C7
+	810C4C0CE1FE0DC3908E1D80A80C0010D641DEA104015A1F436B0CB065C06026
+	084158118685C018458A97D27A573666ED339C74E63C0B22BF1E02F107508090
+	3308C1E0C5104A2FAC742EB2D5E654BA00F060150648300CC24C7F8691719B75
+	F66AD81A633869BD3A3FF6363C078246D581E0B01E45110740A41006ED6DA9BE
+	B7C80A0420E40C8100678C00D844A5C11C430B61FE16C528DBDCBA5F37E9AE15
+	BAB760FF08225F508210BE2085690706CABB7CF20DA60381705008E0541D8631
+	FE06C2342F02A0F0328FFE4EF6C2C8A4E1BB9F88EC4DD7B1F8AF171FFC678DF1
+	DE3FB4F90ED54A0040190570E605C1FBF5044145DD8210A25480B03E0CE3FC17
+	86368615C51F0D09624945048122A28238905140D43F50B038140398B5D5756F
+	A2F70DF7D0CB7F470B018793F29E9DD43A90FF0401397381106B17FC0C5F0280
+	E8308FFF0DE200A039F100481B52601C0B0260BA91A41C02744EE5DC62AF010B
+	20C3C277D09E1F79F77C04214120020F45DF7BFFAB0F63FC0F84D7F607C26079
+	E63CBC7F80D0541244490737E42BCCFC0CA9E745FF54EADD44A97A6F51EABBF2
+	E7EFDEBBD83FB0381220479D1FE0301284130E63FB9F9BFB9BEBCE810F860481
+	BC5B032105F6FD25FC07023C08FD6F240C0400D23FFD000F0621583217DF83F7
+	7FDF9AFBFC08141E7427DF0E00DC082FE005E74101FE9FF5A104040000000000
+$
+	small16
+$
+	4752454154454C4B000A0010408410010682004010B83800810E88C4A26007FC
+	5800E086B021A808E47A088083C8641228E07E08C01FCA2540094CAE507F8238
+	2630283C26110785880000387012294083BFE09438AD0A2F16A1D261D3D82032
+	0E19838720E1383D3E0823838F60E45AD41EB3040252EC717838220E2E0C0380
+	05B1F08C027F160640274034F4BA180B860BA5B2A9655C7D3B9EDA87E3C1F5A8
+	57291596A160A858C9070AD928B04029004A0126A20A81169AC0EA2D7FAE4FA3
+	57FACCEA2C7FA88CA1C7C20CDA5D772ED70BA7FA5920947FA9944A57FAAD4CA9
+	7F998BE646041C1F93001C4800316270C61A78AE4FE387FB412E527FB31204B7
+	FB2114437FB11083CDD1D890FF421F100FF4A23D24FF47A251AFF432010AFF28
+	1289C9D83845C92305000C80335D8689D475A0676DDD77DE178DE5204751D0FF
+	1B4961B8FF28491204FF2E09D1E0FF2B0941D8FF15850150B141C2080202200D
+	82885F3FCCF819D77660B779E0789E43FC831C8693FCDD2F4873FCE330C8C3FC
+	E43148F3FCCD2D48B3FC6317061361070C93952C8913803198CF264543FCD527
+	459825D92F4820E8FF2A071684C0201D520C6E184FF39CCE278FF3A0D1288FF3
+	A4D3298FF394D32A0FF1C4681B8FA01C0601C4441C0552C88964629725E98262
+	3208E7A0B724C643FCDE348C23FCB01C0273FC8B1C05CA6CCF2B0FF3B0DF2E27
+	A374B93FCD632CAF3FC801E0793FC4E1244D1410700E5796461A465F985BE1D8
+	333FCED3ACE83FCF13C4EF9A06907DED1C8563FC9021C833FC851F47D3A070A1
+	0BCB806E252E31B2E38A94845E0100C302CC7A0C4FB3409814CFF1687B7B0462
+	64CD3FC4625CC87B4700F69F1CC308EC500448A41C027270DBA94ABAE020C06B
+	15C2E2B84A268CB3FC622D0EE3FC582B0E63FC4C1E88B3E86B0F402244460A00
+	10230EC43314570FCCD9400002080521ECC7198B53B31BC74FF174B23B4FF11C
+	9D354FF048351246041C06CC335D4B510342B129790F8663FC331A4963FC602C
+	0E9D0B443FC4D28CDE3FC19120631C90701F51DC3340403215C35070471CCFF0
+	784C87C2A170893FC2F198953FC2917C8E3FC110CC4F1BD0758B34DC73252C10
+	0CC59030160F8673BC211447F3FC2013C7DE7C4E1ECFF060411ACFF030261083
+	1E4753E43B150F941643405039184BB05C3F1A0DF0583D194D7040341686995B
+	B2EC39245D0100000000000000000000
+$
+}
+
+icon "stdActivity-Letter"
+{
+	large16
+$
+	4752454154454C4B000A0010410410010682004010B83801010E88C4A26007FC
+	5800F8000FDFEE00000DFF071FC1C071487442192700CA6570A96431810A984B
+	E0803994D669368E8000F3A9E4127D3B9ECF5E10407BF2081FA3C69FEFE2245A
+	9F5081C160F09864223D0E08496B71582482BB5E8BD3E2B62B2D7E0802838220
+	E0C838260E0483C3401698202A0E13BC41C1B070341C0563C0D9AC920C161707
+	86C262B1389B85B20E148388E0E30838B20E21838620E1783D480040839060E3
+	38389A0E1BBD412F904BF5A31988D8E1F678AB95F60E0BCD41C5D071D41C8D07
+	2A41CAD072841C91A2839460E6C839C60E65839739507216934DA8D50035800D
+	75D361B4C6C12E3040B41C55071DF14903810A64B04514AE48A36102783C1707
+	1E60E668398C270942822C56140573FC491104A388370CC3732421078212A507
+	215071F5071CD0719D071790714907111070D1D8411A9411796ADB76BD836395
+	3410471884C0B8CC14840098B11844B0B4CF2086B128FF1E86246C72164353FC
+	6F15C343D6398EC4B0FC323086F1A86F3FCA9298A83FC88210883FC67184673F
+	E048184810C493960C0DCCA0801E080AB41C8841D270007641C6941C5F41C538
+	81070D6240019D4116B4286E158330C8691483126C4C0EC232424491A3D8FE90
+	3FCB2284873FCFD3ECF83FCEC3A0E13FCC92F8AF3FCA52547C3FC76194543FC7
+	81CC783FCDE374DCAC6B3AD6B4354D434CFF2D0B12CCFF2488E244FF1C06B1C2
+	61814FF11C43120E60DA0D32C20074202B50722D07209071E1071AD071810710
+	DBA5A29010294A48FFA50BA2A892B007D17A952808554116358C1458E435AF32
+	90A1290FF27098270FF38CE138302C1306C1703C2707C2B083FCDA360D83FCB7
+	2D0B63FC94240943FC711B071B2206B2ECD0D8320DCCC07ED32BD07229FE6617
+	258E94348C52C2EDBBCB2BC6ED174FF2C49F20EF33FCADCF4FF24459458C82B0
+	FF28CA0BF49E26C9E3FCE7398E5D3F51D4F52D4356D5357D575BD6B5DD50DE37
+	2B42E8B72E4FF258922571B1B072C7CFF058140587E41C22626903C0C12C899C
+	E33ACF2C01F05CBC084CF8CFC5B3FD07463FCA227CA33FCA0274A03FCEB3A8EA
+	E4793E5794E4B98E587B1D87B3FC84203822809CE40C530CC53FF04C1799E5FA
+	DEB3AC9896774548624701603430B3B208FF264851973A27880D087C16CFF2D4
+	A52333EF29502849E28B8927FCF3BCEE3B8FFF4FD5F5FD6F53DAF54D2344D23F
+	CB6C57BC25B7A1F4781F76D2D4B32D7DCFBBD9F67B174907067B592492264841
+	93C0F08911EC2D3427FE3FC620B513ACF9C40FF1BA32C8B0F81EA3FC4708B11E
+	3FC578AC5483CE0B8FF82E3CE0CC188343FC6F8DE1BE3FC660CA8170821141E8
+	5307615C1B85506E120CC1FE13C2484D1E49E4BC1890E21601A8711121CC280F
+	F1602743F4010B09003083E1FE34C628AD67CD0C8B44F1FEBE07F87C0E41D47F
+	8CF19A33C7F8F81EE3DE2E45E8C117E2EC5F1762E45D8FF0FE1E83F8FF0C016C
+	30B6D0E81BE2B87E0F31B06C8D76251923147C8B316C260460943A4838492F6D
+	D522AE548B1044E39E1221E9032941A631055B3E68045A4B4525F21F4390741F
+	EF79F00FC9423FE508FC94728A524A694B2A255CA21A63455D8BE1782F9A98E7
+	9523FC4788B1E83FC5C0B58BE238450A71FE1041E03E1A841C1F16E90E0D4082
+	94140228343420F41597448A1A430D2C3CB7961FC3DBC21AA34C6ACD99C338A7
+	194F1903187D0FF04807076CE99D63FC188291903FC1D0360742FC838372FA78
+	000294150248374D448CA506B8CC6CA3FC78B941FF0217AAF311621DE48610B6
+	1887F8800F82047FD0E7922AC5449416A2C98B4DE9C108182CE47953987DCED9
+	D93AA764F09E40B81502E12E41C149239F6ED9DC0900F215680D3C1AE32C5C2F
+	75F2D09A254380ED1C750896883544D46C17E2F4600FF1542684B3660FA1DC7F
+	8680CD15C2B0590D6DB688D13A2B45E8C8FFA37250538A41693BE788FF0760D1
+	F00480831341802D060864F2B2E364000382491441E83083DA7940C658B722D4
+	21A2B47A15624A850C70C45860BCF5E62E84BC50688278540D01FE1B852C5F1F
+	E27E800EA1372742A88419AB0043D94154205B609611EBB2B146D0B1001D8826
+	04609CE41769F658E1D03510220434043B05228768E1817496E395081B506CD0
+	9E1D83FC430B453833C550A98B02E25983D10F2E8678B1AD5639E58900F01453
+	08430502A8CF10700F6E88BD37082A52F7C8A1E83A2CC8FFB1B146C9B3EB2163
+	EC8D875E714E4CAC01783E47F86113C3D87FDD99758250388F81D38C7CDF24B2
+	1C0248FF0A28D84EB732E17AC902900417C28148A1F03C15058AB2B25DA09509
+	31146FF9508A226031B3EBFF1460549570F62E060F060AA501E02F0381E88381
+	CAF2786BD61FA783E077C22B91173075FFB957FAA10EAA4854328D88B0D424A8
+	5F8BEABD8A80EC1BE31A9E0330500603519CC3662EF63B7185914730CC6D2354
+	6059416427DE10E51A3754760D854835C61C061762A9E48F31CA3260CE828123
+	42A00EB1BC30F426831EE3BC6E8FF1F23C872691D27A574A692D283F3492F31A
+	22FDA72943924100A66676AEDC5966B194B0C3D86508E3FC2E85209F03C3F55E
+	1CDAA87F8740BC1070205347E2A84B0735422B43D0FF0D2158206B80C7AC86E8
+	C211A3FC600A60EC3FC3305529C29447EB5D6E24C3DCD30F41970A68A1163FC6
+	08A693A921251E920E04752983A6E20B228E5190F243205508CDB5D889E118C7
+	B586B2762EC647206DFCB243D06E7F62584286CDEEB245C0A273C168288536DA
+	20C3ACD0158240306D30A00C06A9D7357BB0DA43A0681454A0870DA538720C64
+	B82483D711DF8DB438866E301FC35EB20B01469DBB10D016B5972EE048183F86
+	F673C3F88BB1E61C6032059559CF87FC3E8801942782F18B86540F1F314A4018
+	2940F21801D0FF11A1CC258FF1021C2000780D1C0564BB11001AC268FF0C4150
+	2436D0D217DE2EAC08B8102C4467621D8343440DE1735774B11C1D30A05B0A57
+	8DD8EF4DEC8C41709531E8AF21F90CCF871228805202002F853098303A5F9C59
+	3CDB9C768F43D9FD1B6DF3FC2BD27A6762178280441B219B8D2DD215D57AAA62
+	0E1E77D18F0F6FE9FDDFBAF7AB242083D08448882005F675EA7DA6202098857A
+	621DE9884FA62081F379F0BF4C423FDB8B0FA7E887785509E158507B726477FE
+	3FE4F23F1BF37E5000988187EB2C7F27E8FC9FDC817F6205D91FA7F3F92FF3FE
+	3FDFF7FFBFA1FFDFE9FFA006001FF20120093EC4040000000000000000000000
+$
+	small16
+$
+	4752454154454C4B000A0010408410010682004010B83800810E88C4A26007FC
+	5800800FC1E1B148EC1D011F86A0245248248E08C001C11C0078245E050784C2
+	236001000255070247A3CFF974FA5D2F8541C13070D41C2F0706C1C430712C1C
+	25070441C05169ED562B17ABD5EA30711084320F2A0DC56193E0240E04308381
+	C0F2F0E46A3A54070341C4941CD9072A41C79071353EB904AA45CB447150F0B2
+	4514AA4D8561B381569A413FD4C963FBF4EA6427B9138984DBFD56A8553FD168
+	845BE4BA592EB7466301A2EEE61C4B41CE1072BC1C7143391646A904B208C6FF
+	52244EAFF6C33D85165F275FED1612F5FEC15FB01FEE57238FA9D6EC75DB0D66
+	B3FD6AB25A3FD1E8B47BE4BC5A2F37850251426E0E1138EECDAA74A9DDFEA146
+	9BDFED968B111637CCE3FCD0304BC3FCC7314C73FCED3B0EC82E0D3FCA227CA2
+	3FC9F26C9F3FCB62CCB683E0E8320E0F83A0FCB041C0E1C0570D0417E46D68C7
+	514DD4378D2458B2228FF308B6788DA364DA3FCF63D4F53FCE1380E13FCA327C
+	A33FCAC2A4AD3FCCF338CF8F63F3FCE290CFF0E8360E49E545BA0D414234768B
+	C821A8463FCE9384D4458D6304FF2FCB42CA653A0E93FCFE9D2739D6743F8FF3
+	CE7B9C2722789A3D8FF19C61354FF0C02C0BC824E55722070130F0970FF3ACDB
+	331162C08894CD3808A81FDFB2A0A2920A22689E914A22A0FF2E0B52E0FF334C
+	B334FF1C46C364FF0D82FABC2608C261491B55C791803C322913C4E736D16391
+	DE3FCF53C11636CC9458EC75CC32BCBB3FCB12A5C824C9873CC3268903FCC530
+	9FF1A45B138EA05414058205691797098A44FB378C8458A21CECCB38FF328AF4
+	58DD32CFF390CEA54A729CC67E0BD3B6FBBF4FC3E4F23FC6A15435315F0BAD3D
+	7C8351C2913B4DF30DD4370CA3FCF0394D0A48DBBC8F4399DE3DE933FCFC394D
+	3CACF5838FD37E953BCE7ACC5D1242B2A90702F130007016034136912AC931AC
+	FF1985C168FF25482194FF1B86216CFF21873D2C881E4663FC851D05F64C931D
+	0FF1BC60148FF2D09C1C8FF158440A08E5473E1C741082BE0E9F8224603FC601
+	5C553FC7218F7C168518BC6A170503FC59148573FC70184543FC5D158593FC69
+	17051D23813FC586246241C03CF9579704016051150CC15850E2BA715CFB15FA
+	8DABAEEA8FFEB7A9EBBB3EC84E140C61844C0B41CE7D59F013DEA830EA864EA8
+	4CEA870F27AA1E3AA243AA1A3AA2705513C560C7BF55BC1563D9F73DBF7BD8F7
+	FDAF8101000000000000000000000000
+$
+}
+
+icon "stdActivity-Email"
+{
+	large16
+$
+	4752454154454C4B000A0010410410010682004010B83801010E88C4A26007FC
+	5800F80C03DFEE0823FE0E1F83C36192291442192700CA6570A96431810A9800
+	007329A4126D339AC7400079DCF6093F9E4FA7CF08203DF9040FD20003F7FBF8
+	8916A8D4A070583C26490601C382114AEC1E3F158F57E2F518AD92CF608200A0
+	E08838320E09838124565B2C1ED7040741C35070CC1EB904B6CDEEB68B347F09
+	87C2E230D8CC5DDA0973825BE08148388E0E30838B20E21838620E12B741C1B0
+	71241C850723C1C73071541C3D07CAE4A0E05BA62B6F89DCE324B040341C179E
+	838BA0E3A8391A0E548395A0E50839220E3C838C41A281B0F02E452E9A60E648
+	39AE0E618395E0E4C838FFA596E0C130000C14CF1DB8876440016D6C1C77CC24
+	0E042992C114292E4450D8202781E05C0E1E5071990718D07179071601812463
+	2103225CCB3FC30248C53DC261CC9A344181206129C0604C1949C001C50776D0
+	417D0714DA941C387D9046C1946FD726D969001F355C471884C0B8CC14840098
+	B11844B0B4CF2086B128FF1E86253472164353FC6F15C343D64992C4C0EC232A
+	4340A418230231A48E2DC532B0D43FC8E340E43FC6D2F0DB3FC43288D03FE168
+	602A1FCAB38C1E168792F00F0BC3F269071E9078AD041A107175CC41C417097D
+	41C065946E158330C8691483126E5E08C90952569364FA8CFF2C8A121CFF3F4F
+	B3E0FF3B0E8384FF324BE2BCFF294951F0FF22C75158FFA9C4E1D47F3FC5B2C4
+	D73FCB83A8F03FCBA3AECC2F0EB3C4FF2B0E13B0FF204C7380FF17CB2B227A3F
+	C2E22CBB3C8251C096359D8174AF0181105C8C41C7BA2907181F741C11596A31
+	02A7A96C0956CD2A8923FC921F45EAA0A021552458D630516390D6C29523D0F2
+	3B4FF1F8ACC3474300DEB26CBB36D23FED1B4CBE3B2D3300EDB4CC1CA2CD3A4E
+	F3FC97350E63FC6A2E0DA3FC459DE7985CFF0A87E2A8E5074561D0C302C210B0
+	947897D62EA7348C52C303C1707C2704174FF2C49F20F112B7593FC911651632
+	0ACC470C3FC782ACC53FF1AC72CAB32CEB4F223FF24C9B2B308EEB4CC43B8F23
+	FCC63BF7A31CF0DE8C9E00FF2B8E03ACFF224CAACC4F2A0D3CF07F2A8E441E2F
+	4101CD2E553C0C12C899D4355D5F592487C173072131133CB645B5BD8362C2B5
+	E3FC60248ADDA71BC776DC80BCC9771EE727B4F75DDF79DEF7D3FCC8E0CCAE0C
+	CB3C77A334F23CCFF2526F3FC2F1FCA73B1071650705D8B1C0580D0C2D5C823F
+	C9921465D589E2035D1F05B3FCB52948CC47EFFC0FFD905F274BD3FC8DF436CC
+	7F6FEE7723FDDE0FF13C360740FF09A29C690FF07627466BEB1CAC55E337A198
+	F247F8CE798B60628DF4F21FC528F120E144838137B496449099108191F2BE71
+	221EC2D35D8563FC620B513AC45B09161BA8607F8F81EAFC42F8AB8102586A8E
+	71FE2E58F0BB6402F5DC8AD1C4B5C2F2DE6748603D8C383218059AC809C2A204
+	0C159E3FE0937A82AF3440C181FE0B43287E1B641C2510701C62C3885806A1C4
+	448730A03FC5809D0FD0B42C2500C20F87F8D318AEC9D6B5F6BB205879161D4B
+	6C7FBAA5C10FE20C435982C87332E0EE3058E03B1390302B0AD1AB1CC71AD76F
+	0DE85EB1E8AD020314548B704E2F0FF0C62CC6C33C0CA204699070805C1CB835
+	5F6BFC5809C0F6D743D0575FC958698C4156D69AE3AA1FF2126331090513A008
+	DA1D23FC430CB1C49D59CA764F026C6BC04800EFA17BC06F8DE85B40E1FE0F20
+	58FF0FE3120CCA80B22BA4D0270BC1DC631C452B2D0082A7140228344BB57ED3
+	0618A87E33F8A8C845C09A93603A92C3FC3B493642FF5DDB746EC3FC62BC218E
+	F09C137A70AE1D703CF4E13AA4D0160841644910705A5C8F811F54E2A04906E9
+	7D4A86B8CC172458788EA756C2D86CFF1FE0FC4F0CE996B81704958181545649
+	A931268340B81B23FE284190F91447F89A662AE06D4040D82E59B4E3A735547F
+	81B0A21B43BA94215490003DB7BA2403C855A54A9C6B8CB170C3A64BAE994C2A
+	1A56E166235850CC1A2E38660BC1683FC418A419E3FC230961C63FC340A69581
+	404F2B30722525604D144B20328B19594DE9CD3B676B800D0500D616E34D5F2C
+	A1C12C8A20F41841ED665FF5A05BD2FA62F0DD65702A4D924435C182289888BA
+	12E459D709E1509E0370A51EE4584FD291FE2983C0FF0AA25A1D0B6152FD87FD
+	7222D0E5855270DB2A42682E194A4C8200AB3A45E3603510220434043B4A9587
+	68E186F4D6F3BEFB9F3207F86E13CB5C430B455E33C550A91FE33C5C0BE1FE0F
+	4438F4BEC2C6BD5B07E22403C0511FE1582182815441CAA13CBB447EB084154F
+	8497F8F41D09E1F9534ADB6D588DB222D8747FD3062331E420921783E47F8611
+	3C3DAFD5FCC597F42488F8754D47CE151FE220380491FE1452309D20E08A919F
+	15F2954106134ACA9C7C0F05676AEDBC8198A54A62D6D98E54AB68980C788AB6
+	48186D30E99152C90B6D5383C05E07144B95476634F8E45A543E077C19BD0546
+	F54C7BD454A63C866239D725E20B5454B0DE186143B06F8C6A540CC140180D4F
+	6307667C1EF70616691CC3304A8FF1AA302DB0B213EF9C728D1BEA3B06C2B71A
+	E30E190BB154FB8798E51923FF526A61BA342B50EB1BC30F53EA51FE3DC778DD
+	1FE3E479270D6FAE75C6B6D783F35BB0A1A22FC4F52A5226C7443DA7B82CB468
+	CA12351C328471FE1742904F4DA1F8358FF1CDB35B485E0838A029A4F1542583
+	9AB415A1E87F8690AC101B4863DAA374615731802983B0FF0CC154A80A511FB6
+	36D6CE1261ED5F87A0CB8E75708B1FE304530744AE9647AAF6208BE3209F1AC2
+	20B348E5190FB83205508D818284BD0ADC720088C0E3B4B6A71BE3BC7C48CBCE
+	4BCA83D06E84E2584286CE55C7A5E8B81452E82D0510A7CA8418759F02B04806
+	0DEA140180D520E0CCD1EC830B1B01A05154E21C369501C8318443030F5CEB69
+	ED5E663FC38866E821FC35ED50B0146B2F5A0D016B6AF58E65C7C3F86F6ABCE3
+	9D75AEB9D04320590A9DAA5EC708E41942782F18B8F8B6749374A8C182A70F21
+	801D3F70E612D6C0708581E034726F223FC4006B09A3FC31054091CA83485F7D
+	41EC32845C501623C75A0EC1A1AF86F0B9B47AD75A11C1D31C85B0A5817AD718
+	E34904170953445ABC0E89000A8C407BF0BE14C260C0F59C7FE3792EC5D93E3F
+	CCF25F207FFCAEEFCABE8F5A0BC140220D90CDD0CEFD5EE206EBDE7330E1F3FE
+	40F0FC7F37E97E6F9DF9FE784107A108F390400BEF3F9917E66043998AFE663B
+	F9989FE66101FE9F202FDCCC23DFA42C2001F343BC15413C158281FA44C80000
+	09FD1F7DF79EF6049EF5CCC0C2060595FD9FF9FDA06DC72065C71BAE05205A09
+	609209E04E0A60560A20AE0AA09A0BA0B20BE0B60CDA20404000000000000000
+	0000000000000000
+$
+	small16
+$
+	4752454154454C4B000A0010408410010682004010B83800810E88C4A26007FC
+	58008007C1E1B148EC1D010D90412451890C9A08C001C11C0078245E050784C2
+	236001000255070247A3CFF974FA5D2F8541C13070D41C2F0705C1E5B041241C
+	55070AC1C11070145A7B578AC5EB353838884219079506E2B0C9F01207021860
+	E51060946452131D138B10A8F8A6910101810658393A0E358387E0E0D9CD64B4
+	47150F0B24514AA4D8561B381569A413FD4C963FBF4FA6927378965D2D340FAC
+	6703FD14CD71BFCC8B1693E06A7F51B543853382B4141C132020E5F838E60E06
+	391646A904B208C6FF52244EAFF6C33D85165F2762CF1753FD74C866BFD2CD57
+	3BFD76EB78BFD7EEDF1303CBC96DBA5FE7C61379FE4B4B2E5D4141E945198438
+	F0CDAA74A9DCFF2848D1BCFF364D13111637CCE751D62BCA6284FF270D97ACBB
+	3B1E2791E2270D7778A0360E83FCCB3C4F23FCAC379D60905E1E8A25247015C3
+	4106011B4FF22C7514CFF394DE349162C88A750EB724BC320FF2A0E03B242910
+	FF19CB7364FF220CB388FF1B8BB36CFF2BCE08F8A0868FF0844C1848E701C20D
+	414234768D4821A8463FCE9384D4458D6305163CA3E264A92C4FF1B252940BC3
+	70FF2D8E73BCFF30CEE888C37A0672DA4B214C8698180FC521C10700D5922070
+	130F0980FF3ACDB331162C08882CFF33CB82B4FF230C0368FF1BCA531CFF158A
+	592C5B2AE7B1C8BB374FF184B235CFF0DC9A768161105B0F959564791803C322
+	973C4E794CFF390D6458F53C11636CC9458EC6A8C32BCBB3FCB12A5D02609F90
+	4E12BCA0458FD3F4FF2046B124DD516C245E60262973ECDE904FF28873B4AD43
+	FCCA2BD16374CBB30CEA6CA729CC6800BD3B6FEC00FC3E6221A8550D4C541C11
+	BB93D7E8351C2973B4DF30E36370CA3FCF0394D0A60DB904F439ACE3DE993FCF
+	C394D3CB4F5914FD37E9B3BCE792C5D1242B2A949C54001C0580D04DA5CAB24C
+	6B3FC661705A3FC95208659406216CFF21873D30881E4663FC851D05F65C931D
+	2A8180523FCB427072AB0440A25E41008CFC71D0820B103A80089180FF180571
+	54FF1C863DEC5A146351A85C140FF1645215CFF1C061150FF17456164FF1A45C
+	14749E00FF1618D18A90CFD599804016051150CC15850E27A515CFB15FA6AB3A
+	CEA0FFEAFA7EB3B1EC04E140C61844C0B41CE755BEF93DEA030EA064EA04CEA0
+	70F1FA81E3A8243A81A3A82705513C560C7BD563BF56BD7F6BD9F73D6F77D8F7
+	90100000000000000000000000000000
+$
+}
+
+icon "stdActivity-Fax"
+{
+	large16
+$
+	4752454154454C4B000A0010410410010682004010B83801010E88C4A26007FC
+	5800F80F38006E08A47A190700C42192387C2A472293CA80003604125B2F974B
+	2653099CBE3A0003CE275049E4E6773B784101EFC8207E8A001FBFDFC448B53A
+	9F0382C1E13208300E1C108FC7DFF04AE4560F4E8AC5EC3648BC1C05070441C1
+	90704C1C0921B2D72E50E00DD2C36705DE8220EBE8B20E30838A60E1B83846DB
+	6FB3DC6C78CB9E361D70825B208148388F0107BFC1043070C41C256B8381B450
+	705C1C1B07055B413AC0A0FB5EBB206C97C1FDA9DC21B82FC1C8B071C41C5507
+	0F41C2BA5C4C2A43A48269A099E820BA0E3A8391A0E548395A0E50839220E3C8
+	38C7040AF08D809E41F7720E3300FA85A3DF6AE89A4C25B3CB0572BB789E4E27
+	340884321B0C308009A6D41F1E5E10285B5E80B155EA0043F41C2641C0E62904
+	64400059BF41C3B760480E02126458114292E4450D8202781E05C0E1E5071990
+	718D07179071640C8D06B0E83A0E4D00E63B3301E8F89A0624121C269109312C
+	4A128D41D4721C4FF2007E1F4FF1B86C1ACFF1845F178ED1785C170E67C04B34
+	4421044130262991ED0F4BB04A6B1059F84C008555411C621302E33052100262
+	C46112C2D33C821AC4A3FC7A1894A1C8590D4FF1BC570D0F59F27E1303B08CA9
+	0D02C07CA10DE9935C54148523ADF4158E715454150E4135F037A5F38A531ACF
+	A2308A224FF2ACA92A0FF2C4B02B8FF28CA1280FF1FC7D1F0FF1CC711C0FA1C4
+	6F1B8FE1805E174EC141F834C42B48C10AED56150A1B8560CC321A4520C49BA4
+	42324287A2680A0AE43FCB2284873FCFD3ECF83FCEC3A0E13FCC92F8AF3FCA52
+	56C122875158FF15C4A0E0FF1A466184FF2749B26CFF344D2354FF25895254FF
+	2148420CF91F47B1E8FC1F0791E4FF348D03354FC90EB3ACE43FCDC368D4AD8A
+	F2B0FF22487214FFC647B3FC62184603C043B48C50DB3F06D61B9040BA2E63FE
+	E82E8AA248FF2487D17AE928333C90D630516390D6C90CDD6B041A0673FCB82E
+	4B93FCC7D90FF388E3394FF2ECBB2F64E1F87E3FE4B1C8FF2F0BA2D54E3D4FF3
+	E8F93BB7A3E0EC458FD3C1163F3833D4F2DA4B82DAB917E5C3D8416C8D309F93
+	19DA95D2E8348C52C34CD3B50CCF4D176B627C83C90FF2B7A43FC91164FF3F0C
+	62A8FF1C7B13FC771C06ED9B673FCD9EEAF5324CB3FCCF340D2B0AC73FCAE2AC
+	A252CFE3BCFF3E0F5DA4F93DB69F34E33FCF63CEF4BBF283A8E7D6081AFCFC12
+	849120E68F81E2A9071359FE5E883C0C12C899E73A12C7A3D307C17350213A53
+	3CB645BA73FC770BC7901BE018FF128230443C91FCCA46E0DE56C2C4598FF1C0
+	3899408810CCCC538A51383FC640C56EEF6C698FF1D2398680FF1E83C06BBAC1
+	F1034738E4198C404988C1FE2DC5CB6D10E218430FE0800F41D0E200D0F82C90
+	742E428B08700B00D0613F31043FC4C8850CAAD84F0807521F02D8FF16A29618
+	BA574A3A62D8FF0E1179E28AD65E53C768EE79629C532B51DE3C079ABA14628C
+	7F8D81B83747F8CE782D304934B1402704A0FF198325FE0BB16CF20420800EE3
+	FC4688D11EEFC6B8E08642F4628FF09C128230EF0768DC62803932054BA07051
+	82484C8840C913E288910F6169D4CA61FE3105A89D74A322310DD77C3846E0D9
+	514B21860D08483EC7E0FC1FE3B476BCB16A2D1BB8F41EC3E47F8A01402865F0
+	F11ECBC4784CE1CA3A5E58DB1C039D590AF8202885146F0E81CC3A8FF13827A6
+	58CE1AB0345F8C619C3FC2A8530A03B81E03C07631408CF493663C3885806A1C
+	4448730A03FC5809D6E12942C2830C20F87F8D318A2B5D2BAA22D434720CD180
+	3FC36B051FE3045F36D1FA3FA050C618D2406B8D81B6F547C0FB1FE2544A47C1
+	22240480FF136269858BA1782FE840D71B83FC6A8DA91B359E58BA17A30C7F8A
+	F1642DC7F8CB1A43687F8C5198C3D2C05D1DA0EEA78C39E85F1F5835688A227F
+	89C66C2443D05768F55C698C4156E95FF3A67490AA120700D31384387F0F52FA
+	3254015CAE6098E61FE378702F411E236188921202387F8A98CF3204F41A55E2
+	2A7089C95A2D45B8BA1FE2604CC1AA822E07F8DD1CAE0C598B8A66164FA0EB05
+	F6783C16FAA8041740A01141A1D487A5FEE6061AB58B36B87FB5A6461BE8A86F
+	0D61A47F89F13B2B4728E61D0BA459410134265F809111F5FC4F89C6162D45A8
+	B21FE2E85CD9316D30AC05821302584B0FF1342704F8FF1C23A9BC8AC162FF02
+	62481C167817B4F31F5507F8A8124ED9742E81AE331B10FF1E23A88B4AF22CD5
+	1920FDBFAEC1D9070808B21DB3B576C20840C51A4EC4EB92F816730C7FD86896
+	2644BC55B97157078A013F770570B1A8634C6D3D4C0E2047FCF00783380D6280
+	445DCC7C4588E2403C855ABCA26F88CBB263FDABD0E756EA71D14FBF23F4483A
+	B1E42AE040D7C8B6E048D870E018E2A0630C89543106B63E1BC38074A4C2584C
+	30813F1BC4608D1223FC420846661F331D48195090580B5B1A1542804B1F20AB
+	3787A4238ACC715C93A0D05107A0C20F71967C1AE32EA1DF5BEF06E315F96A6D
+	56B2916182F21920BAC283D04655D104228530FF09416437C5D0B21316105D0A
+	23FC240570DA3FC2F05B69E1F43A0705141BB51078D5A3FC3286274211C2103C
+	1E48181AB96BD53DE7C8811021A021E7C5D03B470BBEB5FB1B6394E79AD59AC0
+	6E13CE00430B41EF2A8514CB1936607F83D1003887F8A411F978590816BD72DB
+	BC5ED521502714D0A4108158B320E5449CE732C59D623041BE155D740F41D109
+	07FDFBC7645B46BA5D15A2745DF674B8E31BB581242F26386113D3381E8871E9
+	B63888FF09223DBCEC81E63BB6D8850DC1247F8514F227483822B43AEB3A0005
+	C80837B633AAE3E0782F4D078E5FEBA829F59286F08A198E84C063E0CD637F59
+	4D8BCD9D4685D923C246AE80780BC0E671208070C5F28DE3CB33E0F81DE37F64
+	3A5D95CE5E671829FC1C7548D649D82FC462E0BA330A6FCD0E538760DF18D9F0
+	198280301A883817DE3BC7168C2EA6398663131AA3030A0B213F144728D1152B
+	C46C2F81AE30E568BB1550C4798E51923FFC87921BA342C98EB1BD4FFCA0FF1E
+	E3BE398F91E4CA3D0FA3F443FFD23ACF42C90688BF13D9F083A6D329DDB93800
+	C5A2CBBD0CACBC1EC328471FE1742904F1FE2383F2551CDEE47F8740BC1052B0
+	535042A84B0735EA2B6B70690AC103E4063F823746108D1FE300530761FE1982
+	A94D14A23FE2FC71261ED7F87A0CBC7FCD08BA2C29B2AA8B51A864C37B3EA245
+	F16882EA63943210C41901541183FC158141576019574278230935EFDF060260
+	1601D6A202204A0401E81B92882582141B20460515742E0288CD816814414E07
+	43FC20C1D569C2B0240181F881400C03547A069DFE5BCA0D53E00D0144BA021C
+	1B45343903190202481EA09603A0981C419A0B41FC1ADF041601458C60401A01
+	69F061120420401FC1BCE8608E09604211A0B419016415209A0413F13F819413
+	C0BC315C905A60D15500C0BA01E41800E921C1CC12C3FC2041C129C1E01A207A
+	0982001AC134CDC1501220981A417D151EEC1149581614120401D81A0EAC1BC1
+	71EF61520482381D1C7C16C149A7A04200A0109D00B825468441000A1ADED0B9
+	020229817C14C13030224E1EE2B43FE13213A0562CE2BA2D22C21361862DA2C6
+	09817814011036419A0BC1ADD420D6291FE9CA20241C22BE2B43C232E2DA33A2
+	D63462E61EC1040F410883841001631A315ED05D20240420242BE0243BE02427
+	E02410238E2B42FE02423E3402C23A62D03BC15413C1582823404C800228E376
+	3EE31E3723F636DBC60240C240858637E39E37E41601E40E01DF5E3F23FA43E4
+	0243A4463FE44A45645245E44245A46646244E46E47A47458440400000000000
+$
+	small16
+$
+	4752454154454C4B000A0010408410010682004010B83800810E88C4A26007FC
+	5800808A46A368086C76091F8C47A47046000E08E003C122F0283C2611078588
+	0012783812371B7FCAE772B9642A0E098386A0E178382E0E05A441C0D4C03020
+	715037046A64C838AA0E15A04C60E08838884219079506E2B0C9F01207021860
+	E51025B8902EB8A102974320E06E374A1A0CC6675968B258701108643598C460
+	30460931658A01688E2A1E1648A29549B0AC36702AD34827FA992C7F7E9F0D24
+	E6F138903F6F22510887A1C4E070779B8D86B7B30982BF7FB419ECC7FA813C9B
+	7F1D8E8737D13C9C4E69620600E391646A904B208C6FF52244EAFF6C33D85165
+	F275FECE60AE9FE9F4EA71FED369B53C89F4FBFD6EB5573FDF6F975BFDF4F774
+	3FDECF3723FC7A1E0753D8290A0282310701C7173C6D29C951DCFF2848D1BCFF
+	364D13111637CCE3FCAE2849B6E8CE6F4C8320CA3FCBF2FCC03FCC531A286E0B
+	23FCDE368C3754A1260FF2C4B578C3C0E8382F0018F80B1C0570D0418446D3FC
+	8B1D4533FCE5378D2458B2228FF2A0A0878E3388E26E8D0344FF320C9890C130
+	CC67A0D7370FF304C5324FF278A0290FF31CCE35CFF1304B128D954C11025CE0
+	D41423476928821A8463FCE9385EB3FCD6304FF334C58A0952408E8A62A86CAE
+	7C89B264973FCA729A6D2B29D9A89F28A6E9C0FF11C46118A84C5164E8881C04
+	C3C27A3FCEB36DBD3FCB0221163C4EA3FCB421C703FC952448F3FC7B1DE0F234
+	8F250FF25896A61ED281D5298A93FC97261C10C6D717AAA455171E4600F0C8AC
+	0F139CDB458E4359163D4F0458DB9A4FF3B0E33FCB9298B03FC81208953FC701
+	E8963FC8C1E0723FC83C08FF1544E110E901709072DAB6A7A262B03ECDE32116
+	28873BAEED328AF458DD32CFF39220A64A7988A12F4EDC6F1D7E2EA1A4540D4C
+	541C11C3117828351C2B03B4DF8C8E5372243C0E5342B136F133D0E6B9CF7AC8
+	FF3F0E534F483D4EC3FCFD37DBD3BCE7364FF174490ACAA51B314E8701603413
+	6B02AC931ACFF1985C16ABF208653FC6E1885B3FC861CF6922079198FF214741
+	7D9E24C743FC6F18052AEC9CC0056110282395CD70001C75F082DD0EA1022460
+	3FC6015C553FC7218F98168519286A170503FC5914857BE46115356158593FC6
+	917051D9B9D3FC586506241C03E2F0D73C4016051150CC15850E9BC115CFB15F
+	C23FFC4F27C8F1FC3F33CC13850318611302DC2D17EE7D845FC40C3C4193C413
+	3C41C3E2F1078F1090F1068F109C1544F15831F653AFC6DBFCBDAFD7F7FD3F9F
+	CFF3404000000000
+$
+}
+
+icon "stdActivity-Task"
+{
+	large16
+$
+	4752454154454C4B000A0010410410010682004010B83801010E88C4A26007FC
+	5800F80F005FEE08207E0F0D8A44A2104920064D28854A618C0854B6590401CB
+	E653199C7400079BCE6093B9C4EA74F08203DF91EA20007EFF7F1122D4CA6C0E
+	0B0784C32100001C382122ACC5608FFAE41E99158BD82C7178380A0E08838320
+	E09838124164AEDC61D6B820860E24838660E12B541C0D66B9E0AC584B9616C3
+	86C4C3ADF04BA800290711C1C61071641EEF040C5F2FD04C0412CF040B41C810
+	728C1C91071E41C63071341C370709C1C1B7FC0E1F075D906D6080B83E6A082E
+	838EA0E46839520E56839434FA9D5EB60E1C121A11E89090D08E77839AE0E658
+	397A0E588394A0E4BD1C1C67CF820720F908203AD10701D82DD07D141055071D
+	F28903810A6458114292E4450D8202781E05C0E1E5071990718DDE781E241C4E
+	0B0802BCFF856170AC7C2A8F709069240D5070511BCB004C3712C9441C6C41C6
+	741C6141C5941C5341C4C41C4241C367A4005F504630008FD5211C621302E330
+	52100262C46112C2D33C821AC4A3FC7A189481C8590D4FF1BC570D0F59324E13
+	03B08CA90D0290608C831071A2193FC572B8E83FC4C288D93FC40258CA3FC382
+	34BE862169F6170986E258DE078581E0BA89C4B255071B5071A5071890716DCC
+	41179410081B8560CC321A4520C49B98423242579665094AA43FCB2284873FCF
+	D3ECF83FCEC3A0E13FCC92FA17294951F0FF22C75158FFAA2A815C57124E19B0
+	792F8E63FCA733CDDAF0C538CFF1C0BA9C05E2CCEC3FC5229ECE1149A338FF0E
+	48D2FE7FB90281CC9D39C201788030C1610459278070541C191077E13CA9040A
+	A2A6B02583FCBA2A8923FC921F45EAA4A02154D458D630516390D6C294D3D0F2
+	3B4FF364D1314FF2409A25AE4218C4B2B14344FFC8B243B7233A0EA348FF334D
+	F360FF2A4D237CFF238C7394FF1A8B93ACFF160ACAD04B27F2B0F491308FF0BC
+	832CCFF074551D0A941D4F90160AA0D2314B0C0F05C1F09C105D3FCB127C83C4
+	4ADD80FF24459458C82B311C3116374CB3FCC334ECE0C084D24A3342D13CCEFC
+	4379C40E439F2F1A8AE3A4FFDFB2FDF0FFE1F87384E89D0C637ACE1DCBF3A8FF
+	0CC872DCFF04C38134928ED1B45EA43C0C12C899D5F5CD7B602487C173072131
+	133CB645B62D9F69C2B6545BB6304AF29CFF0EC8FB8CAF35AD13D0F0368FF394
+	E936CFF0B8923CD5D1F0F99C4A03BCFFF0FC5F57D4F13D8F5BD9230C89C26C04
+	02F10084545731C0580D0C2D78823FC9921465D749E203641F05B3FCB52948CC
+	47FBFF0FFDAC7F8C11443FC5A0BC68A0F1DF35D1B0CDC7A8F21BCF28490F479C
+	F40003CF8243FC450BE7070320741B1FF0760E86E17239172210208069F325C1
+	24264420647E2FCC4887B0B4D92188FF1882D44EB116D0DB1B70FF1F03D5FE94
+	D11E2E4680FF07A241718B41B439C7F8F71E83887F80F108AC228AB00D82C1E9
+	C14827054640DD59513627C5F8991387F8601610381607B1503EC8385520E054
+	B98710B00D4388890E61407F8B013A1FA198584A61841F0FF1A631456B1176CD
+	91B33846203FC750E0762D8C5D0976682E22203E122B8C678E64E10F9650D993
+	23FC740EE89726C7F84D144F362C8FF03E22C7B49F9430F47AACA1AE3A53805A
+	154C401486D1243A4F210701E5CD7CAA81602703DB640F415D7EA591A631055B
+	616C6ECA44B0E915219DB08D16EB7C298A319EC5875B3B1F23DDC9CDE9C137C7
+	FCE11FE3A477B3B9543DE0B04E145046728D11D0CEE6C4DA04E1A04593700010
+	48380A97E960082A8140228344C557ED4C618A888142A684D01182D8668FF0AA
+	2926D0DB1D83B87F8FA1F2F4E8CD1BA354628F51C1FE32C708F182D2A05E0D9A
+	4A2F07051709426C638FF03C1583A8BF20E0E083807370001540A81241BA6454
+	01AE3305C9161E2E4C7FC3A7FCC368594D0D0289A285714D3686E8EEA4A3EC7D
+	3CDAAF566AC0FFAB5576AE55E13A32E1F84F1493AC760F279A2BC6E8F01FE104
+	49AE3038140370B320E0BCF8D3A7CEFA4480790AB501540D71962E268BB79112
+	18A6D4990C2CC468FF0BA271718595983FC770F695839C72AB41DCAC9568FC9D
+	63F6CED9CB3D682CFDA2B4A3FC518D9ADA0C842B49512A2C820272E06DC8B870
+	4B82883D06107B5FD7F58172E3FEA33B3B82C29FFCCF8023FC2F09D61A19C590
+	D786A39E0889B13C2987F89F1382807F89411AC084E0951343FC5309F1463FC5
+	E0B7A8830C5F8C01FE385C79491FC3EDB20D37A69B00602205C1E88381FA7458
+	23883510220434043B76964768E18795330386013E30C7F84A13582C2E0A99B4
+	21C4258C1622C85AB5D1622D2D38A01483FC5089E80426049491122224473031
+	2626C7F8D51DEF403D8C35A29B11990702F7EADA3E8082B057F2A81E83A22254
+	AB0A45A48311B8D002015BF7262C067AB412A2C9A28611335102908F1783FC4A
+	88F1283FC560AB15C3FC3C080C501F44008B1FE260498981FE230420891FE19C
+	45DE20F03019986516034DE507A1463D0838329F98DCAEAA40418ED2CAA81F03
+	C15A54876921A6794D99F21987C8591026031B0A15A27C4F0FF15A2B9AB08A10
+	D8A0430847F59632D075111246E45E907221C592E405C1D44D0DE20E078DB18A
+	A75A0EA00F81DECCF0394C87D61257B11D2122E4694D1B43246265712196B104
+	021382604E30310D9B4768C87603F76BAB11BE31AA003107C0F83EE35CFE6237
+	1D7A185ADC730CC12B8B06049116427DF98E51A22A5588D842E35C61C381762A
+	9FD0F31CA325C46FE1FE374685831D637B05EFDDFE3DC77ACE1742C90B88F111
+	6304A08C1203FC678C761A3F07C8F26143445FE9855041E7D904029B89F33E81
+	65B9C650911FE1EC32847B1A14827B340FC1AC7F8E6E583FC3A05E0823FC3085
+	34A42A84B07356A2B43D0FF0D21582073B0C7CD06E8C2B18300530761FE1982A
+	94B14A23F9BF39E5A24C3DABF0F4194248FFE0F994608A60E89692E0F53F241C
+	08F2730F5E8416B71CA321FD0640AA1187F8560A131FBECC713C23038F32E69E
+	03BE77E98BDFFC4F870F41BA1689610A1B3C478B98E2E0514C40B414429F941F
+	E20C3AD04158240307560A00C06A9E7367DC4C5471068145540870DA52C720C6
+	110C0C3D79C0BBCCFCE8710CDE903F86BE6816028D7EF0E1A02D734F75E1BC67
+	890FE1BDAE79AF39E1FDEFA40C81642A79DF0F1D63B86509E0BC629070445A3D
+	5EE35480C1540790C00E87F88D0E612C7F8810E10C83C068F2BE744006B09A3F
+	C31054091E741A417CFD9CBC115CFC1611F5E1C1D81A0D981BC171CC5E1DE1C2
+	381D1D9016C148145E75DE5DEC9100B96BC000638009F913F80D4200A9020017
+	C14C13030203DF31FD9E1DF0DF160ADF660C20B5F120C5FDA0B9E74178140110
+	364199E9876C42A0816CDAD445DE001C20AA0B1DF83C211E0D613212E13A0CA0
+	C01040F41080FC41C01610610E165B8DE00041E002BDE003BDE0027DE0010218
+	211C2FDE0023E13C15C2C219A0AC3BC15413C1582821AC4BC00207E109B8E162
+	1EA1E61EC581E000C22021FDDFA175DFA19621220C15E20621A1FA1F623A16A2
+	3624223E1F224A25625225E24626224E26627226C45C40400000000000000000
+$
+	small16
+$
+	4752454154454C4B000A0010408410010682004010B83800810E88C4A26007FC
+	58008001C52371B4041D010D90412451890C35811A003800F048BC0A0F098441
+	E1620004A608048E471FF2D9ECB65D0A838260E1A8385E0E0B8381685071B41C
+	59448383295338B4F2AD0E0441C44210C83CA83715864F80903810C30728C1C8
+	0202F204FA212FA0D6C161F959240709868D7072AC1C83071841C3B07031688E
+	2A1E1648A29549B0AC36702AD34827FA992C7F7E9F4D24E6F15C88285E0C8CA7
+	E691C56EE17F97552D57F9092ECA7F8C8FCAB73084C083600648E614E8283A28
+	34D18E4591AA412C8231BFD48913ABFDB0CF614597C9D8B3C5D4FF79B79A0FF3
+	62716AFF62371B8FF77BB1A8FF60B61B6FF63B7BC8A667B7DFE7159B5DFE2837
+	2559D070A9C5C51B4A7254773FCA12346F3FCD9344C4458DF339D6760FF2B885
+	3FC7B288BA3FCD2390E03FC50288EF3FC13214F73FCDA391F33D4F1790B9365A
+	908461214B841C0F1C0570D0418186D3FC8B1D4533FCE5378D2458B2229D63AD
+	16364C63FC66294C83FCDD3A8E63FC782DCF0774B19583A260F43FCF43CCE43F
+	CA233A1C080571D8A1509C40D414234768F8821A8463FCE9385E83FCD6305163
+	CA473FCBB260FF1C0AD83CEA3C8ED3FCFA3E2863D8F6A183B26624204BC3CA3B
+	309E406C4A1908641C04560881C04C3C26A3FCEB36CCC458B022210458D12E5A
+	A28E4E3ACF1880F83DCF13FCFC3ECF58FCEF3D8FF334E4AF4712D1AD04C3612C
+	68555171E4600F0C8A88F139DEC3FCE4359163D6563FCDB324FF170A2938912B
+	4BE3FCA528CA79849D284FF2A8A42A2197ACFF164A6A980604016105585626A2
+	62A23ECDE93A611CD16B6916328AF3FE0B2FCFF2B0B02D8FF29CA2290FF20483
+	234FF2308C24CFF1789C2F4FF0F0892C4F451AF845DFF0D470A88ED37CC38FCD
+	C6C4F0395DCA924E3D0E6B54F7A90FF320BFAB49824C973FCD33131D3B8E7362
+	DC130322BD48C913C1C0580D04DA88AB24C6B92C5C168FF25482194FF1B86216
+	CFF21873D64881E4663FC851D05F658931D0FF1BC60148FF2D09C1C8FF159A02
+	39070234D00071D4020B2C3A81489180FF18057154FF1C863E2C5A1463E1A85C
+	142F014857A0061151AA158593FC691705192F903FC586306241C03DFAF97144
+	016051150CC15850E63B315CFB15FB4DE3BAED8FFEE7B5EEBBFEF84E140C6184
+	4C0B41CEAD17DFBB60C3B6193B6133B61C3D4ED878ED890ED868ED89C1544F15
+	831F2D57F33E5F93E7457E6FA7E8F8FEBFBB7E4040000000
+$
+}
+
+icon "stdActivity-Meeting"
+{
+	large16
+$
+	4752454154454C4B000A0010410410010682004010B83801010E88C4A26007FC
+	5800F885382291C89442091F87C1E3E019249A14C0944100729004B2572D97CB
+	A360003CD26D049C4D66F37784101EFC8207E82001FBFDFC448B52A970382C1E
+	130C844BA1C108EC75FF04AC4560F4A8AC5EBB608BC1C05070441C190704C1C0
+	90786802D90408C1C49071A41C7B071E5D60F4D000620E0A838160E0B8385E0E
+	22838B20E30838AE9F07B94100B61AC6561D70005A208148388F198A838860E1
+	ACF5E60E528396E0E5ED641CB50729C1C85071341EFF04C7C1087072841CAD07
+	2C41CAB072641C6FA4C15B60E06C26DE0E2E838EA0E46839537FBD8393B5E3C1
+	18052A661D0098A872A04DBA8C2C05DB6621C0096E491500933073441CB9071F
+	68208491A878011FC550C00227C640E4022CC5480CA0094150047941C6476104
+	0CD070396B41C1641C2A41C3B6F4480E02126458114292E4450D8202781E05C0
+	E84104199071A9E178CA31A01E3FCCD2504F3FCCE24C4E3FCCB238483FCC7220
+	413FCB21CC293FC951640F3DC480A40226DA81A43C0089525059044EA2BC7109
+	CFF2F07F0DCFF3308F124FF30E473FCAF1D42C3FC771100333C155A06941C3F4
+	1C138614E410471884C0B8CC14840098B11844B0B4CF2086B128FF1E86251872
+	164353FC6F15C343D47112C1A388BC2103D3FCB01DC2E3FCD2264548F63F9064
+	39166C30C820ECFF3007D0D0FF2044C030E20F5DE24CAB1A81F3FCC11F8363FC
+	C4A84FF3208A10E669A0FF33C95140FF34C9B158FF29069B087E12C093350710
+	27B1B8560CC321A4520C49B1303B08C90A5296A368FBBE49284873FCFD3ECF83
+	FCEC3A0E13FCC92F8AF3FC961C03E3FCDA290613FCBA20439A9EA9AAE4090A44
+	91A48AC6B3AD6B72084E03CE60D81F004A72C46F096C3B16C7B26CBB36679A6D
+	1B4ED5B5CB21E4313FC9217C1E365071067BBBC40BCEF13FEF32E8AA24B351F4
+	5E924A02154B458D630516390D63FCD7310AC3FCC6B3CD627C5BC3EAA8FB12AB
+	B159AAB2AD2B63FC85148133D8490C00F32F23C96C4B1AC8A8B2AB3B2DB4AD4B
+	5B532805D3FC901781D371071167B576F3348C52C346D20B2D2B46DF8B127C83
+	D30FF2B7943FC91164FF378A61FF57D675BD74FF2D87A0C8FF2B083900A91AC2
+	1D8F18D988F17BAE1B45193370C9B73B24AB1DA962B07009AD0DE730DF37E23C
+	5D074DE7510704B87A54F0304B2267903FF92E50921F05CD2484E54CF2D916E5
+	CFF380A8203A09A75AD70C92428F2C08714CFF3C8F33CCFF2D08690317D96B72
+	8C74ACCC32D0503D5648EE5D207654C348600A84CC2D9E98BB1000E1BD2D71AE
+	DF5CC85E03C36C8383820E034AE8700B00D0613921043FC4C8850CAF544F3E51
+	221F1AE0B514A231CAC301C23485FBE61FEFA1CB07666831C698D7586358713A
+	4122C29FC3191FE2A83F84B1FE36049864802DC5938AB0DA08C7F8E51BE355F8
+	3F288C1F4A48CE12C145E2A4D0C207C6A90703A60A0E2991242644244D1630A1
+	CC87B0B51C2390C416A275CA8C86AC3FC6E8CB1FE3C471C3D14C1C0152CA7D63
+	FC348760D23FC278A16A413C518DA1FE15835C4D7F02A56D2391622547F8F611
+	8FBC5186203100C5449809C260618FF08C268670FF096220532C31121091CC5E
+	1FE2002600A170610CB8710B00D4388890E6B4C5809D0FD1C02C2900C2C18698
+	C515AE55CD1169A03FDA88FF1F03806930B0FEB4C2288E1703FC320B51DC3FC2
+	F8B21DA3FC1E89218C3FC3D8750C0FD052B451DB3C9A60E919AF7C5A88C0AE3F
+	C34074914134514910C02CE7305314B2443706508C3FC3003A00E34C0E811002
+	134B499767ABCC5809C0F6E643D4FA5E634C620AB72AF85CB3989A934DA90650
+	B4C28308B01CD37E70CE39CA3FC2D0B09CC17C3C086586305A78ED1A831DA6B4
+	F8FC3A97D8F11E83FC1F8941943FC2D8B19CD40A7306516D3881A0711363FC0A
+	81502628C838442CF4554A8105E628045068A36B5DC40C38130C2B5B4C04410C
+	338FF05C1821785914A36E98CE6A693982A88B99C32EBFC7E17A28E68B9B8F71
+	F4638DC1D03FC260A31BB52EA6D0BA063FC280951923FC138561023FC0481C06
+	22BCD390401265DE72961502483734152B6A54B0D71982E48B0F1A86B2A3D34E
+	AD80642106D1FE0802787C1FE084268771FE0DC39D8397F60C23075AAC184495
+	770EE288738FF13C2A0683A41963C5D20C91B939C438BC1FE120488C81FE11C4
+	5C34036112D40210A2F940582407E2D0838272D768C8BC1D83E2403C855B577E
+	86B8CB9BD49EC26006991E47F83208E18EDF05173F6EC3EDBA09D4680F04BB82
+	1082E4220A624A7109D1683907F86E14A3DC7F84911E3D47F8831517680B03EA
+	E006C230711FE07023873C1B4680F84DA340301304212E41C0A5F332D7D14C8A
+	20F4185512F35E77F05BDB0B6580ED9B95B6A3484B51A064130360FF03010435
+	8FFB6F950180440BE3FC458981818730F11613F6A07F8A60F03FC2A896C462D8
+	548BDA8E13AB801A08A1BC7FE10B8206C23872B740F42D0F50080340B9782080
+	2B1E95E2B12F41A8811021A166E45B543B470C7DAD9A5B4B9161C237D7F5FF0D
+	C278760FF10C2D17D0CF1542A5680B817D76EA30CF1622D1F03941682FE3E896
+	14AF7C380677DE158218281545F083807D110720F041D22A59798F41D17521B5
+	419A42E84BB951822888B6D2C92E56934D41242F07C8FF0C22787B6ABDC38871
+	1E981F3B247F8880E09A428A8613A622F915FDE38F8AC2EF041B1AFD0F81E1A7
+	325CD2A4652E91CD2A4C52E69098C0ED32934D28F9489CC64B295BE4705FA078
+	0BC0E07A20E070B6EC2DE40037BAF31F03BC6FE9872A3E372526E47B5DA90FF1
+	D5C41A672A22D92ED8B95D9F501A60EC1BF3A97983305006035186E33BCF4480
+	0BEA30B7B8E619926C6A8C0DA02C84FBE51CA347538EC1B0C086B8C38EE2EC55
+	42F1E6396CB75AB2C374684DE1D637A5475D1FE3DC77D8E1F23CB0DF6AED9DAC
+	7FF6D1FE3F3B534C1A22FC4F5FA6758EF9F740D860D0597441942467586508E3
+	FC2E8524782383F6581CDE087F8740BC9203085351E2A84B6311922B43D4870A
+	C103C80634783746108D5682983B0FF0CC154A48A511FE37C78930F6B5C3D065
+	4D3D8C45AC314C1D14BA991EA874C8F7C32F7D4416F71CA322178640AB4282B0
+	509F5F327D09E1198B7C423CF9F24BE6D1BF9DF63EB07A0DD1344B085CA9F5BE
+	B0B81454682D051D75F6041875ACA2B0484EE0CC1401846442906BE0F1A97A0D
+	028AF310E1B4524390318220CD41E8FBDF51F5D3E81C41993B81FC1AC8F01601
+	457E5F581A01688F201DF8DF601FC1BCDF9FA1FAA02602D37C164AAA0613E930
+	4B4C19413C0BC315BBC410021FE1CFCBBC0C0BCC1E54303FC2341CD1242041C1
+	1C81E01A1F6A0FD2D81AC1343FC188150911F581A417CD701EC194115B741613
+	21F581D81A0E6C1BC171E1A0903FC2381D09A416C14917DF59F25428A040B825
+	459C58E0BDDF445CBBC2021B017C14C1303021661CDF62042049F6E1E2102166
+	1DA0221F5F5A1F1F58178140110365FC80C01ADC61C6A1A5A21F3C1C21D20FC3
+	C223E1FA1E624E1EA2522481040F41089E864E22E22A27DCFDF3C041F3C2BDF3
+	C3BDF3C27DF3C10229A0902FDF3C23E23C2C22B21E43BC15413C15828223C4B4
+	00000A279CFE2FA1AA2FE282304001F3C0C231857628A2AA28A325F3631DF35E
+	7E30E30234E34A35630A35E31235236236A36635A37636E37A37230040400000
+	00000000000000000000000000000000
+$
+	small16
+$
+	4752454154454C4B000A0010408410010682004010B83800810E88C4A26007FC
+	5800808A46A3719822021B1F8F48247046000E08E003C122F0283C2611078588
+	0012783812371B7FCAE772B9642A0E098386A0E17838460E318392E0E4A838D6
+	0E13838920E3D8390A0E2DA041C110711084320F2A0DC56193E0240E04308AC3
+	0013B240BE216B2B4EA3277252E0D4280BC0E961706802553E93828AC4D9984E
+	D44717848C61B07C027D83894B447150F0B24514AA4D8561B381569A413FD4C9
+	63FBF5527A1FBE1888B223FD9A9125BFD8A851F3FD4466113C904500AB398681
+	1D3FD948D233FDA29829BFD36640FBA60E2A391646A904B208C6FF52244EAFF6
+	C33D85165F275FED0511BDFED44E161FEBF447197C7E1B3FD4A6B13BF5125A10
+	BCB81C25DA01C2721CA2D8810FCEE41C2C1C5D31B4A7254773FCA1235E7364D1
+	3111637CCE3FCD3298743FCC92444C3FCCB324C03FCBC21C493FCB31EC3C7B08
+	9150FF2E4780BCFF374D2780C2232282E082100EC5087015C34106101B4FF22C
+	75728E5378D2458B2228FF390C62A8FF2308579C582ACE33FC741F4713FCC62A
+	C8D3FCE02BC886DC7A114FF140A2358FF1CC87688877E4B641C05748350508D1
+	D9CA2086A718E9384D4458D6305163C8EB3FC461AC8F3FC5F2C0E93FC5A264C3
+	3FCDB31CBE458CD2D0FF240C1384FF178B23B4FF110852D4FF02C12064759D51
+	64E8881C04C3C2773FCEB36CCC458B0998FF3C4EA3FC23128733FC2615C853FC
+	3718C8E3FC7227CE53FC832AA88B24B73FC321A89B3FC1F130793FC0A07C3718
+	931AB8001E4600F0C8AD0F139CDB458E49B4FF3D4F03FCC12E0B93FC84260AE3
+	FC8A260B83FCB12A5E02609F322FF254973FC611F49A3FC3F1305539C0201C0C
+	07AE3B8E77262B43ECDEC15B7B0A9532516328AF458DD32E5033AB829CA731A0
+	F2F6A38D3273F0F93C8FF1A8550D4C551B1645E090D470AD0ED37E94394DC328
+	FF3C0E5342B536F053D0E69B4F7AD8FF3F0E534F543D4EC3FCFD37EB83BCE736
+	4FF174490ACAA41C0BCF13A1C0580D04DAD0AB24C6B3FC661705A3FC95208653
+	FC6E1885B3FC861CF7622079198FF2147417DA324E1C1BC60148FF2D09C1C8FF
+	158440A08E56F6900071DB020B95C228489180FF18057156CB18FA7168517286
+	A170503FC59148573FC701862F17456164FF1A45C14773EACFF16199B850400F
+	9AC5DD3100581445433056143B4F40573EC57F4794F5FD33FFD6F4BD7F73DB13
+	850318611302D073C845F9AF4C30F4C64F4C4CF4C70FC7D31E3D3243D31A3D32
+	705513C560C5F413A800455F4C0480301601C0681302205C0220200000000000
+	0000000000000000
+$
+}
+
+icon "stdOpportunity"
+{
+	large16
+$
+	4752454154454C4B000A0010410410010682004010B83801010E88C4A26007FC
+	5800F807C59E0003FBFE38038FC101F1C0000E4B278200DC12A9649A5D2B96CC
+	A4CC0954D669369CCE276038849A7D3D955027C01A251A14FF9A81E2D4CA6D32
+	070583C261908934382114ACC1DFF04AE456B717A6456C364AF4100D0708C1C2
+	907AC4101707B44100562BAD96C75CBB5E6EF7ABC5FAFB80BE60AF7848743400
+	15838DA0E42838E60E308389A0E1E8385E0E12838320E0783DD3077FD06070BA
+	3D0E92EF070241C43072741CC3072E41CB10729C1C9B072341C79071941C4F94
+	CB663359CCF6978FA2E4E160E083896068F23514C62DF2E12056C5260EC46A91
+	A0A4308C080340E70839960E628397A0E59DAEDF73BBDEEFF8304CBC133304CD
+	C133B2A83805C869E010005E1282C0E87A1883F3FCD131CA83FCB92B08C3FCA2
+	2406F3FC8A1D4523FC72164353FC6C150323B06112C2D33C51100262CDDE781E
+	2791E67A1EA7B1EE411B8411BA411BC411BE411505550405907029C6729A6000
+	608944C2487E170FF3C4ED3464E942529464F95653348C82A8FF2E8AC234FF2A
+	89A1E4FF92E4D8721E88222892268A22A8B1E178DE5411E7411E9411EB411ED4
+	105441C4F41C406AD9C802467483122A611E8FF3C8EE34E8AA328EA368BA468F
+	A4A90A5A95A54DA348B53FCC22D8989809AA264B1761B8761F88623896278A62
+	B77C8C078170387941C6641C576419AA0D627F86B884A92E8AD23CFF3CCEE356
+	C4B1AC8B1EC5B2EC9B32CAB42CFB4ACEB52CDB58FF36CD22DCFF30CB6266A11E
+	E641FEA599CFF1BC570D0F5104330788D41C3341C0DAED1741C031B8560CCC73
+	4CCA2BAC43BCD7BFB003CEFFC0705C0F02C1307C14A61E038524A01B4FF398DB
+	2F306C2717C2319C5B002A89B1F0FF1544209CACBBEF1BCD6600007B94EC39CC
+	E3FCF43C0D9CBF31CCF32CC336CD337CD73BCE88C14121CF921368C828F3CCE7
+	47CE349D1B322CCA521F20C8B24412F0412F29156215C440A02A1E863828F43C
+	4DBCBF61D8F62D8366D93673FCEE39CCD3FCCD2D08AC3E162B482118FFD0778C
+	FCFF31CAAC7F6AE0369E0B68E13653FF4D220FF153222B5070D326D5D179202D
+	130931FC5F3FCF53C8DDE679BE779CE6BA0E7BA13FCAD20C47DEB40DEF79EB3A
+	BDEC93168113FCD42FEA0E93B7E8FB9E8B9C2D0A52278AC88AE41C3841D1AE45
+	5CA148A2B09C478F63C8DF3FFCEF43D2F47CFF57D3F58C128471EA7DDEB7AAF8
+	3DEDECDB32A0EF53E7F5BE8F40B429B721504109CAF41C3D66283AF6BF2F0B02
+	5BD13CCE1FF1FF0F67FAFFE01C017FC3886A2DB1682342B8FF1AA3004E0FF1DE
+	3A546C1251B03A083B0764F7DD28830910120140583EFF9F608B1FE160228291
+	729FC838137EC4A97BAF91AC3345C0FF1EE3D071C3586F0E61C4368790EA1EC3
+	B88310221C3F8742803782D7C44845387907710A22C3E8A23FE194340CA13C17
+	8D785641216A45338B94738E119F0D47A8E58C71947BC648CD1AA344678D31B2
+	35C691C63585D0FF1682382C44A7BB1301E4708DB1FA350D619C2E47FC568B11
+	680045C404D61AD02A5CA3E07B0E71FF23E48C939252424B49492F2564A8F11D
+	6CC8610A30EA3FC4D06503F1E60DB791A02E04949895B26E4D4971AE3385DC84
+	8AF164822808B6A0C3084C05A12C4A0800C43FC7C8F61D330E62CC798D312654
+	C89973247F8E41AE2F87FC1994EEB9F0B79178264344CF99D37A66CE098C35C6
+	7B1590B2DC000412D6A0C340510601EC528944C63E47B8EB9873D27B4F59E73E
+	67BCFA9F03FC5387A07B359F0BB00243FC5A88F0B43FC728D81813FA7ED109F9
+	44A7DCF51AE34269C851B07C12028350A2685B0A91223FC7D0F81DB48E92D27A
+	4D49295528A574A681CD40B74186C0C41494BE97538A5B4EA9653CA6F4A06C0D
+	017F2D417D1A20812C8381934A67A180C71B034460D231F23BEA8D531F554AAA
+	558AAD556ABCA86F62F04D06AAB355EAD55858A382B155BAD35A07F8E11B6331
+	5422220E1308381AA9459CE70351E23A8730DA1FE3EC7D0F1AFD602C1581AFF6
+	16C1D86B083FC5788509B4C2C658E18829544D90A63418650AF77F626CDD88B3
+	B61ECFAA643D5CABA1A508C0DC1081A5CA3F07D0F31FF6AED6DAFB5D6B2D95B0
+	B676C6D88EE1CAB1C49D32A6157490D8C09D6D2E1DB7B6D71ADADAD5CB68C825
+	753412F25F095104196D70FB1ED752EB0FCBAB75EEDDD9BB176AEEDDB1EA3C07
+	30FF1882998FDBCA0D6FECB5E5BCF772EFDF0BBD7CAEDDCA2095CEE61A50D414
+	81887914C2583F0FF1FA3F07C601C0781702602C1181B04E07C1B83307E06150
+	1EC203DDC258530860AC3383B05E1CC35832FA80035C4100E1FE2FB0C04A0B81
+	5625F008FD1F58B3170FDC5B8BF19E31C618CB1AE34C6F8C85F09C42C2683302
+	21FE2DC48860C738DB23E46C938E31C6200A0A04820042FA99C600C116C2956C
+	0D51959632D0ED1D30E07F0FE1F83FF30662CC998F30E67CCB9A33366CCD79BB
+	35670CD39CB36E71CE99CB103F4B986A72921D10099C5FE7FD0287477AE5D0AA
+	9D7288C0F016C7FDD10CFA304168ED1BA3F470B8158B7F4AE97D2C3FF4C0FFCA
+	A29B2C0CBD41A886D8D5D423B4750E42983FB550FF1081BAE10550860A25C800
+	013895E3A4650699C206BBD7A8775E21D0A099F3F67DD87B190E89FD040D7402
+	1DD99B2D33E84D0FB490F267060C9F5CEB8DAFB6B6CEDC915B776C6DEDC3B837
+	1EDBDC5B97726DFDCFBAB749172020000000000000000000
+$
+	small16
+$
+	4752454154454C4B000A0010408410010682004010B83800810E88C4A26007FC
+	5800C03FC1180038DC35810D40486470491496490A83C3628F886C5E050784C2
+	25400100023B070245277077FC127D159EC5E2D408201E0E27838860E138382A
+	0E05955122B43AACFAA758AB5527C5F250B090461B8852A291004CF40502008B
+	B0728C1C83071941C47070A53AA152AD5667C7E3411D42DB69AD9FEC45C265FE
+	A94D1E9F48C3D975C063288D97E47B128456220A1FAD36BB6C1C850718C1C1B7
+	BAD8012E8532B31E6EE6A3FF59AED86BF5BB3D7385B2BE7FB257AA07FAB13A7E
+	7D238FC6170190A437608FC641E4841C3FA58380D569C3EBC5E8F06C3FFB1DAE
+	E76FB2FF632A8F6FF61A94E9DFEEF83BDDE451E8BAD6838834A5D248AC3CBE58
+	A59FEF579371FC7F8FF384D32CD881F4403FC94174143FC9B19C213FCD42FC98
+	801FF7F6168048D1F4617C504089A51A8530C44D354CC2D4FF3D8F3382288A8F
+	F390D72E8FF2A07B0F8FF2F89D1ACFF2806F0B4FF2305000CFF374CD2B22C8AE
+	298AE1A188DA41C296946E158331D0EB399AE3DCF5390FF95E5996E5A960FF3C
+	8ED364FF2D89016E3E900FF33CB72425E9725F288941E8EB41C2A6947C198452
+	74F93D8E83FE7C9FA806CCDD3FCB5238593FC901540A9A24126062070FF3BCE7
+	34E7F9F6969F8A32507B9D1049D95A2548419CC53E8F83B0FFA96A7AA4FF328A
+	E21A8D3FCA11C02F9A8B6249FC3C0E1AA2A6AEEAAAF0A32547D3B1070C15341C
+	022B09E218EE3ECFA3C0FFB36CFB44FF330B2232B02F09A1A8FF368C72A4FF34
+	CBC26ED0B3AE4B4AE52C0A222CFA41C3354C5A11C2A064C02D0A13FCFC3ECF5B
+	DEF9BEEFA3E4F53B6642405E3FC8E14C07AC0A51D838BF70DBE2FA2DCAA25545
+	BB9171B0540C843358CF308FF3F4FD3E71EC8322C871FC972328C730D4FF358C
+	129724CC326CC0B82AC97514374A87216435140A725C8037EE9234EB2E0AC61F
+	4561CC72F8AFAB0C02C8FF348CB6E4DB354CB908D8338FF3B4EA9675B964FA3E
+	4F73FCBD2C49F3FC2206C1040D0A6976D45F3A0D420DC372CEC34DC040DC048D
+	C060DEF701F370203700336E55D7AE1B85E21A6E138A56901000000000000000
+$
+}
+
+icon "stdActivity-Phone"
+{
+	large16
+$
+	4752454154454C4B000A0010410410010682004010B83801010E88C4A26007FC
+	5800F80FBE000E000BC2292087442192300C964F0A9180E54C08200E5A0097CB
+	A613298CD1C10403CE0013A9CCEE7B3C9FC7C000F7E4103F46000FDFEFE2245A
+	9F5081C160F0986422630E0848642FF825762B07A7C562F62B2C5E0E02838220
+	E0C838260E0483806CD5DBA58EEB64BCDE2F70E0341C39071D41C91072241C6B
+	0712C1C31070741C0F68BB58AE16C838520E23838C20E2C83887170709656097
+	E8200B257ABBC380637D69487DB04B10F66ABD80F9462EDCA2C29BC34C1CA307
+	22C1C6D54B75CA0FA50002F4104176060E46839520E568394307071E41C63071
+	341C370709C1C1B6A8380ED038F4914904620AC11C812FBBD5EA343BFD3C923A
+	BD0DC60203685112C3C2EDB66E1BA06A071B9070F99665104059070A9070EDD6
+	1203808499160450A4B9114360809E078170387941C6641C6341C5E41C5841C5
+	241C4B41C4041C3441C2941E2105C170B03B8F09221076150EB344CF330FF30E
+	473FCC6928FF2E8B92E4FF2A4A123CFF2989B204F41D46A134DA1544D0E8C00C
+	2611F9070660D55D0411C621302E33052100262C46112C2D33C821AC4A3FC7A1
+	894B1C8590D4FF1BC570D0F59CA741303B08CA90D0290608C895071910718107
+	169D28B42CA60981985B0FCDF35CD634CFF322A33FCD935CD83FCB32BCB23FC9
+	9254973FC821FC7F3FC7D1E8793FCC9AE8FF2D0AD26CFA106C1291961B8560CC
+	321A4520C49BA1C232427D9FE769E2D03FCB2285F63F4FB3E0FF3B0E8386B92F
+	8AF3FCA52547C3FC8B1D4563FED4B50641382F364519BCB30F42F070960400D0
+	1C72096FD2884B11034360C8308B4AE6BB348D1348FF1E0711D8FF2A8A62A4FF
+	224827DB0DC3F157D8D6350D53FCD3C80FF6CC432B10702AD0102D4B4AEB9FA4
+	C2A8923FC921F45EB54A021550458D630516390D6CE1503D0F23B6A5344C53FC
+	B62A33025080188FF1C4589FC621427F14C4A0F4F92B0A1220FE32B5DA94D936
+	4FF2047AAD09122C903FC701A06EC5316C330E3FCA2274A13FCAE2A8AD3FCCED
+	EAC0B099145ED4348C52C331CCF35CDF32174FF2C49F20F3F2B78D3FC9116516
+	320ACCFF3A458DD32D163E0F5CE0E93A0E53FC88214813FC9021066C7F2134CD
+	2A871ADB5F6D8EB4DCB74ECF91D9EB11F3A632FBD3FC7EF00D00F3C318D76B40
+	F0304B226784E278BE34921F05CCD484CFCCF2D916E3F94E5B38E4916F76A2E5
+	8FEF88FF2AC94220FF2107215CFF354D4340FF347F13FC9A25098DBF0FD9B68E
+	D7F7D8B64FF55A0C5188D184C89712A3B019C08102C98BB0700B00D06138B104
+	AB442865714278403910F816C7F8B514A2319FC208423FDCC0FF1822899E33E1
+	650A9DF864092A89828FF19B0C87F89F134275B8B73552AADF9BF57FEFF1DB8B
+	C1742ED280A684E12C2103519C6F00A23427303141092132210324168302443D
+	85A7231607F8C416B0DD9C395732E6C7FB9D84508440C6861818414B8A1570DC
+	700DF1BF0E1BA3B06D4DB188B13760EC05C0B516F170620C41FE1882B8481FE1
+	241E82A14241C111702ECD3C1A8711121CC280FF1602743F45A0B09E43083E63
+	E315BC3DC726E465133D22C3A8703D87202E9580E795A3FC3F87B0E03FC5E0B5
+	1483FC6C4B81FE3686CAA8192320630FF53E3507F8CF8662EC5B8BA770DA05C8
+	B649E2FA678FF10C215EA0650A60E47F83C5EC1E8BF97278C9F994B2D1602703
+	DB910F4FAD6A0D31882ADC73907B23FE52CEF67D28DEF39399E2F9C88870E6FC
+	1F90EC1D23887F8F51E83C6800F573C390720E363EC25248C41853BE83B4716C
+	F5C43D141FE3025A32C4FE0CC140180D441C0B9A82BAB40082D4140228344E55
+	D4E00618A88CD4BA78C281FE25E99B10A4CDE5BD5001CCCEC7A8DC13740071BD
+	71EA3A5228F51E43A68239E1B75287F8A4138FD85D55084632D27AD420E104CB
+	521354B51A4B6C5D8CB46B8CC49E3FC788EA7B4CE59DD2F1EF5A87F8809610BD
+	834B85503BC680891FE3BC6607DAEC3355A0F019CE98780CF71A3C86EB786F43
+	387FBE67A836AC5C3117F4B540A8342441C08D592C5036078900F21568CD9C1A
+	E32C5C5319E7688A84619E63404B87A77E1D4304BAB1838C6E8D11FE39C5E3D2
+	1D02F59A0E817D6B0748BF69A3A4604541E037E3F24A98021AE38FFAD43DD548
+	A210C3FC3305005E358C398DB2A45C382821441E83083DB38B52CF47EAC7595F
+	0566671091EC8B011B6A44B88E570FC6D88ED1B2B88708AD93A384570401FE38
+	857842BF42C0A70E31621187F8E51B83216A8A81463FC538A36E83F7078FF692
+	1B47F86309A0B86510739C410055D62BB23E34068087779968ED1C318E97D2E1
+	338AA4A8A97EC35F178FF1D233DFB0DA13C07E5D09F0423FC6D8A00478EC5082
+	51FE37C56DFDAE27DC464128643359C0900F01447F8560860A0551072A44F30E
+	800B2E106AF27F5A83D0743EF8475A1EFCAB67F0988B6671021F2D48BC16827C
+	7F8DDCE3522B18E95503A46889EC842C429CC1131480708B878B9287FD143EC3
+	E7438FF1F397DD187085CBC81309D917234D4CDE06A0832E59C1F03C16FDE4B4
+	53B8A84EE7BA2043C4FA194311EBD4A1B79CC7A0F41E79CE82B9ED618C702AD5
+	14F09C5488A9C8F887F4641E12A16A4D903936C82180215960B16985A83E077C
+	72C5054232D3011221D9B8BD96A3FC696D8C623A6A3CC548A35069DB11D43AAA
+	3EB2B163699887F61E37C5E4EB2A03B06FCC05A946E8ED1FD8E6A6CB8C2D3039
+	8660957D8301580B213F060728D16263B06C2E21AE30E1B8BB15507C5A8AC134
+	3FC3E07469A2B05188D6F233064B5F6C3B7D508DE1BC3747F8E8E4B2CC5E443A
+	9C2447FADAA06540688BFCF3554825572080537B17CB2E2CB7D0CAE561EC3284
+	71FE1742904F1FE2383F06B1FE39B9E8FF0E8178208FF0C2D55880969F427C46
+	0691FE14C25DF90EE1B33E0CC18D680658C58FC90D228CD198914468850EED88
+	370524F2196170DE18622E128A60E8A01410F5B24412CA694F03CE607082D303
+	946441F0C8157018560A0FAFC6BEB13C23038F42E89943C77977D6246730FF0A
+	A13D7504F0972502E056EE21782CE4F09211D3C04A09012C7F88F10019C7F85A
+	0A39F3C80FF1061D6940AC1216B2E80301AA41C199E3E706A9A78340A2B50438
+	6D29C390633E71241EB3E743E8BEE038866B581FC35F450B0146CDFB80D016BA
+	2FD5F33F983F86F713ED7DBF98FB16B0320590A9F9BDC4929281942782F18BA4
+	882008F8DB209F80C0B501E41800E83FC2341CDEBC2041C11641E01A1E3DE61E
+	E02001AC135208151215EE01A417D06DCFC115D44161269EE01D81A0E4C1BC17
+	1D05EE1EE02381D10B816C14993DEE1E2980C9A80B825468C00069DE086A9564
+	B402020F017C14C1303020A204211203CFADF79F82115FCE129EE212212E1183
+	FE139EE0178140110365F001AD3760E5FF86A5E401C210E141E403C218213E19
+	619219E1321281040F41080FC41C0161705F1961E40041E402BDE403BDE4027D
+	E401021E21802FDE4023E1A015C2C21FA1143BDE7815828220C4C20DE1C60EA1
+	6E2461CA24A240575E400C225C58A1D21F21D2269E3A261E397E625223E29228
+	E29A24E2A22562AA2962A62B22AE29E2BE2B62C223C404000000000000000000
+	0000000000000000
+$
+	small16
+$
+	4752454154454C4B000A0010408410010682004010B83800810E88C4A26007FC
+	58008060452371286A023D208247E45210030007047001E09178141E130883C2
+	C40009441C091C8E3FE593C964B6150704C1C35070BC1C170702CCA2D3BA6000
+	65500B8CEA66612D58DE08AC9160F03820360E08838884219079506E2B0C9F01
+	207021860E5183C42082E838741B780A168A8464EAD55C9E7DA953E9079A00F2
+	696A13890385286B1E3A2D11C543C2C91452A9361586CE055A6904FF53258FEF
+	D3E9A49CDE2B91050BC1E8C03A940C84C166E178B44E995B2C94EF75DAE174FF
+	5026D3CFF401ECFAFF6531D86FE1EF38B8722C8D520964118DFEA4489D5FED86
+	7B0A2CBE4EC59E2EA7FBCDBCD07FB4991C048A14E8FF4CA4500FD602F97EFF43
+	A010BF9FDBFC8B2148A3FCB42CCB33C83F820421C5D21B4A7254773FCA12346F
+	3FCD9344C4458DF339E3794FF2B9FC3B0D7334FF2748B840C530CC33FC9A2509
+	83FC94238923FC7D1D87B3FCAB2A0A83FC5F16C56271371C0570D0418486D7FC
+	7514CFF394DE349162CA023FCF13AD16364C63FCBA2E4B63FCAF298913FCC931
+	CC83FCA828CA67049B27E1E2ACAD3FC841F4723FC370B41E15932744350508D1
+	DA492086A118FF3A4E135116358C1458F294CFF2EE2E2909F254FF380DC344FF
+	3D4EA86CE8390DA3FCDF378DE3FCA7294A43FC9F238763FC190500C0D94E5388
+	81C04C3C2773FCEB36CCC458B02221C944C82CA632909A3FCE4342A23B0C5850
+	ED31C733FCDE350BEA28B82DCFF2608519CF241C24AB1171E4600F0C8AC8F139
+	CDB458E4359163D4F07A8B5294FF2F0B82BAC12F469B2CA70CA902B03C3FCC32
+	E8B13FCDC36EE22046B124DD50ED94EE77262B23ECDE988FF28ACA3FCDB324FF
+	300921E8FF340CC8A8F43C8ED3FCED36ED1398CB24CFF2B0A1270FF3E8F7BA06
+	A1543531507047060020B0D470AC8ED37E2A394DC328FF3C0E57A4BE2C0A0878
+	A8265DC35EE5372FE3FCDDD40FF308B32A4FF3BCE7364FF174490ACAA51F341C
+	0580D04DAC8AB24C6B3FC661705A3FC95208653FC6E1885B3FC761A0563FC7C1
+	D7682448DAE48D219C81AC5D1460327270159AB23960CD071D8820B6C3A84489
+	180FF18057154FF1C863E645A146491A85C140FF1645215CFF1C0611535A1585
+	93FC691738519B9E3FC5865C6241C03CD14E9DC4016051150CC15850E9FC315C
+	FB15FC43FFC6F2FCAF27C5F3BCE13850318611302D073BB45F34F1830F1864F1
+	84CF1870F8FC61E3C6243C6DDFC42705513C560C7DA537DBFD3F3FD915FD7F8F
+	DFF2FEBFDCD080800000000000000000
+$
+}
+
+icon "stdConfiguration"
+{
+	large16
+$
+	4752454154454C4B000A0010410410010682004010B83801010E88C4A26007FC
+	5800F803C59E0001FBFE38018FC100F1C0000E4B278200DC12A9649A5D2B96CC
+	A4CC0954D669369CCE24D109E4AA7A03A050A153D00D1680FF638023516A6D3A
+	2D0382C1E130C8449A1C108A56A0EFF825762B5C8BD362B62B2D7E0809838620
+	E1B838560F598202E0E068380AC778B3592BB79BE5EAFB7BC0E03077FC2DFACF
+	558205E0E3D8392E0E43838E60E308389A0E1CB75C20F73825D60977C360B458
+	4C3E8F4DA5C0C1C08481C084990728C1CCB0730C1CB9072C41CA507D84132304
+	C9C132B04CBC103D07C5C1025070641C0F76D4F4B49D4C4020E4591ABFFB1DA3
+	494862E22E12056C5260EC46A91A0A4308C8399B67B5DBEE60E53839360E4683
+	8F20E328389D077218A41DCC411CE48D0700D07485D569D81175E30EC821AC48
+	3FCF13B0CF3FCD131CA83FCB92B08C3FCA22406F3FC8A1D45276DD93FDDE781E
+	2791E67A1EA7B010034071C1F04106241C5E41C597D1F67E1FA7F10754400665
+	0403A0874DA845C631342E170921F85C854ED3465595CF195A589725A95CD232
+	0AA3FCBA2B08D884911C22589E297686C150323B06112C2D33C51100262CE322
+	32348DA380023A4123C4123E4105441C45659070264B8346A14C31228B228C84
+	3FCF23B8D33FCD2330BAA669B3FCDA354C0A5697A8E98A5AA6A92A7A96AB368D
+	22D8FF308B6260FF2A89A1E8FF9485D9B0FF9BA709CA749DA789E81E05C0E1E6
+	3D90E05A31638286D154332DCC32DC993FCF33BCD53FC801E47F3FC391F0C53F
+	C5D20262B6ADC348CD2EED5B5EEAB62D6BB6EBBBAECBCAF1BD2EB36CD32DCFFB
+	4AD42A89B1EEB81FEBA770FF13C3D094A241C3341C0DB2D176AC6F15C34354D3
+	328AF3FCDC38298070773595D1F0F93FC0F20F20210972CA99334BDBA8D7CAF2
+	DB5B2CCBF2E3BF30CCF32CD337CD8FF2CCA4218FF1544209CACC270BC35D6C0C
+	F43C0D93FC2E248F3C7B201A8B03DB21C8CFF0547837CFF330CF31CFFD234A28
+	89B258FF1E0711D4FF2448A226B42909D98CB5988D3338BE3FCEC3A0D2D7B49D
+	E74AD7F7BDFB7D2CCA521F3ED03424130A4130C8316383C2B8446C128FF3D4F1
+	36CFF1ACAF3B2E1200A9DA08B23CFF1387898800C7CFF130A13C392E53AAE54E
+	4380CE3FCD433EA22CCAD2962126C97DA08A228FF1C0681B8FF2248220BACF1B
+	93E57C8F1B81220FF153402B5070D50703B450024E940931FC5FE48F2377DDF7
+	CF5F7BE0F906B2C0EDD3CFF1ECB73AFE4F8BE1F8FEFFBBF1FD3F0FDBF3FDCB42
+	976BF3C272B8C91707ACA39480B414CEF47B0F36B3022054091FF02E0740D81E
+	0F84D34E748C805C0D51CB0420641C83707A07C2082308A0EC0F80AEF42A0410
+	4E2BC8383E406A3166ACF16E3145C8A18203887F8AB14A2819D0AE4382CE1E8F
+	F1AA341700EE1D63687F8E71D838C7F81F116D4D910F81FE35C720E486D15A04
+	4378B115C79C598B916E2EC601FE2F0583630BA124158C320E1008381385E410
+	02310624358668B81FE3DC7A455110209C18D21A0DE0648C8192E75CF8D51A23
+	1A3B4781FE3246F0E87D222C603E88EF156494889272264A49892F26A4B49C1F
+	F1CE3A86509E0BC6BC6A8D91B8001D74543BC75B951AC9807F8A11390EC790F3
+	69D2D1A70B115C2C64F4AF1F03D4734481C6CB05189D1363FC5A0AF4C42F05BC
+	BB95C3225E4CF97D302690FF9A935A5FCD59B135E600D619C2E47FCA19472948
+	246D4181782502C0741E8318409AA3DA468CE1923087F8A914A8725BA9596B2C
+	2590FF1BE36D2B8F89DE47C768E01FE2F45C0B398E2BC558FF9882715C08C4CC
+	2284188577CF028B3C111420A8A892116882624C6991432788C19DD2346B8CF5
+	D3386521048D73914606409C0BC2D8941001887F8F91EE3AA290D31974344F36
+	E12544688266A8499A9CD3BA914E29D54BA93532A5550A9F54A9D8D7A7B4F29F
+	5071683FC5A8B01583FC670CA187536290CF1793825152C0001088381451900C
+	450AD13D4569CB99AE952EBA8F7AF15EABBD7CAED5FABCD7DB015FEBDD83B036
+	12C00D71A0DD2708D820E120E49A94141AD378A917E2CDB70FA1F03B87FD99B3
+	7676CE59AB4167AD0D9FB4B692D3DA3B5368AD5DA6B556B6D65A11B03405F8FF
+	A620BC6C9BD20E066C892A0DC158198C71B0346928FB1F2EA5B28761FE204418
+	9044A20D9E8931182387F8E91CED66E2BA9BB03FEED5DCB8D76EEF5DDBB3782F
+	1DE2BCB77EF35DA1D4395A54711EB6E48201AB7852D818F21E1300708DF69424
+	84AC3B05A24A2885B1523DC7FCB99763606B2571F63E8795DBC178370660AC21
+	83B08E0FC2B8530BE13C3384B0DE16C1CC0EF7800BE26882B8440500A83D8630
+	823FC7E0FB1E83FC5D8D18AA01C3DBA982CFA42B081A123AC7444BC598BB1F5C
+	E70624C46B9FC87917220FF15A2A10E0B61632EF26CBB17E2EA6F8D995C3FF2A
+	B78CB18AF16E5BC7F9732061F2086FB109A90C09CC26095104197158FC6A6040
+	42320C66EA43288864ED5DACE721FE334723531F99B7363531E8A5B2B8D71A9A
+	13430D9D0A3FC5F8BB5D22D859327D1EC9E1D435C877374B0FFD30EFE8C88479
+	B9FB3EE7FCC200331E224985755E88715E281DE8FD1F9144670E48A23306D0E7
+	53E35D8E8C31A2D6737B20040231900ED1E914756EC3D5C3FF626C7D8DB2365E
+	CAD9BB1767EC9DA1B33686A209C41C0E9D12F41C1888A21822D4520FF1FC3F47
+	D6E1DC7B97726E2DD1B98570D5DC98D81F89C641BA773EF4DE7BDB736F7DD5BE
+	B7AEF8DFBBEF79EA209241C0F9AB3007705F8A712EB705C0AC567C338770D1FF
+	C3C7F8DB1AA32B8A7169C02796C6360DE2D7740FE1F9B8790F23E443FB92727E
+	4DCA395F2AE5BC9797F29E61C935102EAD9B64D31DC060770381DC101CF79F9D
+	9E7C7645FF07E0E0603A8CF1BF8D8270640E4AED81B03C501087FE690CFD5041
+	756EABD5FAB709100874562D443DD87B075FEC6B504206E09D6D699702208015
+	EB7702F5058ACB1F856C7C281A93B8080EE040EF9DF8ECF7D3B3CF3A0F4006BD
+	0BC378515E77008771D4C837C6F8F717E4BC7790F2BE4FC8F94F2FE5BCCF9CF3
+	1E7BCDF9FF35E8BCE901000000000000
+$
+	small16
+$
+	4752454154454C4B000A0010408410010682004010B83800810E88C4A26007FC
+	5800C03FC1180038DC35810D40486470491496490A83C3628F986C5E050784C2
+	25400100023B070245277077FC127D159EC5E2D40820220E2F83C0E081A83836
+	0E078380A8915A1D5A7D54ACD5EAB3E3293C5E56280F84AA61C0B0348B090381
+	067839560E47838E60E2B8386E0E0E83D1E0803AD562B681359294AE971B19FE
+	CF6329DFEB855229FE99449A9D276329219B6212AC0782F0E2442A11051AA0E5
+	7839260E3798DFAB8004E22CD6D06732570FF48A9D74FFD96D1E6EF6A3FF79BE
+	76BA19AFF6AB315EFF5DAB51EFF4FA3CE0EE3D9AC9ECF248E0449D8388357070
+	1AB53A7F7A92932E57F8891AF87FA3956C57FB7DB4C77FAF16CAB7FB4D9CBD7F
+	BA5CAD07FBD0F0361FE802028048D1F460359DA6AC6112C2D098C02D0983FCAD
+	315BE2C8BA7E42E248F43FCD738CE07E8E5348FF340CB2F9C92D8AD3FCDA3598
+	73D4F2370FF8BE31818618250408DAB1AC540C851364D12EDF6338C23FCDD364
+	CB3FCC2364E43FC3A260F33FCEE3BCE13FCF63CE5495A5895E5596E593FC9020
+	065371070A5AB1B8560CC78394E07F4BB2E2412FCBD2FCFF39CE3358FF254B73
+	54FF2F4C7922759DCF83D5E5A0A84A0CFFA14FF288941E8EB41C2A6AC7F1A449
+	294E638A012D0B12C4FF2B8AA7D4F23C0E33FCE8394DA3FCD233DF1310BF6E0B
+	52C0AC3FCB32B4AA3FCB2ACCFF87E7728C941EE8E4129056C9A2246D330FA3E0
+	ED3FEC6B22CAB26C7B36CBB3ACCB4AD1B52C828C951F4EC41C31551DD2B8A022
+	0F12E8B86D065240C13FCC12F8BC3FCFB3E8F1BB6EFBC6F0BBAF4BCAF5BCEF92
+	C8A5238FD41C335505D1242B078C22DCA43FC3624CEF3FC1F1FA54214B237CFF
+	3F0FC3D6282D8FF2D8B22CB1AC70FF2D0AF7231BA6F243FCE037AA62DCAA2554
+	5C011799C33128DB350C83FCE63BB17398E93A8FF0E0983E4FF328E2D04FE3F7
+	45D1CFFD1B48D334AD274B630AB25D450D5521C8590D43C2708A1C0BC284901D
+	CC02A099204CF23090234DF088893C0F72BCAE2A18C2B0993FCC32E371328C0C
+	74CE315B4370D59237F920AB270863FC330A0180912A6AF8D4BC7C3E43000390
+	05154D5C3506397083970B3971039EE5C4CE5C04E397FE99ACE97A856FA96AD0
+	1000000000000000
+$
+}
+
+icon "Elk9"
+{
+	large16
+$
+	4752454154454C4B000A0010410410010682004010B83801010E88C4A26007FC
+	5800F801C59F0000FBFDE1048FC100F200000E4B27824A64CE0954B6592E98CC
+	24CC0954D669369CCE219109E42A7A01A050A7F448645C0F16A4D2A930382C1E
+	130C8449A1C108A55A0EFF90D6A4317A4C56BB60ACC1C11070D41C45070E41C2
+	B07AAC1017070341C055EBAD86BF59BB5E6EF7ABC5FAFB80BE60AF7628204E0E
+	3A8393E0E4C8390E0E39838C20E26B4DAEDB07B8412E504BA60EFF9FC0E1341A
+	3D1438044D1E0908E3C17870F30732EC60E61839720E588394B198EC864B2996
+	825B2096E000320E07B9E9B97A1CFDC4DE571A391046B243FCE4591ABFCD2521
+	8B88B84815B14983B11AA468290C2320E66D9C136B04DBC137304DDC131B04C7
+	C1313041941C2741C1E41C1741C1241DC748DCA735A55DD07029D8768F13B0CF
+	3FCE938CC53FCD131CA93FCB92B08C3FCA22406F3FC8A1D45275DD976DDD77DE
+	178DE579DE97AD047B5046C9EF41C5D6E10714D0713507119070F1077F904092
+	0541C047320C564631342E12A268A0F23B4D13FE5495A5895E5596E599725A34
+	8C82A8FF2E8AC2362124470896278A5DA771DE781E214440098B37A1EA0400D0
+	1C707B800189071790716507129070AA0E92DA400066140301AC921F85D95CEE
+	34E93A54F2A5296A6A98A5E99A729BA7AA1A54D2324AC990AD23A681C66B14E6
+	D3FC6C150323B06112C2D33E739D67723012038088D4000E10703E895F66F22C
+	B2290853FCF33BCD5B2ECDB3ECEB32D2B42D3B46D7B5AD9B56DBB52DDB62D034
+	CC92B4FF30CB7264FF2A89B1ECFF2086C124FF1504109CAF41C3D816C445D070
+	046E1583331AE526ACF35F02C12CCC0CED3A4D23FCE237CCB3FCE5384CD3FCE3
+	380CA3FCB32BC9F3FC9A252CA234851D4FF23486C84A8290943FCC22FCAF3FCC
+	E32CB93FCE738CCEC14EFC0F06C10B3290863FC58114292E5071010704EF8614
+	00011D00D0D5350CA2C0FF3D0F036750D4B54D4CEC3A30A2DCAF270FF2107718
+	CFF23C8E21225213211D8570A4FF20C53D1477120113FC71114103FC7A134173
+	FC7B1441C3FC781944C3FCD5348C1B3CD8D5B89D4753D374F1944F0BCD7D0B44
+	D190E022103FCF53C4DCE679BE779CB30DB3FCBC2C89D884650B0FF2B8680B4F
+	F1D44B0A0FF1F067114FF24C66097B616F761E04C048FF1DC4BEFC8E1737A24C
+	57DDAB00C8FF2E0B598F8430CFF398E33439FF58D432CB23FF8FE479361B9517
+	5E10EEED12B993C8DEF9BE83D0F1FA0D4340BF3FC9B1B03D3FCD922C503FCCF2
+	13F826463FD0490720B03FC40855772FED6188C0C00987F86D0920547F87F0A4
+	0511285781E1881F81655E149E58880E61550C8CC176FA6118D41982CDEDB907
+	24411A1BDF4165F92702E0B824C3F8601FE3D8798E086D0E07F8EC1D2E205209
+	10EC3FC6587E07D0F04C85F1FE2802F3CB1301DC310FF194D71AF0577E81A022
+	82F1FE2F84F2CA17821C28B6C0A4D143F8506E4188204190F01280641009C034
+	7F8CD188D3E1BC398E8E0C660B5850F76159078270B8AF06A0A60C4450B414C2
+	2E1B0F41C5222450D31A0E185006E0763FC770A25243484304E1FE22C2D0335C
+	82883F3501982847F8D316CCA05088D0EE3FC6845C1FE3844F86A1FE2182B37E
+	1481B81A4431472A8400560463FC3F05C75236C6BA181ED22645B8319A2DA3D0
+	D820E11083C1985CBE8368550662DC628BA1443FC7B8F41C936E6E8FF16E2C25
+	18C10F80FC8F8AD0D83FC5E879082894364E71BA321D30F51A028D0A8C112A3F
+	C690B11143FC750AE120C5C3B0361FE1642650516C2203325717620E0185D3B4
+	1B833AAD6983266FCDE9B93786B0CD17133142107030A2524B4A1AA358673301
+	F03D4730FFA554B05389E11F3EC498561FE3C45A4AA1721B65C0A20F6FE0780D
+	E1794B46F0BD86C35455A1913C9A8728B714A3FC5807C0803FC31856078E0C54
+	8829562520F85407EDE8390573B423C43079A5B4AEB352CA4ECC1378E2378410
+	0D523208E5D150F81EC3A296D76AF15DC508989FC34C4DB611E42FE878AF0E32
+	E04086D9323A46D8C61FE3E473B161F43ADEA8C814C2260806C0BC3FC3805D08
+	43FC578916C23284A8616F617ECF04A06F4886207906EDB02DC59AEB5DED957A
+	55D5B80057085CF841583B1061B5C10F91EE3AAC75C2B8970C5057D1FE3304C5
+	0C1E83304B8FF17E229C1055089164568A61483FEC9214B24A547C8E959C2644
+	4CB1B90202968E51803FC590990E63FC341E01FE1D02802E61624A300950E011
+	EE35FCB8370DCC5B7B7293217A4F0B825040B611F23E07658EC17837060A914A
+	B9C5607F0A8E64680A01FE3B45D07D97E154158FF0700F6CF0B51662C6ED8E74
+	282D04FDD016C2ADD30F71BF09C7B0D954D7845BB7B0DC16E250660732AC41D9
+	E13A2267560AC1991707DB63EE59544C819062B84FB3C1F43E0775DBCA79572A
+	0CA192E184306EC2C3A85D4871EA352ED0DA14E1A07F85E0840887F82F071678
+	3E87B0F8F0026DAE08A0B5DC8A211D8745F89F5941CC2FBF80DA11DD48E3130A
+	48538667623145E8AECAFA3B29654C004111F904036BE8BECD39AA2DC5F8B313
+	C3FC7D8F91E1A7F50EA3D443BC770E51FE2604A4FE13E1DE4CCF5BB43D46B5DA
+	1C42B035C9A0BF4141B02177E254305051381868285207609C7F86F0960A87F8
+	7D0A4EC46B0968A037C492AD14421C32ACB1E039F52EDCD41A8B490000A053C8
+	391A41A4A97E03318E364693D11F63E87969FDDFBC7786EEDE036C6DACE10A1E
+	D350A40FD07C7A0CBC323D86E68D1E6321548C61278EC6B8930B83FC778A2A18
+	26C30DF51541CEAB0F015E9A8778A66C22943DB821C43786A6F3E4BBD792EE03
+	EC00012971D3048DCC0F31E35DC7E0FB1E83FF9A736E71CDF9AF3BE6C3646C29
+	511E226F38900EA15C7F8C8D5C95C63AE7B9C26D2B8B86CA3C45AE1D1E22EF0E
+	8EC145694675D31FE2A443DA51BC35863F3DECBCEBB3F3C0F618E77023036040
+	349C03365F42B8440500ABB54EE1F83F07B737EF7DF7BE77AF01DFBC0F7F42A3
+	A66F0B917109C4C0915942283A70E18A26C3A4DB1B389C798C04CE31F868FF15
+	02161A8BD161A78738E41B5E17C27A8F07EABBE095105B601D02D0361FBB8800
+	00C5F43204E05E127D6D0C1FA3F07C0FFF7DF03E17C1F7FF17E1FC6F89F13770
+	F723E3C076AE814F28C4A8717CA2D047867F3A2543FAE417AF68740E41BBF1FF
+	1FCAF93F9BE47E81FFEF07FFB0F65ED3DB17769420C578A190E3F87E8FA1FFFD
+	FFCFFBFF5FE1FF9FF1FFDFF600E00A01600601E00202601202202E02A01A025F
+	AC6B46BC41C08DCB45DC84027DEB5F642E02B0260F3207607E07A072079BE0C5
+	A0943FE09E0A4354C583F83F83F1FEA0BA0C20BE0B60CE0C60D20CA0E20DE0EA
+	0DA0F20D60F9FA8209F641240E4088191341B905F48400808402021321387661
+	3476423C8402FE15215876615476433CE621708A8E61DA967A06A101F6618A18
+	829C25D79C878B9E1A88742B21AE1BA1B4B9C2301E18ED0C0A1466DA5D1FE1E9
+	80CE5457A1288401022022087662047641C213C0D614622622214E16212A1F61
+	ECA2A2421F224624E24A25626225226A25E26E25A27A26627228627E27628069
+	84040000000000000000000000000000
+$
+	small16
+$
+	4752454154454C4B000A0010408410010682004010B83800810E88C4A26007FC
+	5800C01FC11810D8E46E1A809048A09219248E29287FC362F0283C2611078588
+	000038701251388AC11FF3B83C5A793F8701E0E31838C20E218384E0E0983CDE
+	1541A8C5EA540A9D5A7864270BC9A5F260C16E431A87D36291004CF5072D41C9
+	D07884128F041141C29070541C0B31AA4562E79311012AF075339FEDC69AD9FE
+	C45C265FEAA4D1E9F0893C169B65F268C97961B18B044143E81408022EC1CA30
+	71F52AF541479F0B8BD79BBDA8FFD76C365B1D7ED767B66EB5572FF62AE5398C
+	4D9F1F48E3F185C055228B15107135EA62A2489C9CCF478361FEF277359FEC35
+	E29DFEB85AA91FE923D961FE813310DFE9840179FEC15CA976BD7EAF5D2E8735
+	3920E2ABD1483F098112E0AA238FF3D4F1374FF320B7274FF2F8770F8FF21C62
+	104FF22C5A068FF1E8500621615C143FC7D19C496F4BD2A6063CA09284931D8E
+	B7F17A19C510C03A334C32ACFF3ACE835CFF2FC8814CFF2E876114FF318A521D
+	EC1E1EF32C991C6161681D3FC891842F3FCA92446C3FCF63D0E13FCA224C788B
+	9040B17A1B4550CC6438CDC324FF34CCE2FCFF3749C7BCA91CE153BCD52B8FF3
+	84B923CFF334961ADE41D4573FCA61EE24244861CCFF3E0F53965D24C793B907
+	0C97A1D85F0F4903E4F73A67E31CBA9E8B01E4FF2446B0FCFF388D5304FF3B4D
+	9300FF2287B18CFF324A91F8FF1A0510D0FF2C076100FFA6E9D2D4A89F5070CD
+	7A6A85F2E4FA3E0ED3FCDA360CD6209E1D4FF33CA31B4FF17C5B15A55250863F
+	CA52447D620AB8149B1B4473FCB6230613FECCB38B69593C412BB4B10A290941
+	ECDF3ECFA3C68C3DCEEA149891CE12F27D358AC1DCFF2686AAFC9E1A03C97470
+	AFCD2248599C0D4314FFBF6FF2DCA924EF40003A41C0212C3A0880C2DCAA254F
+	F3F0FC3D72ECC1B13CECE2C0A8700B7708FF3A4BE244FF39CB1A8CC82628136C
+	CF2FB32CC72FCC4C22DDE30901C0444D41C031AC540C833340C76F0FE3F4F93F
+	F5ED83623FCFD3F360398E4970D12FE27368D39ACF83DCF2D875FDD763DD8C92
+	FCB03FC2E08C15143551C8590D4302548219CC0284901DCC029DED34CAE2808A
+	37CAD27C8938CB82B18BE698B30CB82A0FF328C02C8FF338C52E184354CBEABA
+	CBC8963FC480E0220CD7955D7B557B9EE3BB507830D418EF820EF82CEF840F17
+	BE153BE021A8EDFCCEEBCEEF3CDF493C4040000000000000
+$
+}
+stringtable
+{
+	"SBE_IDAlreadyExists"
+		DEU "ID %1 ist bereits vorhanden",
+		ELL "ID %1 ήδη υφίσταται",
+		ENU "ID %1 already exists!",
+		ESP "El ID %1 ya existe",
+		FRA "L'ID %1 existe déjà!",
+		ITA "ID %1 esiste già!",
+		JPN "ID %1 はすでに存在します!",
+		PLK "ID %1 już istnieje!",
+		THA "รหัส %1 มีอยู่แล้ว!",
+		ZHS "标识符 %1已经存在！"
+}
+
+
+sysclass "stdConfiguration" from "stdConfiguration"
+{
+	
+	folder "stdConfiguration"
+	{
+		title(Singular)
+			ZHT "模組組態",
+			DEU "Modulkonfiguration",
+			ELL "Επιβεβαίωση Λειτουργικής Μονάδας",
+			ENU "Module Configuration",
+			ESP "Configuración de módulo",
+			FRA "Configuration du module",
+			ITA "Configurazione Modulo",
+			JPN "モジュールの設定",
+			KOR "모듈 형태",
+			PLK "Konfiguracja modułu",
+			THA "การกำหนดค่าโมดูล",
+			ZHS "模块配置"
+		gender DEU feminine,FRA feminine
+		properties
+		{
+			"AppShellHidden" True
+			"FolderSets" 0
+				properties
+				{
+					"Admin" 0
+				}
+		}
+		cancreatenew "System.Folders(\"stdConfiguration\").Count<5"
+	}
+	
+	folder "Configurations"
+	{
+		title(Singular)
+			ZHT "模組組態",
+			DEU "Modulkonfiguration",
+			ELL "Επιβεβαίωση Λειτουργικής Μονάδας",
+			ENU "Module Configuration",
+			ESP "Configuración de módulo",
+			FRA "Configuration du module",
+			ITA "Configurazione Modulo",
+			JPN "モジュールの設定",
+			KOR "모듈 형태",
+			PLK "Konfiguracja modułu",
+			THA "การกำหนดค่าโมดูล",
+			ZHS "模块配置"
+		gender DEU feminine,FRA feminine
+		properties
+		{
+			"FolderSets" 0
+				properties
+				{
+					"Admin" 0
+				}
+			"Hidden" True
+		}
+	}
+}
+
+
+}
+layout
+<%
+<?xml version="1.0" encoding="utf-8"?>
+<AeDesigner_doc version="3">
+    <class_diagram name="stdbaseentities" width="1230" height="1219">
+        <class name="stdOrganization" left="122" top="24" right="256" bottom="117">
+            <member name="Phone" type="class" />
+            <member name="Fax" type="class" />
+            <member name="WWW" type="class" />
+            <member name="Address" type="class" />
+            <member name="Name" type="data" />
+            <hide show_base_members="1">
+                <link_in_list name="Phone" forced="0" />
+                <link_in_list name="Fax" forced="0" />
+                <link_in_list name="WWW" forced="0" />
+                <link_in_list name="Address" forced="0" />
+            </hide>
+        </class>
+        <class name="stdActivity" left="130" top="604" right="264" bottom="697">
+            <member name="Notes" type="data" />
+            <member name="stdTimeStamp" type="class" />
+            <member name="CalBarColor" type="class" />
+            <member name="CalForeColor" type="class" />
+            <member name="CalBackColor" type="class" />
+            <hide show_base_members="1">
+                <link_in_list name="stdTimeStamp" forced="0" />
+                <link_in_list name="stdColor" forced="0" />
+                <link_in_list name="CalBarColor" forced="1" />
+                <link_in_list name="CalForeColor" forced="1" />
+                <link_in_list name="CalBackColor" forced="1" />
+            </hide>
+        </class>
+        <class name="stdPerson" left="123" top="272" right="257" bottom="395">
+            <member name="Address" type="class" />
+            <member name="Phone" type="class" />
+            <member name="Fax" type="class" />
+            <member name="Mobile" type="class" />
+            <member name="eMailAddress" type="class" />
+            <member name="DontMail" type="data" />
+            <member name="Name" type="class" />
+            <hide show_base_members="1">
+                <link_in_list name="Address" forced="0" />
+                <link_in_list name="Phone" forced="0" />
+                <link_in_list name="Fax" forced="0" />
+                <link_in_list name="Mobile" forced="0" />
+                <link_in_list name="eMailAddress" forced="0" />
+                <link_in_list name="Name" forced="1" />
+            </hide>
+        </class>
+        <class name="stdUser" left="407" top="287" right="541" bottom="377">
+            <member name="ID" type="data" />
+            <member name="IsAdmin" type="data" />
+            <member name="Password" type="data" />
+            <hide show_base_members="1" />
+        </class>
+        <class name="stdEmailActivity" left="409" top="709" right="543" bottom="799">
+            <hide show_base_members="1" />
+        </class>
+        <class name="stdPhoneCallActivity" left="409" top="818" right="543" bottom="908">
+            <member name="PhoneCallType" type="enum" />
+            <hide show_base_members="1" />
+        </class>
+        <class name="stdMeetingActivity" left="409" top="933" right="543" bottom="1023">
+            <member name="MeetingType" type="enum" />
+            <hide show_base_members="1" />
+        </class>
+        <class name="stdTaskActivity" left="12" top="772" right="146" bottom="895">
+            <member name="stdTimeStamp" type="class" />
+            <member name="Complete" type="data" />
+            <member name="Result" type="data" />
+            <member name="Priority" type="enum" />
+            <member name="Status" type="enum" />
+            <member name="Percent" type="data" />
+            <member name="Due" type="class" />
+            <hide show_base_members="1">
+                <link_in_list name="stdTimeStamp" forced="0" />
+                <link_in_list name="Due" forced="0" />
+            </hide>
+        </class>
+        <class name="stdLetter" left="249" top="933" right="383" bottom="1023">
+            <member name="Document" type="class" />
+            <member name="Thumbnail" type="data" />
+            <hide show_base_members="1">
+                <link_in_list name="Document" forced="0" />
+            </hide>
+        </class>
+        <class name="stdFaxActivity" left="409" top="587" right="543" bottom="677">
+            <member name="FaxCallType" type="enum" />
+            <hide show_base_members="1" />
+        </class>
+        <class name="stdConfiguration" left="128" top="467" right="262" bottom="557">
+            <member name="Notes" type="data" />
+            <hide show_base_members="1" />
+        </class>
+        <class name="stdOpportunity" left="434" top="30" right="568" bottom="120">
+            <member name="LikelyCloseDate" type="data" />
+            <member name="Probability" type="data" />
+            <member name="Notes" type="data" />
+            <member name="Value" type="data" />
+            <hide show_base_members="1" />
+        </class>
+        <class name="stdProduct" left="121" top="144" right="255" bottom="234">
+            <member name="UnitCost" type="data" />
+            <member name="UnitPrice" type="data" />
+            <member name="Descr" type="data" />
+            <member name="SKU" type="data" />
+            <hide show_base_members="1" />
+        </class>
+        <class name="stdProject" left="437" top="149" right="571" bottom="239">
+            <member name="Title" type="data" />
+            <hide show_base_members="1" />
+        </class>
+        <class name="stdCallActivity" left="229" top="758" right="363" bottom="848">
+            <hide show_base_members="1" />
+        </class>
+        <class name="stdbasecomponents::stdColor" included_class="1" left="534" top="452" right="668" bottom="542">
+            <member name="ColorValue" type="data" />
+            <hide pos_x="750" pos_y="100" show_base_members="1" />
+        </class>
+        <class name="stdDiaryActivity" left="657" top="283" right="791" bottom="376">
+            <member name="stdTimeStamp" type="class" />
+            <member name="Description" type="data" />
+            <member name="CalBarcolor" type="class" />
+            <member name="CalForecolor" type="class" />
+            <member name="CalBackColor" type="class" />
+            <hide show_base_members="1">
+                <link_in_list name="stdTimeStamp" forced="0" />
+                <link_in_list name="CalBarcolor" forced="1" />
+                <link_in_list name="CalForecolor" forced="1" />
+                <link_in_list name="CalBackColor" forced="1" />
+            </hide>
+        </class>
+        <class name="stdCalendarYear" left="656" top="148" right="790" bottom="238">
+            <hide show_base_members="1" />
+        </class>
+        <generalization base="stdPerson" derived="stdUser" />
+        <generalization base="stdCallActivity" derived="stdEmailActivity" />
+        <generalization base="stdCallActivity" derived="stdPhoneCallActivity" />
+        <generalization base="stdCallActivity" derived="stdMeetingActivity" />
+        <generalization base="stdActivity" derived="stdTaskActivity" />
+        <generalization base="stdCallActivity" derived="stdLetter" />
+        <generalization base="stdCallActivity" derived="stdFaxActivity" />
+        <generalization base="stdProject" derived="stdOpportunity" />
+        <generalization base="stdActivity" derived="stdCallActivity" />
+        <link_join name="stdUser" class="stdDiaryActivity" target="stdUser" />
+        <hide name="stdTimeStamp" pos_x="672" pos_y="432" show_base_members="1" />
+    </class_diagram>
+    <TargetPlatforms>1</TargetPlatforms>
+    <DefaultScriptLang>VBScript</DefaultScriptLang>
+</AeDesigner_doc>
+%>

@@ -1,0 +1,36 @@
+<script id="{2B044A6D-B6A2-4f5c-943A-703EB75FCA56}" version="1" description="Merge Wizard" language="VBScript" startpage="{0195B812-C624-4fac-B99B-5C712EF57031}" allowdebug="False">
+   <notes/>
+   <pages>
+	
+	<page id="{0195B812-C624-4fac-B99B-5C712EF57031}" pagetype="Form" form="MergeObjectSelect" title="Choose the object that you want to merge to." description="Select the item and press next." nextenabled="True" canfinish="False">
+		<script>
+		Sub PageFinish
+			if Not Script.ActiveForm.FormForm.Controls("oleListView").Control.SelectedItem is Nothing then
+				Script.AeObject.To 	= Script.ActiveForm.FormForm.Controls("oleListView").Control.SelectedItem.Key
+				Script.AeObject.ToClass = Script.ActiveForm.FormForm.Controls("oleListView").Control.SelectedItem.Class.Name
+				Script.Properties("SelectedOption") = true
+			else
+				Script.Properties("SelectedOption") = False
+			end if
+		End Sub
+		</script>
+		<branches>
+			<branch nextpage="{0195B812-C624-4fac-B99B-5C712EF57031}" expression="Script.Properties(&quot;SelectedOption&quot;)=False" />
+			<branch nextpage="{3074F971-15E9-4d65-BBF0-A4A164782A8A}" expression="Script.Properties(&quot;SelectedOption&quot;)=True" />
+		</branches>
+	</page>
+	<page id="{3074F971-15E9-4d65-BBF0-A4A164782A8A}" pagetype="Form" form="MergeConfirm" title="Please confirm the final details of the merge." description="Confirm the details then press finish to start the merge." canfinish="True">
+		<script>
+		Sub PageLoaded
+			Script.ActiveForm.FormForm.Controls("lblMergeFrom").Text = Script.AeSystem.Classes(Script.AeObject.FromClass).GetInstance(Script.AeObject.From).Prompt
+			Script.ActiveForm.FormForm.Controls("lblMergeTo").Text = Script.AeSystem.Classes(Script.AeObject.ToClass).GetInstance(Script.AeObject.To).Prompt
+			Script.ActiveForm.FormForm.Controls("objSummary").Text = Script.AeObject.GetMergeStats
+		End Sub 
+		Sub PageFinish
+			Script.AeObject.Properties("ReadyToMerge") = True
+		End Sub
+		</script>
+	<branches/>
+	</page>
+   </pages>
+</script>

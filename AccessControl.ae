@@ -1,0 +1,890 @@
+﻿// Active Elk definition file generated from binary format
+// Date:	2010-10-19 14:50:42
+// User:	build
+
+library "AccessControl"
+{
+/* Application Shell - 187 12.0.2.patch */
+version "12.2.114\r\nCopyright (C) StayinFront, Inc 2001-2010"
+uses "SysObject", "stdbaseentities"
+aspect "Elk9.Aspect" "AccessControl"
+
+class "UserGroup"
+{
+	title(Singular)
+		ZHT "使用者群組",
+		DEU "Benutzergruppe",
+		ELL "Ομάδα χρήστη",
+		ENU "User Group",
+		FRA "Groupe d'utilisateurs",
+		ITA "Gruppo utente",
+		JPN "ユーザーグループ",
+		KOR "사용자 그룹",
+		PLK "Grupa użytkowników",
+		THA "กลุ่มผู้ใช้",
+		ZHS "用户组"
+	gender DEU feminine,PLK feminine
+	properties
+	{
+		"Hidden" "TRUE"
+		"Forms" "'UserGroup'"
+	}
+	uses "GroupMember"
+	members
+	{
+		"Title" data VarChar(50)
+		{
+			title(Singular)
+				ZHT "組員名稱",
+				DEU "Gruppenname",
+				ELL "Όνομα ομάδας",
+				ENU "Group name",
+				FRA "Nom du groupe",
+				ITA "Nome del gruppo ",
+				JPN "グループ名",
+				KOR "그룹명",
+				PLK "Nazwa grupy",
+				THA "ชื่อกลุ่ม",
+				ZHS "组名"
+			properties
+			{
+				"Hotkey" 0
+					title(Singular)
+						DEU "N",
+						ENU "N"
+			}
+		}
+	}
+	index "A"
+		on "Title"
+		configurations
+		{
+			"Server" include
+		}
+	sort [ENU] "Title" asc
+	prompt ""
+		ENU "Title"
+	icon ""
+		ENU "\"UserGroup\""
+	defaulticon ""
+		ENU "UserGroup"
+}
+
+class "GroupMember"
+{
+	title(Singular)
+		ZHT "組員",
+		DEU "Gruppenmitglied",
+		ELL "Μέλος ομάδας",
+		ENU "Group Member",
+		FRA "Membre de groupe",
+		ITA "Membro del gruppo",
+		JPN "グループメンバー",
+		KOR "그룹 위원",
+		PLK "Członek grupy",
+		THA "สมาชิกกลุ่ม",
+		ZHS "组成员"
+	gender DEU neuter
+	properties
+	{
+		"Hidden" True
+		"Forms" "'GroupMember'"
+			properties
+			{
+				"User_GroupMember" "\"UserMember\""
+				"Group_GroupMember" "\"GroupMember\""
+			}
+		"ContextTitles" 0
+			properties
+			{
+				"User_GroupMember" 0
+					title(Singular)
+						ZHT "組員",
+						DEU "Gruppenmitglied",
+						ELL "Μέλοις Ομάδας",
+						ENU "Group Member",
+						FRA "Membre de groupe",
+						ITA "Membro del gruppo",
+						JPN "グループメンバー",
+						KOR "그룹 위원",
+						PLK "Członek grupy",
+						THA "สมาชิกกลุ่ม",
+						ZHS "组成员"
+					gender DEU neuter
+				"Group_GroupMember" 0
+					title(Singular)
+						ZHT "群組",
+						DEU "Gruppe",
+						ELL "Ομάδα",
+						ENU "Group",
+						FRA "Groupe",
+						ITA "Gruppo",
+						JPN "グループ",
+						KOR "그룹",
+						PLK "Grupa",
+						THA "กลุ่ม",
+						ZHS "组"
+					gender DEU feminine
+			}
+	}
+	members
+	{
+		"User" join "stdUser"
+		{
+			properties
+			{
+				"NewWizard" True
+					properties
+					{
+						"Title" 0
+							title(Singular)
+								ZHT "新增一個組員",
+								DEU "Gruppenmitglied hinzufügen",
+								ELL "Προσθήκη Μέλους Ομάδας",
+								ENU "Adding a Group Member",
+								FRA "Ajouter un membre de groupe",
+								ITA "Aggiungere un membro del gruppo",
+								JPN "グループメンバーの追加",
+								KOR "그룹 위원 추가중",
+								PLK "Dodawanie członka grupy",
+								THA "การเพิ่มสมาชิกกลุ่ม",
+								ZHS "添加一个组成员"
+						"Text" 0
+							title(Singular)
+								ZHT "請為此一存取群組選擇一群組人員",
+								DEU "Bitte wählen Sie ein Gruppenmitglied für diese Zugangsgruppe",
+								ELL "Παρακαλείσθε να επιλέξετε ένα Μέλος Ομάδας για αυτήν την Ομάδα Πρόσβασης",
+								ENU "Please choose a Group Member for the Access Group",
+								FRA "Veuillez sélectionner un membre de groupe pour le groupe d'accès",
+								ITA "Scegli un membro di gruppo per il gruppo di accesso",
+								JPN "このアクセスグループのグループメンバーを選択してください",
+								KOR "액세스 그룹의 그룹 위원을 선택하십시오",
+								PLK "Wybierz członka grupy dla grupy dostępu",
+								THA "โปรดเลือกสมาชิกกลุ่มสำหรับกลุ่มการเข้าถึง",
+								ZHS "请为这个访问组选择一个组成员"
+					}
+				"FoldTarget" True
+			}
+			ontargetdelete delete
+			
+			folder "Groups" context "Group_GroupMember"
+			{
+				title(Singular)
+					DEU "Groups",
+					ENU "Groups",
+					FRA "Groupes",
+					ITA "Gruppi",
+					JPN "グループ",
+					KOR "그룹",
+					PLK "Grupy"
+				sort [ENU] "Group" asc
+			}
+			choose folder 
+			{
+			}
+		}
+		"Group" join "UserGroup"
+		{
+			properties
+			{
+				"NewWizard" True
+					properties
+					{
+						"Title" 0
+							title(Singular)
+								ZHT "新增存取群組",
+								DEU "Zugangsgruppe hinzufügen",
+								ELL "Προσθήκη μιας Ομάδας Πρόσβασης ",
+								ENU "Adding an Access Group",
+								FRA "Ajouter un groupe d'accès",
+								ITA "Aggiunta di un gruppo di accesso",
+								JPN "アクセスグループの追加",
+								KOR "액세스 그룹을 추가중 ",
+								PLK "Dodawanie grupy dostępu",
+								THA "การเพิ่มกลุ่มการเข้าถึง",
+								ZHS "添加一个访问组"
+						"Text" 0
+							title(Singular)
+								ZHT "請為此一群組人員選擇一存取群組",
+								DEU "Bitte wählen Sie eine Zugangsgruppe für dieses Gruppenmitglied",
+								ELL "Παρακαλείσθε να επιλέξετε μια Ομάδα Πρόσβασης για αυτό το Μέλος Ομάδας",
+								ENU "Please choose an Access Group for this Group Member",
+								FRA "Veuillez sélectionner un groupe d'accès pour ce membre de groupe",
+								ITA "Scegli un gruppo di accesso per questo membro di gruppo",
+								JPN "このグループメンバーのアクセスグループを選択してください",
+								KOR "이 그룹 위원의 액세스 그룹을 선택하십시오",
+								PLK "Wybierz grupę dostępu dla tego członka grupy",
+								THA "โปรดเลือกกลุ่มการเข้าถึงสำหรับสมาชิกกลุ่มนี้",
+								ZHS "请为这个组成员选择一个访问组"
+					}
+				"FoldTarget" True
+			}
+			ontargetdelete delete
+			
+			folder "Members" context "User_GroupMember"
+			{
+				title(Singular)
+					ZHT "員",
+					DEU "Mitglieder",
+					ELL "Μέλη",
+					ENU "Members",
+					FRA "Membres",
+					ITA "Membri",
+					JPN "メンバー",
+					KOR "사용자",
+					PLK "Członkowie",
+					THA "สมาชิก",
+					ZHS "成员"
+				gender DEU neuter
+				sort [ENU] "Members.User" asc
+			}
+			choose folder 
+			{
+			}
+		}
+	}
+	index "A"
+		on "Group"
+		configurations
+		{
+			"Server" include
+		}
+	index "B"
+		on "Members.User"
+		configurations
+		{
+			"Server" include
+		}
+	prompt "Group"
+		ENU "Group.prompt"
+	prompt "Member"
+		ENU "members.User.prompt"
+	prompt "User_GroupMember"
+		ENU "Members.User.Prompt"
+	prompt "Group_GroupMember"
+		ENU "Group.Prompt"
+	icon "Group"
+		ENU "Group.icon"
+	icon "Member"
+		ENU "members.User.icon"
+	icon "User_GroupMember"
+		ENU "Members.User.Icon"
+	icon "Group_GroupMember"
+		ENU "Group.icon"
+	defaulticon ""
+		ENU "stdPerson"
+}
+
+class "PermitBase"
+{
+}
+
+class "PermitUser" from "PermitBase" embedded
+{
+	title(Singular)
+		ZHT "許可使用者",
+		DEU "Berechtigungsbenutzer",
+		ELL "Επέτρεψε χρήστη",
+		ENU "Permit User",
+		FRA "Autorisation d'utilisateur",
+		ITA "Utente permesso",
+		JPN "ユーザー",
+		KOR "허가된 사용자",
+		PLK "Zezwalaj użytkownikowi",
+		THA "อนุญาตผู้ใช้",
+		ZHS "权限用户"
+	gender FRA feminine
+	properties
+	{
+		"Hidden" "TRUE"
+	}
+	candelete "User.Object.IsAdmin or Object.Users.Exists(Permission>=2 and members.User=user.Object) or Object.Groups.Exists(Permission>=2 and Group.folders.Members.Exists(members.User=user.Object)) or (not Object.users.exists and not Object.Groups.exists)"
+	canmodify "User.Object.IsAdmin or Object.Users.Exists(Permission>=2 and members.User=user.Object) or Object.Groups.Exists(Permission>=2 and Group.folders.Members.Exists(members.User=user.Object)) or (not Object.users.exists and not Object.Groups.exists)"
+	members
+	{
+		"Object" join "SystemObj"
+		{
+			ontargetdelete delete
+			
+			folder "Users"
+			{
+				title(Singular)
+					ZHT "使用者",
+					DEU "Benutzer",
+					ELL "Χρήστες",
+					ENU "Users",
+					FRA "Utilisateurs",
+					ITA "Utenti",
+					JPN "ユーザー",
+					KOR "사용자",
+					PLK "Użytkownicy",
+					THA "ผู้ใช้",
+					ZHS "用户"
+				properties
+				{
+					"Hidden" "TRUE"
+				}
+				cancreatenew "User.Object.IsAdmin or Users.Exists(Permission>=2 and members.User=user.Object) or Groups.Exists(Permission>=2 and Group.folders.Members.Exists(members.User=user.Object)) or (not users.exists and not Groups.exists)"
+			}
+			choose folder 
+			{
+			}
+		}
+		"User" join "stdUser"
+		{
+			title(Singular)
+				ZHT "使用者",
+				DEU "Benutzer",
+				ELL "Χρήστης",
+				ENU "User",
+				FRA "Utilisateur",
+				ITA "Utento",
+				JPN "ユーザー",
+				KOR "사용자",
+				PLK "Użytkownik",
+				THA "ผู้ใช้",
+				ZHS "用户"
+			properties
+			{
+				"NewWizard" True
+				"Hotkey" 0
+					title(Singular)
+						DEU "U",
+						ENU "U"
+			}
+			ontargetdelete delete
+			choose folder 
+			{
+			}
+		}
+		"Permission" enum "Permission" forced
+		{
+			title(Singular)
+				ZHT "許可",
+				DEU "Berechtigung",
+				ELL "Άδεια",
+				ENU "Permission",
+				FRA "Autorisation",
+				ITA "Permesso",
+				JPN "許可",
+				KOR "허가",
+				PLK "Pozwolenie",
+				THA "การอนุญาต",
+				ZHS "权限"
+			gender DEU feminine,FRA feminine
+			properties
+			{
+				"Hotkey" 0
+					title(Singular)
+						DEU "P",
+						ENU "P"
+			}
+			default "0"
+			validate
+			{
+				"Control_cant_grant_delete" validError "Permission <= 2 Or User.Object.IsAdmin Or Object.Users.Exists(Permission >= 3 And Members.User = User.Object) Or Object.Groups.Exists(Permission >= 3 And Group.folders.Members.Exists(Members.User = User.Object)) Or (Not Object.Users.Exists And Not Object.Groups.Exists)" 
+				ENU "Control permission does not allow for granting higher levels of permission.",
+				JPN "制御権限ではこれ以上高いレベルのアクセス許可を付与できません。",
+				PLK "Moduł kontroli pozwoleń nie zezwala na przyznanie wyższych poziomów pozwoleń."
+			}
+		}
+	}
+	index "A"
+		on "Object then Members.User"
+		configurations
+		{
+			"Server" include
+		}
+	index "B"
+		on "Object"
+		configurations
+		{
+			"Server" include
+		}
+	prompt ""
+		ENU "Members.User.prompt"
+	icon ""
+		ENU "Members.User.icon"
+}
+
+class "PermitGroup" from "PermitBase" embedded
+{
+	title(Singular)
+		ZHT "許可群組",
+		DEU "Gruppe zulassen",
+		ELL "Επέτρεψε Ομάδα",
+		ENU "Permit Group",
+		FRA "Autorisation de groupe",
+		ITA "Gruppo Permesso",
+		JPN "グループ",
+		KOR "허가된 그룹",
+		PLK "Grupa pozwoleń",
+		THA "อนุญาตกลุ่ม",
+		ZHS "权限组"
+	gender FRA feminine
+	properties
+	{
+		"Hidden" "TRUE"
+	}
+	candelete "User.Object.IsAdmin or Object.Users.Exists(Permission>=2 and members.User=user.Object) or Object.Groups.Exists(Permission>=2 and Group.folders.Members.Exists(members.User=user.Object)) or (not Object.users.exists and not Object.Groups.exists)"
+	canmodify "User.Object.IsAdmin or Object.Users.Exists(Permission>=2 and members.User=user.Object) or Object.Groups.Exists(Permission>=2 and Group.folders.Members.Exists(members.User=user.Object)) or (not Object.users.exists and not Object.Groups.exists)"
+	members
+	{
+		"Object" join "SystemObj"
+		{
+			ontargetdelete delete
+			
+			folder "Groups"
+			{
+				title(Singular)
+					ZHT "組員",
+					DEU "Gruppen",
+					ELL "Ομάδες",
+					ENU "Groups",
+					FRA "Groupes",
+					ITA "Gruppi",
+					JPN "グループ",
+					KOR "그룹",
+					PLK "Grupy",
+					THA "กลุ่ม",
+					ZHS "组"
+				gender DEU feminine
+				properties
+				{
+					"Hidden" "TRUE"
+				}
+				cancreatenew "User.Object.IsAdmin or Users.Exists(Permission>=2 and members.User=user.Object) or Groups.Exists(Permission>=2 and Group.folders.Members.Exists(members.User=user.Object)) or (not users.exists and not Groups.exists)"
+			}
+			choose folder 
+			{
+			}
+		}
+		"Group" join "UserGroup"
+		{
+			title(Singular)
+				ZHT "組員",
+				DEU "Gruppe",
+				ELL "Ομάδα",
+				ENU "Group",
+				FRA "Groupe",
+				ITA "Gruppo",
+				JPN "グループ",
+				KOR "그룹",
+				PLK "Grupa",
+				THA "กลุ่ม",
+				ZHS "组"
+			gender DEU feminine
+			properties
+			{
+				"NewWizard" True
+				"Hotkey" 0
+					title(Singular)
+						DEU "G",
+						ENU "G"
+			}
+			ontargetdelete delete
+			choose folder 
+			{
+			}
+		}
+		"Permission" enum "Permission" forced
+		{
+			title(Singular)
+				ZHT "許可",
+				DEU "Berechtigung",
+				ELL "Άδεια",
+				ENU "Permission",
+				FRA "Autorisation",
+				ITA "Permesso",
+				JPN "許可",
+				KOR "허가",
+				PLK "Pozwolenie",
+				THA "การอนุญาต",
+				ZHS "权限"
+			gender DEU feminine,FRA feminine
+			properties
+			{
+				"Hotkey" 0
+					title(Singular)
+						DEU "P",
+						ENU "P"
+			}
+			default "0"
+			validate
+			{
+				"Control_cant_grant_delete" validError "Permission <= 2 Or User.Object.IsAdmin Or Object.Users.Exists(Permission >= 3 And Members.User = User.Object) Or Object.Groups.Exists(Permission >= 3 And Group.folders.Members.Exists(Members.User = User.Object)) Or (Not Object.Users.Exists And Not Object.Groups.Exists)" 
+				ENU "Control permission does not allow for granting higher levels of permission.",
+				JPN "制御権限ではこれ以上高いレベルのアクセス許可を付与できません。",
+				PLK "Moduł kontroli pozwoleń nie zezwala na przyznanie wyższych poziomów pozwoleń."
+			}
+		}
+	}
+	index "A"
+		on "Object then Group"
+		configurations
+		{
+			"Server" include
+		}
+	index "B"
+		on "Object"
+		configurations
+		{
+			"Server" include
+		}
+	prompt ""
+		ENU "Group.prompt"
+	icon ""
+		ENU "Group.icon"
+}
+
+template "AccessControl::SystemObj_Mod" class "SystemObj"
+{
+	properties
+	{
+		"forms" "'Object'"
+			properties
+			{
+				"ACL" "'ACL'"
+			}
+		"ContextTitles" 0
+			properties
+			{
+				"ACL" 0
+			}
+	}
+	cancreatenew "Not IsNull(User.Object)"
+	candelete "User.Object.IsSystemManagementAdmin or Users.Exists(Permission=3 and members.User=user.Object) or Groups.Exists(Permission=3 and Group.folders.Members.Exists(members.User=user.Object)) or (not users.exists and not Groups.exists)"
+	canmodify "User.Object.IsSystemManagementAdmin or Users.Exists(Permission>=1 and members.User=user.Object) or Groups.Exists(Permission>=1 and Group.folders.Members.Exists(members.User=user.Object)) or (not users.exists and not Groups.exists)"
+	filter "IsWindowsCE or User.Object.IsSystemManagementAdmin Or Users.exists(members.User=user.Object) or Groups.exists(Group.folders.Members.exists(members.User=user.Object)) or (not users.exists and not Groups.exists)"
+	OnNew "OnNew"
+	PreSave "PreSave"
+	PostSave "PostSave"
+	script VBScript
+<%
+Sub OnNew(hwnd)
+	If Not IsGhost Then
+		Set TheUser=Folders.Users.CreateNewInstance
+		TheUser.User=System.User.Object
+		TheUser.Permission=3
+		Properties.Item("ACL")=TheUser
+	End If
+End Sub
+
+Sub PreSave(Transaction)
+	For Each User in Folders.Users
+		If User.IsNew Then User.Save Transaction
+	Next
+End Sub
+
+Sub PostSave()
+	DoDefault()
+	Properties.Delete("ACL")
+End Sub
+%>
+}
+
+template "AccessControl::stdUser_Mod" class "stdUser"
+{
+	members
+	{
+		"IsSystemManagementAdmin" data Bit
+		{
+			title(Singular)
+				ENU "Is system management administrator",
+				JPN "システム管理の管理者",
+				PLK "Jest administratorem zarządzania systemem"
+			default "0"
+		}
+	}
+}
+
+enum "Permission" TinyInt
+{
+	values
+	{
+		value 0
+		{
+			ZHT "讀",
+			DEU "Lesen",
+			ELL "Ανάγνωση",
+			ENU "Read",
+			FRA "Lire",
+			ITA "Leggi",
+			JPN "読み取り",
+			KOR "읽기",
+			PLK "Odczyt",
+			THA "อ่าน",
+			ZHS "可读"
+		}
+		value 1
+		{
+			ZHT "修改",
+			DEU "Ändern",
+			ELL "Διαμόρφωση",
+			ENU "Modify",
+			FRA "Modifier",
+			ITA "Modifica",
+			JPN "編集",
+			KOR "수정",
+			PLK "Modyfikacja",
+			THA "แก้ไข",
+			ZHS "修改"
+		}
+		value 2
+		{
+			ZHT "受限",
+			DEU "Steuern",
+			ELL "Έλεγχος",
+			ENU "Control",
+			FRA "Contrôler",
+			ITA "Controlla",
+			JPN "コントロール",
+			KOR "제어",
+			PLK "Kontrola",
+			THA "ตัวควบคุม",
+			ZHS "控制"
+		}
+		value 3
+		{
+			ZHT "移除",
+			DEU "Löschen",
+			ELL "Διαγραφή",
+			ENU "Delete",
+			FRA "Supprimer",
+			ITA "Elemina",
+			JPN "削除",
+			KOR "삭제",
+			PLK "Usuwanie",
+			THA "ลบ",
+			ZHS "删除"
+		}
+	}
+}
+
+icon "UserGroup"
+{
+	large16
+$
+	4752454154454C4B000A0010410410010682004010B83801010E88C4A26007FC
+	5A2AFE0003DFF1007C6634F88203E431A7848A4C0003CA0072800CB65F0A9843
+	2652E98C2A48017E410073A004F000109FD067543A04FC60079D0C23C003C0FD
+	FE818B54AA75481C160F09864227D0E08452BF077FC12C515B0C5EA515B3DAAC
+	568B6DAED36CB7DBAE3648541C090705C1C25070E41C55071A41C61071341C47
+	070F41C1D0701DCEE190C7E4AE594BAD6A0806838320E118384E0E148385E0E2
+	1838BE0E3D8392A0E548396A0E588394A0E518391B0B0704E4EE991CAEF77907
+	0141C15070B41C49071941C77071FC1C810722C1C9D072BC1CBC3C1C0ED2A5A2
+	A1658A5527951780609064E0141D94118101790107B0E4E6B77BFFAE3E0F0D00
+	023450716C1C4241C507C5041750717D071801E0701E1D84A114492A45F1605D
+	33C7C1D47B5407B200FF1EC741E8FF1C0681B8FF0E47C28CFF1249932CFF1049
+	230CFF078581E4A27C904031F48E1BE41D994117E4103C6B035078011F8640E4
+	022C8771100333C73134223647017450364761BC75388861F4833FC7D85E5D1D
+	A1885A1826C9726CFF2E8B92ECFF294A2294FF0CC812B8FF178AC37CFF1349D3
+	3CFF0805E9C9070E10746DBE8E5C0411C24119D41036164330089722450024EC
+	2986A080FF2D47A0C8FF24C640B4FF22858068FF1D0620F8FF10C809BC541E89
+	53FC63170633FC5914C5A3FC56140573FC821FC843FC7A1D87CADEB93FC4E164
+	683FC3C1B88E3FC481D0913FC4512050299FF41C15A15F65BD0701C570C80213
+	48312C03374B01DC2E3FCB81FC373FCA61AC213FC9616D1B2E0810E8FF358A21
+	78FF2405EA8C6C2C0DC3FC3822E6B158621C2C3AEAB8C2EC4C330AC430FAD2B6
+	14C4D148BB41C4D6258DB65F462C7410C022689F192A32685F050FF2A87109CF
+	F33097148FF36CA719332CD336CD4B41F0343FC652025C0D47E2A0FF14C53177
+	11B10521F8583FC6417C653FC7F1F21B25893258FF2BCAE2C0FF31CC22E4FF21
+	33F389D541C3141D5E4EF1D5BC721040213EF246CBD21840BE2FACE377CCF35C
+	BF312BC76A7C9A178133FC991B69B27477142BF196BA2047D5449C2689D3FCA9
+	2E8A4CB8BF2ACFF344BC270FF360B821CFF37CB41CF9EE80FF27C9C278FF0440
+	F0406B74D835EF1CA116F2084A00C9A3088C11B78CDEF9BEEF5BDC9B182D8280
+	64064FF2C8750B35C220423FCC5216A730AF63FCC01F8363FCB42CCB43FCDA2E
+	BA1380B81E4FFF8E1F380B9FA0B9860E12EAC2FB87DF6FDDB24370EC9641C626
+	CBB24100DDA8B108909C00C6A3796EEDC9BA3277042C83C02F1FE3284784965C
+	240250FF192EF1E73D07A4F51EB3D87B42D0550A21FE3785F08B1FE3885F2BE1
+	C42FC42C261802187F8E3180E84718C11110C06108965C3105A8FF0FC18C238F
+	50BA0D4010A920E18CDB1C57FE00050066036EF99AB2765234C4D8561FE34198
+	0FF19C24C27412828F2D4F8B45CEF45E98FF7AABDE0E8FF15C26C453DF18A280
+	7F8E418CB40728C71243FC728C81271DC648948F6AB8730CA12E3FC6A8C74E62
+	644521B1501B812B4D48E2CC8384C20EA8DDA9BC89913A02C0513C18C0C0FF8A
+	71562BB318B51705206803C3FC5F8A243027C378301FE2F5ECC658392C05888E
+	0D6BE0648B11FE39C6789F974342378E81A3084740D244F311CB0E91A69BC700
+	D04E6EA5D58D113C17C7F89A78A5D6489049266F0FA3C45B12619B8B00ECBA24
+	F4568B02A43702494F2A47F8F21E63CD970B61323FC5429696319E580AB0FE14
+	E2B0CA17A3FC750D94E63AC6D35BA072E4758DB1663FC758DC7BC3B06EC3C1D2
+	3705BBF37BC2E04833513E196274909251284584F006346028D81461824189E5
+	6D39215AA79572B676CEFA611DC6F8D59A817408CF67AF2C055076082CB8648C
+	21FE3A06F8BF86036C600FF1B234C608FF1A833EA08CE1988BD34B5F15E2B457
+	8FF16628E3ED17A3346E6BD1E928640458500063006A8A168E35DBB0D5A53276
+	2A0FF13A1880BBA21A831A764EEAF14C6BC89AA6F4E6340BD0F40C5D43AA7B70
+	81AC09C1189B0440695E21D8288FF122188158FF186239988D21321524189D0B
+	2E79BB51AA384126C000793588B408CACA2006088A0883FEB5AFBADAAD86308D
+	77A250414D311E2E8688FFB756F2DF4F31903687F8A00D60A2BFCB016EF307F8
+	9BAFC2FC3EB3C8CC3FC50BC8A9232A8A0B211AD1C570720523FECCD9B1AB676C
+	FAFBB425D422449B4E45ED4803040DC0778C9124132942B69C2A7C2207457C14
+	C52DC30A829C6F0FF0A429B0003B11F5043A05C5D17485E87B5362542C23714A
+	19551DCFBA2F5ABE812AF58684C8645E032609D9CB3C362D055F20E0B8F9DEA3
+	797B0185EC15EE01C10830C4BA01B88A4D61905A8EE1FE1885A6390BE2C8768F
+	F08E270690FF0941C5F289E0D00987F88D0A20187A08409800C540A1AE729EE8
+	5391201814B89B1834D6E008E13EEAC5086F79B78B1137611E154048F2338ED2
+	6DE2921CA22D282A0F62A07405C158389A6E38C758F07FE3EC8017058E4008A2
+	6F2203B0C21B06790709E5604785300E3405606C0454E42E068B3C1044B0CA68
+	980D1609418E3FC3487659031C474111461A40F95077022CE0C4A63C66008835
+	0AE24C2589C4F61A05BE39C6F8E71DE3DC7E3FF41E400B22BF2002E1002BC7AB
+	FB2080943303A00405AF609F0EC164140E1074219AD8561563947F8601679002
+	E8AE1CC3FC1B0806861BC2381019C158188021045F758671D640000581006416
+	079055D723FF5DEBDCFBB03406C2D88ACF63A2411D5040682706C1A4DC1982D0
+	0A83D0A714E134518DDD87A13706E267B9F42709FC880441A052179B34001C82
+	08017589BE01C0B4270490260E69381B0881B37386D1343FC2D0A51B79FB60E8
+	2E37B1B2004112E3387F8170841683EF10000018B402B0F82A86285815E3B38D
+	640DC390032E7D0A4258648FF0200CECF00301203D0290430DC477A9BE01E0C4
+	2B084036118390FF0421450D81A08688C178645A1C0F40F58E0FD13A37480861
+	6C3D9A42EFD43A90C4EABD5F8375A1FE0942987E1FE0581F067F2C0F1A800803
+	60BC3C90703FE2BB66702C5D882C08103C1283BF75EEFDD4287950280E8310FF
+	049E53DAFB7046D287F822F7606824F7401A0A0200705AE7E0B40160841A8787
+	BDF2A08FDBFB6F2A0541E3350421403F8FF032108368FF0140801C865CDC42B9
+	67A5281D8C280180801ABD6A1BFADE540F84C7CA08027AC20401390C01F09A87
+	FF83E5FA6D41F780E169002063DD8816433DEA9EB1FE487DFD9FD413CFC9F59F
+	607A4AC803009C1140F9E8DF95F91F98164041AD017037C07812C1E1EBDE5408
+	60389F1FD09F1FDC3FE0283FC0741241D4EB00D016838C70DF1C5BE01414004C
+	0E134C068114C2407011CE95DC9DD1FF9D85BE82860DE065E907D60140C20783
+	7C05C101634070B3A0BA0C08C1EADF65DE83FC0480D81743C003C0C01500CE12
+	8B69E99D8C1020142021AE1B5D8D2B61320687D20E61B816427E0161DDD8C1C2
+	014A5E1C61FA12E20219E20A1CA1FE20E21621220622221A22621E23623223E2
+	2E2462287D04040000000000000000000000000000000000
+$
+	small16
+$
+	4752454154454C4B000A0010408410010682004010B83800810E88C4A26007FC
+	5800F801C11C11A003023AC086B020F23824963D2494C6E1AE0961063643823C
+	1FF048BC0A0F098441E16200047608048A50A0F348ACD689178B4D29515A4CDA
+	0805838260E0B838620E2D83CC60910820DA714CB0D3A974F000220E2483D740
+	04E055B8AE3B1B8E90E622E18578693119DC030352357E252D9E93F070FD8AC9
+	88870185C1A00924E84707ABD1A5A0E380F259193B0C87A46BE0DC6736BFCF87
+	73E3FD188846BFC8E7D50BFC82734A3560E28C3D3712611C0087E9C31061EEB5
+	3E8D1FEC145911FEBD44F1CA08E58BFCAA552FF3CB8577F990BE65D19E0FAFF4
+	09ECFAE7838F60E06DB5313A660F2E9A49E2D3FDA29C2C3FD72811CBFD627416
+	3FD5E7B1FBFC9C214713FCC02C8903FCD72EC8F3FCDE2E1A630CB0258FF06417
+	0606C41C3141C046D8BA20C3C3D0C3234473FCBC2083B3FCCC2444B3FCBE201F
+	63121D7CC90198FF380C2818E43108C3FCE43148E3FCDB319AE22C68104E70A8
+	180046A41C0C6D8BC2143E7108A71CD2264543FCB720C433FCC72BE3E2E87B0C
+	E5720A2A378CF2BCFF3A4D52A4FF3A8D72B0FF3A0D72C25727C853FC79130122
+	9907035B62D87F0DCE4358A0175C421C403FCD9328B73FCEF3B8EC3FCAE1BC26
+	3FE5F0E0FF308BC9CCC42D49E3FCB22748080CA3210FF3189D1B0FF1E84E0567
+	B4127D58C002906B084A434DF13FC941F8563FC712C0D7AF4AE34CFF29872984
+	B21C9B52C06F094FF2C0716D4DC33CBF7CC800EA072805C3FC8214C16271526D
+	88C140030308C14C0C1C8512149C3E4632D4EE3FC582B0E63FC5C1D8783CC6C0
+	F80420CA81A01E3CC9C1CE261C0AE350FF1D8861FAA6238483FC83134061913B
+	799170403115066170AA37CFFBBAF0178B23B4FF1189B34CFD014100584220C4
+	B00C2F12C81264E2174B13ACFF148A1C1C3D0CC1F2610704B15624150EC632CC
+	23145DC14C9C348FFC8723134A3378FF048341185041C031109933CE2D3CFF0F
+	47729CFF03C2D134B541C14D09B700018100692D0211447F3FC1E128753FC221
+	41A60718F3FC0A080350D94C068451BCEFDE9DC0784B1E0FF05038178A87936B
+	530110D45B1201A1106F3DC1F13079DD44A1DCFFD106330759530120D85D1901
+	7DBCC00583D19CAC0403215C29E52B1530100CC59053BC16448F0044F0008EE5
+	89F1F6CF27CBEEBCD625010000000000
+$
+}
+
+
+sysclass "PermitUser" from "PermitUser"
+{
+}
+
+sysclass "PermitGroup" from "PermitGroup"
+{
+}
+
+sysclass "UserGroup" from "UserGroup"
+{
+	
+	folder "UserGroups"
+	{
+		title(Singular)
+			ZHT "使用者群組",
+			DEU "Benutzergruppen",
+			ELL "Ομάδες χρηστών",
+			ENU "User Groups",
+			FRA "Groupes d'utilisateurs",
+			ITA "Gruppi utente",
+			JPN "ユーザーグループ",
+			KOR "사용자 그룹",
+			PLK "Grupy użytkowników",
+			THA "กลุ่มผู้ใช้",
+			ZHS "用户组"
+		gender DEU feminine
+		properties
+		{
+			"foldersets" 0
+				properties
+				{
+					"Admin" 0
+				}
+		}
+	}
+}
+
+sysclass "stdUser" from "stdUser"
+{
+}
+
+systemplate "AccessControl::SystemObj_Mod" template "AccessControl::SystemObj_Mod"
+systemplate "AccessControl::stdUser_Mod" template "AccessControl::stdUser_Mod"
+
+}
+layout
+<%
+<?xml version="1.0" encoding="utf-8"?>
+<AeDesigner_doc version="3">
+    <class_diagram name="AccessControl" width="1000" height="1000">
+        <class name="UserGroup" left="434" top="21" right="568" bottom="111">
+            <member name="Title" type="data" />
+            <hide show_base_members="1" />
+        </class>
+        <class name="GroupMember" left="242" top="152" right="376" bottom="242">
+            <hide show_base_members="1" />
+        </class>
+        <class name="PermitUser" left="45" top="241" right="179" bottom="331">
+            <member name="Permission" type="enum" />
+            <hide show_base_members="1" />
+        </class>
+        <class name="PermitGroup" left="433" top="241" right="567" bottom="331">
+            <member name="Permission" type="enum" />
+            <hide show_base_members="1" />
+        </class>
+        <class name="SysObject::SystemObj" included_class="1" left="242" top="387" right="376" bottom="477">
+            <member name="Title" type="data" />
+            <member name="Descrip" type="data" />
+            <hide show_base_members="1" />
+        </class>
+        <class name="PermitBase" left="244" top="573" right="378" bottom="663">
+            <hide show_base_members="1" />
+        </class>
+        <class name="stdbaseentities::stdUser" included_class="1" left="45" top="22" right="179" bottom="205">
+            <member name="ID" type="data" />
+            <member name="IsAdmin" type="data" />
+            <member name="Password" type="data" />
+            <member name="Phone" type="class" />
+            <member name="Address" type="class" />
+            <member name="Fax" type="class" />
+            <member name="Mobile" type="class" />
+            <member name="eMailAddress" type="class" />
+            <member name="DontMail" type="data" />
+            <member name="Name" type="class" />
+            <member name="IsSystemManagementAdmin" type="data" />
+            <hide pos_x="112" pos_y="66" show_base_members="1">
+                <link_in_list name="Phone" forced="1" />
+                <link_in_list name="Address" forced="0" />
+                <link_in_list name="Fax" forced="0" />
+                <link_in_list name="Mobile" forced="0" />
+                <link_in_list name="eMailAddress" forced="0" />
+                <link_in_list name="Name" forced="0" />
+            </hide>
+        </class>
+        <generalization base="PermitBase" derived="PermitUser" />
+        <generalization base="PermitBase" derived="PermitGroup" />
+        <link_join name="Group" class="GroupMember" target="UserGroup" />
+        <link_join name="Object" class="PermitUser" target="SystemObj" />
+        <link_join name="Object" class="PermitGroup" target="SystemObj" />
+        <link_join name="Group" class="PermitGroup" target="UserGroup" />
+        <link_join name="User" class="GroupMember" target="stdUser" />
+        <link_join name="User" class="PermitUser" target="stdUser" />
+    </class_diagram>
+    <TargetPlatforms>1</TargetPlatforms>
+    <DefaultScriptLang>VBScript</DefaultScriptLang>
+</AeDesigner_doc>
+%>

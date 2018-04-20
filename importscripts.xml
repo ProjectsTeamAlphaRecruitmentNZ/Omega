@@ -1,0 +1,4 @@
+
+<scripts>
+  <script file="importdocument.xml" id="importdocument" description="Perform an Import" persist="1" />  
+</scripts>

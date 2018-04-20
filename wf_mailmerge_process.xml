@@ -1,0 +1,43 @@
+<aedata><folder title="Workflow Batch Mail Merge Processes" timestamp="3/5/2009" targetfolder="WF_MailMergeProcesses">
+		<instance class="WF_Process" key="{1EDE4DD7-D33A-4f69-BC1B-78180B8BDBCA}">
+			<member name="Active">True</member>
+			<xmlmember name="Defn">
+				<xml>
+					<entryevents>
+						<event id="{E76BA7B8-B93C-4e35-89D1-B70DC973B9A7}" progid="AeWorkFlow.StartWithInstance.Event" class="MergeDoc" PendingWorkClass="MM_PendingWork" nextid="{57CE5739-3AE2-4290-9EFB-08A50B7A7540}"/>
+					</entryevents>
+					<actions>
+						<action id="{57CE5739-3AE2-4290-9EFB-08A50B7A7540}" progid="Elk9.MailMergeWF.Action" title="Batch Mail Merge" class="MergeDoc" nextid="">
+						</action>
+					</actions>
+					<layout>
+						<symbols>
+							<symbol type="entry" id="{E76BA7B8-B93C-4e35-89D1-B70DC973B9A7}" left="88" top="40" right="104" bottom="56"/>
+							<symbol type="action" id="{57CE5739-3AE2-4290-9EFB-08A50B7A7540}" left="38" top="130" right="154" bottom="181"/>
+							<symbol type="exit" id="{A799C073-616A-4D1F-8703-D0BD33C784D8}" left="84" top="252" right="108" bottom="276"/>
+						</symbols>
+						<links>
+							<link id="{8E38A32F-A087-4750-A3A3-3342E73C946E}" source_id="{E76BA7B8-B93C-4e35-89D1-B70DC973B9A7}" target_id="{57CE5739-3AE2-4290-9EFB-08A50B7A7540}" source_port="2" target_port="0"/>
+							<link id="{2ED5D1A8-07D6-4045-A93E-91CE3490A7BA}" source_id="{57CE5739-3AE2-4290-9EFB-08A50B7A7540}" target_id="{A799C073-616A-4D1F-8703-D0BD33C784D8}" source_port="2" target_port="0"/>
+						</links>
+						<Viewport magnificationX="100" magnificationY="100" originX="0" originY="0" canvasSizeX="1000" canvasSizeY="1000"/>
+					</layout>
+				</xml>
+
+			</xmlmember>
+			<member name="Title">Workflow Batch Mail Merge</member>
+			<member name="MaxRunningProcesses">1</member>
+			<member name="StartWithInst_Class">MergeDoc</member>
+			<member name="StartWithInst_FirstStep">{57CE5739-3AE2-4290-9EFB-08A50B7A7540}</member>
+			<member name="WF_ServerGroup" null=""/>
+			<member name="IsMaintenance">False</member>
+			<member name="WF_ProcID">WF_BATCH_MAIL_MERGE</member>
+			<member name="WF_AppPool" null=""/>
+			<member name="EnableLogging">False</member>
+			<member name="Priority">3</member>
+			<member name="IsMailMerge">True</member>
+			<member name="cq_queueable">False</member>
+			<member name="cq_class" null=""/>
+			<member name="cq_firststep" null=""/>
+		</instance>
+	</folder></aedata>

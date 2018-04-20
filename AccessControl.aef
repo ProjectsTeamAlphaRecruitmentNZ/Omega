@@ -1,0 +1,264 @@
+﻿
+
+modify form "Object" for "SystemObj" as "Object"
+{
+	modify tabset "Tabs"
+	{
+		Insert "ACL"
+			ZHT "存取控制", 
+			ZHS "访问控制", 
+			DEU "Zugriffssteuerung", 
+			ELL "Έλεγχος Πρόσβασης", 
+			ENU "Access control", 
+			FRA "Contrôle d'accès", 
+			ITA "Controllo accesso", 
+			JPN "アクセス コントロール", 
+			KOR "액세스 컨트롤", 
+			PLK "Kontrola dostępu", 
+			THA "การควบคุมการเรียกใช้งาน"
+		
+		{
+			"ACL" form self tag ITA "" 1,0,279(100),135(100) context "ACL"
+		}
+	}
+}
+
+form "ACL" for "SystemObj" 146,144
+{
+	"Groups" control "Elk9.grid" 0,0,146(100),72(50) ENU ""
+	{
+		"_cx" = "5080"
+		"_cy" = "5080"
+		"Enabled" = "-1"
+		"FolderName" = "Groups"
+		"ConfirmDelete" = "0"
+		"AllowDelete" = "-1"
+		"AllowSort" = "-1"
+		"AllowOpen" = "0"
+		"AllowAdds" = "-1"
+		"Toolbar" = "-1"
+		"ManualFill" = "0"
+		"Configurable" = "0"
+		"MaxRows" = "0"
+		"PrintButton" = "0"
+		"Collapsable" = "0"
+		"ShowGroupBox" = "0"
+		"OpenOnAdd" = "0"
+		"Filter" = ""
+		"GridID" = "{E871E6FA-87A0-410D-8E6F-C98C72D74892}"
+		"BackColor" = "2147483653"
+		"ForeColor" = "4294967295"
+		"BandOnMember" = ""
+		"BandFolder" = ""
+		"ExpandMember" = ""
+		"ExpandExistence" = ""
+		"RowColor" = ""
+		"ShowTooltips" = "-1"
+		"FixedColumnCount" = "0"
+		"SortCol" = "0"
+		"SortCol2" = "-1"
+		"SortCol3" = "-1"
+		"SortDirection" = "0"
+		"SortDirection2" = "0"
+		"SortDirection3" = "0"
+		"ColumnCount" = "2"
+		"Column1_Expr" = "Group.Title"
+		"Column1_Flags" = "9"
+		"Column1_Align" = "0"
+		"Column1_Format" = ""
+		"Column1_ColorExpression" = ""
+		"Column2_Expr" = "Permission"
+		"Column2_Flags" = "8"
+		"Column2_Align" = "0"
+		"Column2_Format" = ""
+		"Column2_ColorExpression" = ""
+		"TotalCount" = "1"
+		"Total1_Expr" = "TOTAL"
+		"Caption_StringCount" = "0"
+		"OpenInDialog" = "0"
+		"Column1_Caption_String1Lang" = "1033"
+		"Column1_Caption_String1Val" = "Name"
+		"Column1_Caption_String2Lang" = "1036"
+		"Column1_Caption_String2Val" = "Nom"
+		"Column1_Caption_String3Lang" = "1031"
+		"Column1_Caption_String3Val" = "Name"
+		"Column1_Caption_String4Lang" = "1045"
+		"Column1_Caption_String4Val" = "Nazwa"
+		"Column1_Caption_String5Lang" = "1054"
+		"Column1_Caption_String5Val" = "ชื่อ"
+		"Column1_Caption_String6Lang" = "1041"
+		"Column1_Caption_String6Val" = "グループ名"
+		"Column1_Caption_String7Lang" = "1040"
+		"Column1_Caption_String7Val" = "Nome"
+		"Column1_Caption_String8Lang" = "1042"
+		"Column1_Caption_String8Val" = "이름"
+		"Column1_Caption_StringCount" = "8"
+		"Column2_Caption_String1Lang" = "1033"
+		"Column2_Caption_String1Val" = "Permission"
+		"Column2_Caption_String2Lang" = "1036"
+		"Column2_Caption_String2Val" = "Permission"
+		"Column2_Caption_String3Lang" = "1031"
+		"Column2_Caption_String3Val" = "Erlaubnis"
+		"Column2_Caption_String4Lang" = "1045"
+		"Column2_Caption_String4Val" = "Pozwolenie"
+		"Column2_Caption_String5Lang" = "1054"
+		"Column2_Caption_String5Val" = "การอนุญาต"
+		"Column2_Caption_String6Lang" = "1041"
+		"Column2_Caption_String6Val" = "許可"
+		"Column2_Caption_String7Lang" = "1042"
+		"Column2_Caption_String7Val" = "허가"
+		"Column2_Caption_String8Lang" = "1040"
+		"Column2_Caption_String8Val" = "Permesso"
+		"Column2_Caption_StringCount" = "8"
+		"Total1_Caption_String1Lang" = "1033"
+		"Total1_Caption_String1Val" = "Total"
+		"Total1_Caption_String2Lang" = "1045"
+		"Total1_Caption_String2Val" = "Łącznie"
+		"Total1_Caption_String3Lang" = "1054"
+		"Total1_Caption_String3Val" = "รวม"
+		"Total1_Caption_StringCount" = "3"
+	}
+	"Users" control "Elk9.grid" 0,74(50),146(100),70(100)
+	{
+		"_cx" = "5080"
+		"_cy" = "5080"
+		"Enabled" = "-1"
+		"FolderName" = "Users"
+		"ConfirmDelete" = "0"
+		"AllowDelete" = "-1"
+		"AllowSort" = "-1"
+		"AllowOpen" = "0"
+		"AllowAdds" = "-1"
+		"Toolbar" = "-1"
+		"ManualFill" = "0"
+		"Configurable" = "0"
+		"MaxRows" = "0"
+		"PrintButton" = "0"
+		"Collapsable" = "0"
+		"ShowGroupBox" = "0"
+		"OpenOnAdd" = "0"
+		"Filter" = ""
+		"GridID" = "{C7EAE3FA-7DF0-4783-A46A-BE25A675AE55}"
+		"BackColor" = "2147483653"
+		"ForeColor" = "4294967295"
+		"BandOnMember" = ""
+		"BandFolder" = ""
+		"ExpandMember" = ""
+		"ExpandExistence" = ""
+		"RowColor" = ""
+		"ShowTooltips" = "-1"
+		"FixedColumnCount" = "0"
+		"SortCol" = "-1"
+		"SortCol2" = "-1"
+		"SortCol3" = "-1"
+		"SortDirection" = "0"
+		"SortDirection2" = "0"
+		"SortDirection3" = "0"
+		"ColumnCount" = "3"
+		"Column1_Expr" = "Members.User.ID"
+		"Column1_Flags" = "1"
+		"Column1_Align" = "0"
+		"Column1_Format" = ""
+		"Column1_ColorExpression" = ""
+		"Column2_Expr" = "Members.User.Prompt"
+		"Column2_Flags" = "9"
+		"Column2_Align" = "0"
+		"Column2_Format" = ""
+		"Column2_ColorExpression" = ""
+		"Column3_Expr" = "Permission"
+		"Column3_Flags" = "8"
+		"Column3_Align" = "0"
+		"Column3_Format" = ""
+		"Column3_ColorExpression" = ""
+		"TotalCount" = "1"
+		"Total1_Expr" = "TOTAL"
+		"Caption_StringCount" = "0"
+		"OpenInDialog" = "0"
+		"Column1_Caption_String1Lang" = "1033"
+		"Column1_Caption_String1Val" = "ID"
+		"Column1_Caption_String2Lang" = "1036"
+		"Column1_Caption_String2Val" = "ID"
+		"Column1_Caption_String3Lang" = "1031"
+		"Column1_Caption_String3Val" = "ID"
+		"Column1_Caption_String4Lang" = "1041"
+		"Column1_Caption_String4Val" = "ID"
+		"Column1_Caption_String5Lang" = "1040"
+		"Column1_Caption_String5Val" = "ID"
+		"Column1_Caption_String6Lang" = "1042"
+		"Column1_Caption_String6Val" = "ID"
+		"Column1_Caption_StringCount" = "6"
+		"Column2_Caption_String1Lang" = "1033"
+		"Column2_Caption_String1Val" = "Name"
+		"Column2_Caption_String2Lang" = "1036"
+		"Column2_Caption_String2Val" = "Nom"
+		"Column2_Caption_String3Lang" = "1031"
+		"Column2_Caption_String3Val" = "Name"
+		"Column2_Caption_String4Lang" = "1045"
+		"Column2_Caption_String4Val" = "Nazwa"
+		"Column2_Caption_String5Lang" = "1054"
+		"Column2_Caption_String5Val" = "ชื่อ"
+		"Column2_Caption_String6Lang" = "1041"
+		"Column2_Caption_String6Val" = "ユーザー名"
+		"Column2_Caption_String7Lang" = "1042"
+		"Column2_Caption_String7Val" = "이름"
+		"Column2_Caption_String8Lang" = "1040"
+		"Column2_Caption_String8Val" = "Nome"
+		"Column2_Caption_StringCount" = "8"
+		"Column3_Caption_String1Lang" = "1033"
+		"Column3_Caption_String1Val" = "Permission"
+		"Column3_Caption_String2Lang" = "1036"
+		"Column3_Caption_String2Val" = "Permission"
+		"Column3_Caption_String3Lang" = "1031"
+		"Column3_Caption_String3Val" = "Erlaubnis"
+		"Column3_Caption_String4Lang" = "1045"
+		"Column3_Caption_String4Val" = "Pozwolenie"
+		"Column3_Caption_String5Lang" = "1054"
+		"Column3_Caption_String5Val" = "การอนุญาต"
+		"Column3_Caption_String6Lang" = "1041"
+		"Column3_Caption_String6Val" = "許可"
+		"Column3_Caption_String7Lang" = "1042"
+		"Column3_Caption_String7Val" = "허가"
+		"Column3_Caption_String8Lang" = "1040"
+		"Column3_Caption_String8Val" = "Permesso"
+		"Column3_Caption_StringCount" = "8"
+		"Total1_Caption_String1Lang" = "1041"
+		"Total1_Caption_String1Val" = "合計"
+		"Total1_Caption_StringCount" = "1"
+	}
+}
+
+form "UserGroup" for "UserGroup" 249,96
+{
+	"Title" edit member "Title" 0,0,248(50),14 sidetag tagset(1)
+	"ocxUserList" control "Elk9.JoinSetList.1" 0,16,249(100),80(100) toptag
+		ZHS "用户(&U)", 
+		DEU "&Benutzer", 
+		ELL "&Χρήστες", 
+		ENU "&Users", 
+		FRA "&Utilisateurs", 
+		ITA "&Utenti", 
+		JPN "ユーザー(&U)", 
+		KOR "사용자(&U)", 
+		PLK "&Użytkownicy", 
+		THA "ผู้ใช้ (&U)"
+	
+	{
+		"_cx" = "5080"
+		"_cy" = "5080"
+		"Enabled" = "-1"
+		"BackColor" = "2147483653"
+		"ForeColor" = "4294967295"
+		"FolderName" = "Members"
+		"JoinMember" = "User"
+	}
+}
+
+form "GroupMember" for "GroupMember" 304,113
+{
+	"frmGroup" form member "Group" 0,0,304(100),113(100)
+}
+
+form "UserMember" for "GroupMember" 304,113
+{
+	"frmUser" form member "User" 0,0,304(100),113(100)
+}

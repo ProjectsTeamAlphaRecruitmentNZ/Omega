@@ -1,0 +1,145 @@
+
+
+modify form "stdConfiguration" for "stdConfiguration" as "stdConfiguration"
+{
+}
+
+form "MergeObjectSelect" 304,195
+{
+	"oleChooser" control "Elk9.Chooser.1" 0,0,304(100),65
+	{
+		"_cx" = "6006"
+		"_cy" = "2540"
+		"HasSource" = "-1"
+		"Sources" = "3"
+		"HasSegments" = "-1"
+		"HasSearch" = "-1"
+		"BackColor" = "4294967295"
+		"ForeColor" = "4294967295"
+		"ListControl" = "oleListView"
+		"FolderSet" = ""
+	}
+	"oleListView" control "Elk9.ListView.1" 0,76,304(100),119(100)
+	{
+		"_cx" = "5080"
+		"_cy" = "5080"
+		"ShowIcons" = "-1"
+		"MaxItems" = "0"
+		"FormControl" = ""
+		"BackColor" = "2147483653"
+		"BorderStyle" = "1"
+		"Enabled" = "-1"
+		"ForeColor" = "4294967295"
+		"ContextMenuEnabled" = "0"
+	}
+	OnInit "Form_Init"
+	Script VBScript
+<%
+Sub Form_Init()
+	oleChooser.Control.ListControl 	= Form.oleListView.Control
+	oleChooser.Control.FolderSet 	= "GenericMerge"
+End Sub
+%>
+}
+
+form "MergeConfirm" 304,178
+{
+	"lblMergeFrom" text tag ENU "lblMergeFrom" 8,3,290(100),9
+	"lblMergeTo" text tag ENU "lblMergeTo" 8,34,282(100),9
+	"objSummary" text tag ENU "objSummary" 8,68,286(100),106(100) wrap
+	"box1" box 0,1,304(100),47 style solid(1)
+	"objFlex" control "VE9Gen.FlexLabel" 7,17,273,9
+	{
+		"_ExtentX" = "3757"
+		"_ExtentY" = "1561"
+		"BorderStyle" = "0"
+		"BackStyle" = "1"
+		"ForeColor" = "16711680"
+		"MousePointer" = "0"
+		"OLEDropMode" = "0"
+		"Caption" = "Will be Merged Into:"
+		"Effect" = "5"
+		"TextAlignment" = "0"
+		"BackColor" = "-2147483633"
+		"FontBold" = "-1"
+		"FontItalic" = "0"
+		"FontStrikethru" = "0"
+		"FontUnderline" = "0"
+		"VMargin" = "0"
+		"HMargin" = "0"
+	}
+	"box2" box 0,51,304(100),127(100) style solid(1)
+	"objFlex2" control "VE9Gen.FlexLabel" 7,55,274,9
+	{
+		"_ExtentX" = "3757"
+		"_ExtentY" = "1561"
+		"FontName" = "MS Sans Serif"
+		"FontCharset" = "0"
+		"BorderStyle" = "0"
+		"BackStyle" = "1"
+		"ForeColor" = "16711680"
+		"MousePointer" = "0"
+		"OLEDropMode" = "0"
+		"Caption" = "The Following will be Merged:"
+		"Effect" = "5"
+		"TextAlignment" = "0"
+		"BackColor" = "-2147483633"
+		"FontBold" = "-1"
+		"FontItalic" = "0"
+		"FontSize" = "9.75"
+		"FontStrikethru" = "0"
+		"FontUnderline" = "0"
+		"VMargin" = "0"
+		"HMargin" = "0"
+	}
+}
+
+menu "MergeUtilities" ENZ "Merge Utilities"
+{
+	item "Merge" "On_Merge"ENZ "Merge Wizard..." message ENZ "Allows you to merge objects of the same class"
+	Script VBScript
+<%
+Sub On_Merge(Control)
+	If Not System.Folders.MergeGeneric.CanCreateNewInstance Then
+		MsgBox System.LoadString("MergeNoPermissions")
+		Exit Sub
+	End If
+
+	Dim oMergeGeneric
+	Set oMergeGeneric = System.Folders.MergeGeneric.CreateNewInstance
+	
+	' Choose the instances to merge TO and FROM
+	Dim lngResult
+	lngResult = System.UT_DoScriptWithObject("mergescripts.mergegeneric", "On_Merge(Control)", oMergeGeneric)
+	
+	If oMergeGeneric.Properties("ReadyToMerge") = True Then
+		If IsNull(oMergeGeneric.To) Then
+			MsgBox System.LoadString("MergeNeedTo")
+		ElseIf IsNull(oMergeGeneric.From) Then
+			MsgBox System.LoadString("MergeNeedFrom")
+		Else
+			' Do the merge
+			oMergeGeneric.Merge
+			
+			If oMergeGeneric.Properties("MergedOK") Then
+			    MsgBox System.LoadString("MergeSuccessful")
+			ElseIf oMergeGeneric.Properties("MergeCancelled") = True Then
+				' do nothing
+			ElseIf oMergeGeneric.Properties("MergeError") <> "" Then
+				MsgBox System.FormatString("#MergeError", oMergeGeneric.Properties("MergeError"))
+			Else
+				MsgBox System.LoadString("MergeUnexpectedError2")
+			End If
+		End If
+	Else
+		If oMergeGeneric.Properties("MergeError") <> "" Then
+			MsgBox System.FormatString("#MergeError", oMergeGeneric.Properties("MergeError"))
+		ElseIf lngResult <> 0 Then
+			MsgBox System.FormatString("#MergeUnexpectedError", lngResult)
+		End If
+	End If
+	
+	Set oMergeGeneric = Nothing
+End Sub
+%>
+}

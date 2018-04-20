@@ -1,0 +1,173 @@
+﻿
+
+form "stdLetterNotes" 280,185
+{
+	"Notes" edit
+		tag 
+			ZHT "附註(&N)", 
+			DEU "&Anmerkungen", 
+			ELL "&Σημειώσεις", 
+			ENU "&Notes", 
+			ESP "&Notas", 
+			FRA "&Notes", 
+			ITA "&Appunti", 
+			JPN "メモ(&N)", 
+			KOR "특이사항", 
+			PLK "Uw&agi"
+	 1,1,279(100),184(100) multiline autovscroll vscroll toptag tagset(1)
+	Script VBScript
+<%
+Sub GetFormData(frmData)
+      frmData = Form.Notes
+End Sub
+%>
+}
+
+modify form "stdActivity" for "stdLetter" as "stdLetter"
+{
+	before "Tabs" Height 17
+	{
+		"Date" form member "stdTimeStamp" 0,0,222,14 context "Start" sidetag tagset(1)
+	}
+	modify tabset "Tabs"
+	{
+		Insert "Document"
+			ZHT "文件", 
+			DEU "Dokument", 
+			ELL "Έγγραφο", 
+			ENU "Document", 
+			ESP "Documento", 
+			FRA "Document", 
+			ITA "Documento", 
+			JPN "ドキュメント", 
+			KOR "문서", 
+			PLK "Dokument"
+		
+		{
+			"Thumbnail" control "Elk9.DocThumbnail.1" 0,16,296(100),92(100) bind "Metafile" to "Thumbnail"
+			{
+				"_cx" = "6752280"
+				"_cy" = "6752280"
+			}
+			"oleToolbar" control "Elk9.Toolbar.1" 0,0,296(100),17
+				DEU "ole Symbolleiste", 
+				ELL "ole Εργαλειογραμμή", 
+				ENU "oleToolbar", 
+				ESP "oletoolbar"
+			
+			Events
+			{
+				"Clicked" "oleToolbar_Clicked"
+			}
+			{
+				"MaskColor" = "16711935"
+				"_cx" = "5080"
+				"_cy" = "5080"
+				"Buttons" object "{068C33E4-1E68-4CDD-B8FD-911E1E9E65BD}"
+				{
+					"NumButtons" = "1"
+					"Button0" object "{44FDBD5A-2EC9-4F70-8D5D-E5E999241C4B}"
+					{
+						"ID" = "1"
+						"Image" = "-2"
+						"Style" = "0"
+						"MenuItems" = "0"
+						"Enabled" = "1"
+						"Checked" = "0"
+						"Caption_String1Lang" = "1034"
+						"Caption_String1Val" = "Abrir"
+						"Caption_String2Lang" = "1033"
+						"Caption_String2Val" = "Open"
+						"Caption_String3Lang" = "1045"
+						"Caption_String3Val" = "Otwórz"
+						"Caption_String4Lang" = "1041"
+						"Caption_String4Val" = "開く"
+						"Caption_StringCount" = "4"
+						"ToolTip_String1Lang" = "1034"
+						"ToolTip_String1Val" = "Abrir el documento"
+						"ToolTip_String2Lang" = "1033"
+						"ToolTip_String2Val" = "Open the document"
+						"ToolTip_String3Lang" = "1045"
+						"ToolTip_String3Val" = "Otwórz dokument"
+						"ToolTip_String4Lang" = "1041"
+						"ToolTip_String4Val" = "ドキュメントを開く"
+						"ToolTip_StringCount" = "4"
+					}
+				}
+				"ImageList" object "{134475AE-ED31-4867-9E10-BD9ACF5CE238}"
+$
+	00030000880000004752454154454c4b249300201000020a040004214007fc39
+	fe0586c3e2642269da0d188345e0c288c102310b834223306014924f2893a020
+	d2b964ae5a0097cc65ac09acce60ff834e675399dc367f0e9e4fa5344a2d1a8f
+	48a4d2a974ca6d3a9f50a8d4aa754aad5aaf58acd6ab7458a8fa515f8e47a411
+	882c163330a7c3eb96cb6d5a02000000b00000004752454154454c4b24930020
+	1000020a040008214007fc39fe0586c3e2642269da0d188345e0c288c202310b
+	834223306044924f2893c7c012b9647e5b2f974198134974b5ff069c4e6713a8
+	6cfa1d3b9eca68744a2d1a8f48a4d2a974ca6d3a9f50a8d4aa754aad5aaf58ac
+	d6ab75caed7abf60b0d8ac764b2d9acf68b4daad76cb6dbadf70b8dcae774bad
+	daef78bcdd22a3e945f6391e904620b059200aa10fbd62b178cc6e3b1f668080
+	00000000ff00ff00
+$
+				"Caption_String1Lang" = "1034"
+				"Caption_String1Val" = "Combinar documento"
+				"Caption_String2Lang" = "1033"
+				"Caption_String2Val" = "Merge Document"
+				"Caption_String3Lang" = "1045"
+				"Caption_String3Val" = "Scal dokument"
+				"Caption_String4Lang" = "1041"
+				"Caption_String4Val" = "ドキュメントのマージ"
+				"Caption_StringCount" = "4"
+			}
+			OnInit "Document_Init"
+		}
+	}
+	Script VBScript
+<%
+Sub oleToolbar_Clicked(btnID)
+
+	Select Case btnID
+		Case 1
+
+			' Extract the document and open for the user
+
+			On Error Resume Next
+			strFileName = Form.Object.Document.Extract()
+			On Error goto 0
+	
+			If Len(strFileName) > 0 Then
+
+				' Check if the filename has an extension and if not try to work it out
+				' from the mime document type
+
+				Set objFileSystem = CreateObject("Scripting.FileSystemObject")
+			    strTargetFile = objFileSystem.GetSpecialFolder(2).Path & "\" & objFileSystem.GetTempName
+	    
+				Select Case Lcase(Form.Object.Document.MimeType)
+					Case "application/msword"
+						strTargetFile = Replace(strTargetFile,".tmp",".doc")
+				End Select
+		
+				objFileSystem.MoveFile strFileName,strTargetFile
+
+				Set objFileSystem = Nothing
+			
+				Set objUtils = CreateObject("Elk9.Utils")
+				objUtils.ShellExecute strTargetFile
+				Set objUtils = Nothing	
+			End If	
+	End Select
+	
+End Sub
+
+Sub Document_Init()
+
+	' Check if any embedded document exists and if so enable the Open button
+	
+	If Not Form.Object.Document.Value.IsNull Then	
+		This.oleToolbar.Control.Buttons(0).Enabled = (Not IsNull(Form.Object.Document.MimeType.Value))	
+	Else
+		This.oleToolbar.Control.Buttons(0).Enabled = False
+	End If
+End Sub
+%>
+}

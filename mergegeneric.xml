@@ -1,0 +1,52 @@
+<script id="{DE2AAB3A-21FF-4837-8334-AF4294F4E30C}" version="1" description="Merge Wizard" language="VBScript" startpage="{C3A7CAC8-CEB7-49e8-8417-50B0B3711A15}" allowdebug="False">
+   <notes/>
+   <pages>
+	<page id="{C3A7CAC8-CEB7-49e8-8417-50B0B3711A15}" pagetype="Form" form="MergeObjectSelect" title="Choose the object that you want to merge from." description="Select the item and press next." nextenabled="True" canfinish="False">
+		<script>
+		Sub PageFinish
+			if Not Script.ActiveForm.FormForm.Controls("oleListView").Control.SelectedItem is Nothing then
+				Script.AeObject.From 		= Script.ActiveForm.FormForm.Controls("oleListView").Control.SelectedItem.Key
+				Script.AeObject.FromClass 	= Script.ActiveForm.FormForm.Controls("oleListView").Control.SelectedItem.Class.Name
+				Script.Properties("SelectedOption") = true
+			else
+				Script.Properties("SelectedOption") = False
+			end if
+		End Sub
+		</script>
+		<branches>
+			<branch nextpage="{C3A7CAC8-CEB7-49e8-8417-50B0B3711A15}" expression="Script.Properties(&quot;SelectedOption&quot;)=False" />
+			<branch nextpage="{21FCC528-F07D-4cf6-B4DF-21BB4B6700B5}" expression="Script.Properties(&quot;SelectedOption&quot;)=True" />
+		</branches>
+	</page>
+	<page id="{21FCC528-F07D-4cf6-B4DF-21BB4B6700B5}" pagetype="Form" form="MergeObjectSelect" title="Choose the object that you want to merge to." description="Select the item and press next." nextenabled="True" canfinish="False">
+		<script>
+		Sub PageFinish
+			if Not Script.ActiveForm.FormForm.Controls("oleListView").Control.SelectedItem is Nothing then
+				Script.AeObject.To 	= Script.ActiveForm.FormForm.Controls("oleListView").Control.SelectedItem.Key
+				Script.AeObject.ToClass = Script.ActiveForm.FormForm.Controls("oleListView").Control.SelectedItem.Class.Name
+				Script.Properties("SelectedOption") = true
+			else
+				Script.Properties("SelectedOption") = False
+			end if
+		End Sub
+		</script>
+		<branches>
+			<branch nextpage="{21FCC528-F07D-4cf6-B4DF-21BB4B6700B5}" expression="Script.Properties(&quot;SelectedOption&quot;)=False" />
+			<branch nextpage="{0A6220C7-0109-423b-B41A-587BFA144654}" expression="Script.Properties(&quot;SelectedOption&quot;)=True" />
+		</branches>
+	</page>
+	<page id="{0A6220C7-0109-423b-B41A-587BFA144654}" pagetype="Form" form="MergeConfirm" title="Please confirm the final details of the merge." description="Confirm the details then press finish to start the merge." canfinish="True">
+		<script>
+		Sub PageLoaded
+			Script.ActiveForm.FormForm.Controls("lblMergeFrom").Text = Script.AeSystem.Classes(Script.AeObject.FromClass).GetInstance(Script.AeObject.From).Prompt
+			Script.ActiveForm.FormForm.Controls("lblMergeTo").Text = Script.AeSystem.Classes(Script.AeObject.ToClass).GetInstance(Script.AeObject.To).Prompt
+			Script.ActiveForm.FormForm.Controls("objSummary").Text = Script.AeObject.GetMergeStats
+		End Sub 
+		Sub PageFinish
+			Script.AeObject.Properties("ReadyToMerge") = True
+		End Sub
+		</script>
+	<branches/>
+	</page>
+   </pages>
+</script>

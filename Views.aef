@@ -1,0 +1,193 @@
+﻿
+
+form "Views" for "ViewGroup" 264,113
+{
+	"Views" control "Elk9.grid" 0,0,264(100),113(100) ENU ""
+	{
+		"_cx" = "5080"
+		"_cy" = "5080"
+		"Enabled" = "-1"
+		"FolderName" = "Views"
+		"ConfirmDelete" = "0"
+		"AllowDelete" = "-1"
+		"AllowOpen" = "-1"
+		"AllowAdds" = "0"
+		"Toolbar" = "-1"
+		"ManualFill" = "0"
+		"Configurable" = "-1"
+		"MaxRows" = "0"
+		"PrintButton" = "0"
+		"Collapsable" = "0"
+		"ShowGroupBox" = "0"
+		"OpenOnAdd" = "0"
+		"Filter" = ""
+		"GridID" = "{FBDE3AFF-D610-41B2-9E61-270010A44B0D}"
+		"BackColor" = "2147483653"
+		"ForeColor" = "4294967295"
+		"BandOnMember" = ""
+		"BandFolder" = ""
+		"ExpandMember" = ""
+		"ExpandExistence" = ""
+		"RowColor" = ""
+		"ColumnCount" = "3"
+		"Column1_Expr" = "View.Icon"
+		"Column1_Caption_StringCount" = "0"
+		"Column1_Flags" = "1"
+		"Column1_Align" = "0"
+		"Column1_Format" = ""
+		"Column1_ColorExpression" = ""
+		"Column2_Expr" = "Title"
+		"Column2_Flags" = "8"
+		"Column2_Align" = "0"
+		"Column2_Format" = ""
+		"Column2_ColorExpression" = ""
+		"Column2_Width" = "-1"
+		"Column3_Expr" = "Priority"
+		"Column3_Caption_StringCount" = "0"
+		"Column3_Flags" = "8"
+		"Column3_Align" = "2"
+		"Column3_Format" = ""
+		"Column3_ColorExpression" = ""
+		"Column3_Width" = "-1"
+		"TotalCount" = "1"
+		"Total1_Expr" = "TOTAL"
+		"Caption_String1Lang" = "1033"
+		"Caption_String1Val" = "Views"
+		"Caption_String2Lang" = "1031"
+		"Caption_String2Val" = "Views"
+		"Caption_String3Lang" = "1036"
+		"Caption_String3Val" = "Views"
+		"Caption_String4Lang" = "1045"
+		"Caption_String4Val" = "Widoki"
+		"Caption_String5Lang" = "1054"
+		"Caption_String5Val" = "มุมมอง"
+		"Caption_String6Lang" = "1042"
+		"Caption_String6Val" = "창"
+		"Caption_String7Lang" = "1041"
+		"Caption_String7Val" = "ビュー"
+		"Caption_String8Lang" = "1034"
+		"Caption_String8Val" = "Vistas"
+		"Caption_StringCount" = "8"
+		"Column2_Caption_String1Lang" = "1033"
+		"Column2_Caption_String1Val" = "Title"
+		"Column2_Caption_String2Lang" = "1031"
+		"Column2_Caption_String2Val" = "Title"
+		"Column2_Caption_String3Lang" = "1033"
+		"Column2_Caption_String3Val" = "Title"
+		"Column2_Caption_String4Lang" = "1045"
+		"Column2_Caption_String4Val" = "Tytuł"
+		"Column2_Caption_String5Lang" = "1054"
+		"Column2_Caption_String5Val" = "ชื่อเรื่อง"
+		"Column2_Caption_String6Lang" = "1042"
+		"Column2_Caption_String6Val" = "타이틀"
+		"Column2_Caption_String7Lang" = "1041"
+		"Column2_Caption_String7Val" = "タイトル"
+		"Column2_Caption_String8Lang" = "1034"
+		"Column2_Caption_String8Val" = "Título"
+		"Column2_Caption_StringCount" = "8"
+		"Total1_Caption_String1Lang" = "1033"
+		"Total1_Caption_String1Val" = "Total"
+		"Total1_Caption_String2Lang" = "1031"
+		"Total1_Caption_String2Val" = "Total"
+		"Total1_Caption_String3Lang" = "1033"
+		"Total1_Caption_String3Val" = "Total"
+		"Total1_Caption_String4Lang" = "1045"
+		"Total1_Caption_String4Val" = "Łącznie"
+		"Total1_Caption_String5Lang" = "1054"
+		"Total1_Caption_String5Val" = "รวม"
+		"Total1_Caption_String6Lang" = "1042"
+		"Total1_Caption_String6Val" = "총계"
+		"Total1_Caption_String7Lang" = "1041"
+		"Total1_Caption_String7Val" = "合計"
+		"Total1_Caption_StringCount" = "7"
+	}
+}
+
+modify form "Object" for "ViewGroup" as "ViewGroup"
+{
+	modify tabset "Tabs"
+	{
+		Insert "Tab"
+			ENU "Views", 
+			ESP "Vistas", 
+			PLK "Widoki"
+		
+		{
+			"frmViews" form self tag ENU "frm" 0,0,280(100),135(100) context "Views"
+		}
+	}
+}
+
+component "Elk9.System" name "System"
+{
+}
+
+view "Elk9.ListForm"
+	name 
+		ZHT "標準檢視", 
+		DEU "Standart Ansicht",
+		ELL "Κανονική προβολή",
+		ENU "Standard View",
+		ESP "Vista estándar",
+		FRA "Raccourci Standard",
+		ITA "Visualizzazione Standard",
+		JPN "標準ビュー",
+		KOR "기본 창",
+		PLK "Widok stanrdowa"
+
+	deftitle 
+		ZHT "新標準檢視", 
+		DEU "Neu Ansicht", 
+		ELL "Νέα Κανονική Προβολή", 
+		ENU "New Std View", 
+		FRA "Raccourci Nouveau", 
+		ITA "Visualizzazione Standard", 
+		JPN "新規標準ビュー", 
+		KOR "새 기본 창"
+ icon "Default"
+{
+	"FolderSet" = "User"
+	"Sources" = "1"
+}
+
+view "Elk9.ListForm"
+	name 
+		ZHT "管理檢視", 
+		DEU "Verwaltung", 
+		ELL "Διαχείρισης", 
+		ENU "Administration", 
+		ESP "Administración",
+		FRA "Administration", 
+		ITA "Amministrazione", 
+		JPN "管理ビュー", 
+		KOR "관리",
+		PLK "Administracja"
+
+	deftitle 
+		ZHT "新管理檢視", 
+		DEU "Neu Verwaltung Ansicht", 
+		ELL "Νέα Προβολή Διαχείρισης", 
+		ENU "New Admin View", 
+		FRA "Administration", 
+		ITA "Amministrazione", 
+		JPN "新規管理ビュー", 
+		KOR "새 관리 창"
+ icon "Default"
+cancreate "User.Object.IsAdmin"
+{
+	"FolderSet" = "Admin"
+	"Sources" = "1"
+}
+
+view "Elk9.ListForm"
+	name
+		ENU "System Management",
+		ESP "Gestión del sistema",
+		PLK "Zarządzanie systemu"
+	deftitle
+		ENU "New System Management View"
+	icon "Default"
+{
+	"FolderSet" = "SystemManagement"
+	"Sources" = "1"
+}

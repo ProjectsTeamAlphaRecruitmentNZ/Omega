@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<AeDesigner_User_settings version="1">
+    <workspace CurrentView="2">
+        <View Number="0" Type="Class diagram" Name="Omega" />
+        <View Number="1" Type="Form" Name="ContactAccessPermission" Class="ContactAccessPermission" />
+        <View Number="2" Type="Form" Name="Contact" Class="Contact" />
+    </workspace>
+    <SystemToRun name="Omega-Test" UserID="bhoomip" Password="3ED1C04EB9B19D1FA5E574F8D47B4E37" PromptUpdateStructures="1" WarnStdDataOutOfData="1" />
+    <lang_used>1033,5129,103</lang_used>
+</AeDesigner_User_settings>

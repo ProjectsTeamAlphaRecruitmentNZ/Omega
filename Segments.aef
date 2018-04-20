@@ -1,0 +1,172 @@
+﻿
+
+modify form "ClassObj" for "Segment" as "Segment"
+{
+	modify tabset "Tabs"
+	{
+		Insert "Expr" before "Descrip"
+			ZHT "運算式", 
+			ZHS "表达", 
+			DEU "Ausdruck", 
+			ELL "Έκφραση", 
+			ENU "Expression", 
+			FRA "Expression", 
+			ITA "Espressione", 
+			JPN "式", 
+			KOR "식", 
+			PLK "Wyrażenie", 
+			THA "นิพจน์"
+		
+		{
+			"Expr" control "Elk9.SegmentEditor" 0,0,279(100),135(100) bind "SegmentExpression" to "Expression"
+			{
+			}
+		}
+		Insert "Parameters"
+			ZHS "参数", 
+			DEU "Parameter", 
+			ELL "Παράμετροι", 
+			ENU "Parameters", 
+			FRA "Paramètres", 
+			ITA "Parametri", 
+			JPN "パラメータ", 
+			KOR "매개변수", 
+			PLK "Parametry", 
+			THA "พารามิเตอร์ (&P):"
+		
+		{
+			"ocxParams" control "Elk9.SegmentParameterChooser.1" 0,0,280(100),135(100) ENU "ocxParams"
+			Events
+			{
+				"Click" "ocxParams_Click"
+				"DblClick" "ocxParams_DblClick"
+			}
+$
+	10070000d8130000d81300001300050000800300010000000900000000000000
+	000000000000000000001300080000800b00ffff
+$
+			OnActivate "Parameters_Activate"
+		}
+	}
+	Script VBScript
+<%
+Sub Parameters_Activate()
+	Dim Params: Set Params=this.controls.ocxParams.Control
+	Params.HasDescription=True
+	Params.HasPromptUser=False
+	Params.ShowAllParams=True
+	
+	If not IsNull(Form.Object.Expression) Then
+		Params.Expression=Form.Object.Expression
+	Else
+		Params.Expression=""
+	End If
+	Params.Class=System.Classes.Item(Form.Object.ClassName)
+	Params.System=System
+	
+	If Not IsNull(Form.Object.UserParams.Value) Then
+		Params.XML=CStr(Form.Object.UserParams.Value)
+	Else
+		Params.XML=""		
+	End If
+End Sub
+
+Sub ocxParams_Click()
+	CheckParams
+End Sub
+
+Sub ocxParams_DblClick()
+	CheckParams	
+End Sub
+
+Sub CheckParams
+	Form.Object.UserParams=this.Control.XML
+	Form.FireChangeEvent
+End Sub
+%>
+}
+
+form "PESegmentManager" 304,215
+{
+	"ocxComponentHost" control "Elk9.ComponentHost.1" 0,0,304(100),215(100) ENU "ocxComponentHost"
+	Events
+	{
+		"Click" "ocxComponentHost_Click"
+	}
+	{
+	}
+	OnInit "Form_Init"
+	Script VBScript
+<%
+Sub Form_Init()
+	Set oComponents = CreateObject("Elk9.Components")
+	oComponents.Initialize System
+	For Each oComponent in oComponents
+		If oComponent.Name = "Segments" Then
+			Form.ocxComponentHost.Control.Control = oComponent.Control
+			Exit For
+		End if
+	Next
+	Set oComponent = Nothing
+	Set oComponents = Nothing
+End Sub
+
+Sub ocxComponentHost_Click(SelectedItem, Context, IsFolder)
+	Form.FireOpenFormEvent SelectedItem, Context
+End Sub
+%>
+}
+
+menu "Segment" for "Segment"
+{
+	item "Optimize" "On_Optimize"
+		ZHT "最佳化(&O)", 
+		ZHS "优化(&O)", 
+		DEU "&Optimieren", 
+		ELL "&Βελτίωση", 
+		ENU "&Optimize", 
+		FRA "&Optimiser", 
+		ITA "&Ottimizzazione", 
+		JPN "最適化(&O)", 
+		KOR "최적화(&O)", 
+		PLK "&Optymalizuj", 
+		THA "ปรับปรุง (&O)"
+	
+		message 
+			ZHT "確定此區段所需要的索引有存在", 
+			ZHS "确保这个区段有全部所需的索引", 
+			DEU "Versichern Sie sich, dass alle notwendigen Verzeichnisse für dieses Segment vorhanden sind.", 
+			ELL "Βεβαίωση ότι όλα τα ευρετήρια που απαιτούνται για αυτήν την τμηματοποίηση υφίστανται", 
+			ENU "Ensure that all the indexes required for this segment exist", 
+			FRA " Vérifiez que tous les index requis pour ce segment existent", 
+			ITA "Assicurati che tutti gli indici necessari per questo segmento esistono", 
+			JPN "このセグメントに必要なインデックスがすべてあることを確認してください。", 
+			KOR "모든 목록들이 요구하는 이 세그먼트의 존재를 확인하십시오", 
+			PLK "Upewnij się, że istnieją wszystkie indeksy wymagane dla tego segmentu", 
+			THA "ตรวจสอบให้แน่ใจว่ามีดัชนีทั้งหมดที่จำเป็นสำหรับเซ็กเมนต์นี้"
+	
+	Script VBScript
+<%
+Sub On_Optimize(Control)
+	This.Optimize
+End Sub
+%>
+}
+
+component "Elk9.Segments" name "Segments"
+	ZHT "區段", 
+	ZHS "区段", 
+	DEU "Segmente", 
+	ELL "Τμηματοποιήσεις", 
+	ENU "Segments", 
+	FRA "Segments", 
+	ITA "Segmenti", 
+	JPN "セグメント", 
+	KOR "세그먼트", 
+	PLK "Segmenty",
+	THA "เซ็กเมนต์ "
+ icon "Segments.bmp" mask fuchsia visible
+{
+	"UseInfoSystem" = "true"
+	"SegmentFolderName" = "Segments"
+}

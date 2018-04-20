@@ -1,0 +1,30 @@
+--
+update tempjob set tempjoblength = 'As Specified' where tempjoblength = 'As specified'
+
+--Set 0 if null
+
+update Job Set jobrate1=0 where jobrate1 is Null
+update Job Set jobrate2=0 where jobrate2 is Null
+update Job Set jobrate3=0 where jobrate3 is Null
+update Job Set aogAdminFees=0 where aogAdminFees is Null
+update Job Set AogOnCostFees=0 where AogOnCostFees is Null
+update Job Set AoGProviderFees=0 where AogProviderFees is Null
+
+--if permjobstatus=Open then Stage=InProgress else Stage=Approved
+
+select j.Stage, p.PermJobStatus from job j, Permjob p where j.job=p.permjob
+update j set stage='InProgress' from job j join permjob p on j.job=p.permjob where p.permjobstatus='Open'
+update j set stage='Approved' from job j join permjob p on j.job=p.permjob where p.permjobstatus <> 'Open'
+
+--if Tempjobstatus=Open then Stage=InProgress else Stage=Approved
+
+select j.Stage, p.TempJobStatus from job j, tempjob p where j.job=p.tempjob
+update j set stage='InProgress' from job j join tempjob p on j.job=p.tempjob where p.tempjobstatus='Open'
+update j set stage='Approved' from job j join tempjob p on j.job=p.tempjob where p.tempjobstatus <> 'Open'
+
+--if Tempjobstatus=Open then Stage=InProgress else Stage=Approved
+
+select j.Stage, p.ContractJobStatus from job j, Contractjob p where j.job=p.Contractjob
+update j set stage='InProgress' from job j join Contractjob p on j.job=p.Contractjob where p.Contractjobstatus='Open'
+update j set stage='Approved' from job j join Contractjob p on j.job=p.Contractjob where p.Contractjobstatus <> 'Open'
+

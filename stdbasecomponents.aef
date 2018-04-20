@@ -1,0 +1,1928 @@
+﻿
+
+form "stdPersonName" for "stdPersonName" 268,14
+{
+	"Title" combobox member "Title" 0,0,56,14
+	"FirstName" edit member "FirstName" 56,0,72(50),14 autohscroll
+	"MiddleName" edit member "MiddleName" 128(50),0,40(75),14 autohscroll
+	"LastName" edit member "LastName" 168(75),0,100(100),14 autohscroll
+}
+
+form "stdeMailAddress" for "stdeMailAddress" 206,14
+{
+	"eMailAddress" edit member "eMailAddress" 0,0,206(100),14 autohscroll choose
+	OnChoose "eMailAddress_Choose"
+	Script VBScript
+<%
+Sub eMailAddress_Choose()  
+	' Launch the Email Application and display a form for editing
+	This.Parent.Object.Open Wnd
+End Sub
+%>
+}
+
+form "stdDocument" for "stdDocument" 308,250
+{
+	"expFileName" expression
+		ENU "iif(IsEmpty(Name),\"<NO DOCUMENT LOADED>\",Name)", 
+		FRA "iif(IsEmpty(Name),\"<PAS DE DOCUMENT CHARGE>\",Name)"
+	 0,18,305(100),12 sidetag
+		text 
+			ZHS "文件名&", 
+			DEU "&Dateiname des Dokuments", 
+			ELL "&όνομα αρχείου εγγράφου", 
+			ENU "&Document filename", 
+			FRA "Nom de fichier du &document", 
+			ITA "Nome file &documento", 
+			JPN "ドキュメントファイル名(&D)", 
+			KOR "문서 파일명(&D)", 
+			PLK "&Nazwa pliku dokumentu", 
+			THA "ชื่อไฟล์เอกสาร (&D)"
+	 tagset(1)
+	"expFileSize" expression
+		ENU "iif(IsEmpty(FileSize),\"<NO DOCUMENT LOADED>\",FileSize & \" kb\")", 
+		FRA "iif(IsEmpty(FileSize),\"<PAS DE DOCUMENT CHARGE>\",FileSize & \" kb\")"
+	 0,32,305(100),12 sidetag
+		text 
+			ZHS "文件尺寸&", 
+			DEU "&Dateigröße", 
+			ELL "&μέγεθος αρχείου", 
+			ENU "&File size", 
+			FRA "Taille du &fichier", 
+			ITA "Dimensione &file", 
+			JPN "ファイルサイズ(&F)", 
+			KOR "파일 크기(&F)", 
+			PLK "&Rozmiar pliku", 
+			THA "ขนาดไฟล์ (&F)"
+	 tagset(1)
+	"DocumentDescription" edit member "DocumentDescription" 0,46,308(100),14 autohscroll sidetag tagset(1)
+	"stdDocumentPreview" control "Shell.Explorer.2" 0,62,308(100),188(100) toptag
+		ZHT "預覽文件( &P)", 
+		ZHS "文件预览&", 
+		DEU "Dokument&vorschau", 
+		ELL "&προεπισκόπηση εγγράφου", 
+		ENU "Document &preview", 
+		FRA "&Aperçu du document", 
+		ITA "Ante&prima documento", 
+		JPN "ドキュメントプレビュー(&P):", 
+		KOR "문서 미리보기(&p)", 
+		PLK "P&odgląd dokumentu", 
+		THA "ดูตัวอย่างเอกสาร (&p)"
+	
+	{
+		"ExtentX" = "7938"
+		"ExtentY" = "3969"
+		"ViewMode" = "1"
+		"Offline" = "0"
+		"Silent" = "0"
+		"RegisterAsBrowser" = "0"
+		"RegisterAsDropTarget" = "0"
+		"AutoArrange" = "-1"
+		"NoClientEdge" = "-1"
+		"AlignLeft" = "0"
+		"NoWebView" = "0"
+		"HideFileNames" = "0"
+		"SingleClick" = "0"
+		"SingleSelection" = "0"
+		"NoFolders" = "0"
+		"Transparent" = "0"
+		"Location" = ""
+	}
+	"stdDocumentToolbar" control "Elk9.Toolbar.1" 0,0,307(100),17
+	Events
+	{
+		"Clicked" "stdDocumentToolbar_Clicked"
+	}
+	{
+		"MaskColor" = "16711935"
+		"_cx" = "5080"
+		"_cy" = "5080"
+		"Buttons" object "{068C33E4-1E68-4CDD-B8FD-911E1E9E65BD}"
+		{
+			"NumButtons" = "2"
+			"Button0" object "{44FDBD5A-2EC9-4F70-8D5D-E5E999241C4B}"
+			{
+				"ID" = "1"
+				"Image" = "1"
+				"Style" = "0"
+				"ToolTip_StringCount" = "0"
+				"MenuItems" = "0"
+				"Enabled" = "1"
+				"Checked" = "0"
+				"Caption_String1Lang" = "1033"
+				"Caption_String1Val" = "Load document"
+				"Caption_String2Lang" = "1036"
+				"Caption_String2Val" = "Chargez le document"
+				"Caption_String3Lang" = "1045"
+				"Caption_String3Val" = "Załaduj dokument"
+				"Caption_String4Lang" = "1054"
+				"Caption_String4Val" = "โหลดเอกสาร"
+				"Caption_String5Lang" = "1041"
+				"Caption_String5Val" = "ドキュメントのロード"
+				"Caption_String6Lang" = "1042"
+				"Caption_String6Val" = "문서 불러오기"
+				"Caption_StringCount" = "6"
+			}
+			"Button1" object "{44FDBD5A-2EC9-4F70-8D5D-E5E999241C4B}"
+			{
+				"ID" = "2"
+				"Image" = "0"
+				"Style" = "0"
+				"ToolTip_StringCount" = "0"
+				"MenuItems" = "0"
+				"Enabled" = "1"
+				"Checked" = "0"
+				"Caption_String1Lang" = "1033"
+				"Caption_String1Val" = "View document"
+				"Caption_String2Lang" = "1036"
+				"Caption_String2Val" = "Lisez le document"
+				"Caption_String3Lang" = "1045"
+				"Caption_String3Val" = "Wyświetl dokument"
+				"Caption_String4Lang" = "1054"
+				"Caption_String4Val" = "ดูเอกสาร"
+				"Caption_String5Lang" = "1041"
+				"Caption_String5Val" = "ドキュメントの表示"
+				"Caption_String6Lang" = "1042"
+				"Caption_String6Val" = "문서 보기"
+				"Caption_StringCount" = "6"
+			}
+		}
+		"ImageList" object "{134475AE-ED31-4867-9E10-BD9ACF5CE238}"
+$
+	00030000280100004752454154454c4b2493002010100009070004214007fc39
+	fe050843e26ff21134ec008cc6801188c8a234408d42e320184c6c010693caa5
+	727404665d2f974c001329a4c1013800302771a7fc667d3f9f5021b448750687
+	2ca4d2a96074453a9d33a5c6c6754aa4669b4f44546a4000780eaa3318002b14
+	fadd4816f0b00cec6f847d96b91b07afebf551801d1ef87c542e11a05bede127
+	03c3af0f8b352ee4bf5fdfeaf0fbce02f95dc4e2b1f828763b2000bf3edf6bf5
+	86321e8fc352ae52acac3f1f98d2c4f0ba995e99fe70d6eba267fd8eca37af3b
+	edf0277de9df6d908b0fa57c38f482451a92c9637a2be43e1aff4000e4e0fe96
+	07ad1b01f6393db8d7765fd3b8f7fabe18d793a9ddbc775fefcf5ae900078dbf
+	d8e8007fcba21fddc6e0200000000000100200004752454154454c4b24930020
+	10100009070008214007fc39fe050843e26ff21134ec008cc6801188c8a23480
+	8d42e320184c6c000893caa572a908025d2f90cc265318ca026e00604ea34ff8
+	ccf67d3d9fc36870ea050a5948a4d2a974ca6d3a9f50a89dd1154aad591151ac
+	d3aa757abd6aa033b0d8ac43093d72bb55afd3ec76cb2c6ecf68ac5aa993db65
+	b2df71b4dce9775bb58af179b95ee937dbf0cf0179c1d29773d01e1b0f193bbf
+	ea88f7c5771549c60031d868d64b2996af66258ffc63c3397ec8a221cf8cae8b
+	472ad2bff4f8fd56b35d56d84af18bb5fbc2959287eb78754dd4ab79bee044f8
+	7b8e349f64fb5ff47a3bfb3451ffcca3f3ba1d2eef56dfd7ecf3a37c8e9f4961
+	2ae0c5389e38d797bafbf475bc3aef6cfb4d4bf575e8bf6d977d487e9fb7d950
+	805c27160356dfb762078214c814ff3dc708354f83e1184e0975e1685e0e7ecf
+	71fcf71de1b72a1987e2188a008747784a278a2198aa2c800778ca338ca2b8c1
+	2b8d2398d9ed4583e4ae3e479204891a4952549d0657d0f4350f3011903da493
+	24e524013fe4d0024f5225495a585203f96d4a97a525240f97e6399548992625
+	200399d2c9b26a5226d4b2724ae744aa76912559c12a96a7b49e7d95e539ea81
+	966839712ba028746cc01fe559e28ca3a7e518f09e10fa529292db3a54ff27cc
+	c9583f9429da7e5038261952a4a99da4f25101eaa51a7aab5ba4040000000000
+	00000000ff00ff00
+$
+		"Caption_String1Lang" = "1033"
+		"Caption_String1Val" = "Document options"
+		"Caption_String2Lang" = "1036"
+		"Caption_String2Val" = "Options de document"
+		"Caption_String3Lang" = "1045"
+		"Caption_String3Val" = "Opcje dokumentu"
+		"Caption_String4Lang" = "1054"
+		"Caption_String4Val" = "ตัวเลือกเอกสาร"
+		"Caption_String5Lang" = "1041"
+		"Caption_String5Val" = "ドキュメント オプション"
+		"Caption_String6Lang" = "1042"
+		"Caption_String6Val" = "문서 옵션"
+		"Caption_StringCount" = "6"
+	}
+	"oleCommonDialog" control "MSComDlg.CommonDialog.1" license "28C4C820-401A-101B-A3C9-08002B2F49FB" 216,80,20,20 ENU ""
+	{
+		"_ExtentX" = "847"
+		"_ExtentY" = "847"
+		"_Version" = "393216"
+		"CancelError" = "0"
+		"Color" = "0"
+		"Copies" = "1"
+		"DefaultExt" = ""
+		"DialogTitle" = ""
+		"FileName" = ""
+		"Filter" = ""
+		"FilterIndex" = "0"
+		"Flags" = "0"
+		"FontBold" = "0"
+		"FontItalic" = "0"
+		"FontName" = ""
+		"FontSize" = "8"
+		"FontStrikeThru" = "0"
+		"FontUnderLine" = "0"
+		"FromPage" = "0"
+		"HelpCommand" = "0"
+		"HelpContext" = "0"
+		"HelpFile" = ""
+		"HelpKey" = ""
+		"InitDir" = ""
+		"Max" = "0"
+		"Min" = "0"
+		"MaxFileSize" = "260"
+		"PrinterDefault" = "1"
+		"ToPage" = "0"
+		"Orientation" = "1"
+	}
+	OnInit "Form_Init"
+	Script VBScript
+<%
+Sub Form_Init()
+	FillDocument
+End Sub
+
+Sub FillDocument()
+	' if the document is embedded, and not dirty then load to a temp file then 
+	' display the image on the screen
+'	On Error Resume Next
+	If Not IsNull(Form.Object.Content) And Not Form.Object.Content.IsDirty Then
+		This.stdDocumentPreview.Control.Navigate2 Form.Object.Extract()
+	Else
+		This.stdDocumentPreview.Control.Navigate2 "about:blank"
+	End If   
+'	On Error goto 0
+End Sub
+
+Sub stdDocumentToolbar_Clicked(btnID)    
+	If btnID = 1 Then 
+	
+		With Form.oleCommonDialog.Control
+			.Filter = "*.*"
+			.FilterIndex = 0
+			.ShowOpen
+		End With
+	
+		' Check if the selected file is valid
+		If Len(Trim(Form.oleCommonDialog.Control.FileName)) > 0 Then
+			If Form.Object.Embed(Form.oleCommonDialog.Control.FileName) Then
+				Set objFileSystem = CreateObject("Scripting.FileSystemObject")
+				Set objFileObject = objFileSystem.GetFile(Form.oleCommonDialog.Control.FileName)
+				Form.Object.Filesize = Int(objFileObject.Size/1024)
+				Form.FireChangeEvent
+			End If
+		End If
+
+	End If
+	
+	If btnID = 2 Then
+		If Not IsNull(Form.Object.Content) Then
+			Set objUtils = CreateObject("Elk9.Utils")
+			strFileName = Form.Object.Extract()
+			objUtils.ShellExecute strFileName 
+			Set objUtils = Nothing
+		Else
+			MsgBox "No document has been loaded.",0,System.Title
+		End If
+
+	End If
+
+End Sub
+%>
+}
+
+form "stdWWWAddress" for "stdWWWAddress" 226,14
+{
+	"WWWAddress" edit member "WWWAddress" 0,0,226(100),14 autohscroll choose
+	OnChoose "WWWAddress_OnChoose"
+	Script VBScript
+<%
+Sub WWWAddress_OnChoose()
+	' Launch the browser to display the URL
+	'Bhoomi | 25-02-2015 | If Linked IN field is not having http:// then append the string and redirect to the page
+	Dim wwwStr
+	wwwStr = this.parent.wwwAddress.value
+	If Len(RTrim(this.parent.wwwAddress.value)) > 0 Then
+		If Not InStr(1, wwwStr, "http://", 1) = 1 Then
+			this.parent.wwwAddress.value =  "http://" & wwwStr
+			This.Parent.Object.Display			
+		Else
+			This.Parent.Object.Display
+		End If
+	End If
+End Sub
+%>
+}
+
+form "stdBaseAddress" for "stdBaseAddress" 242,80
+{
+	"Address" edit member "Address" 0,0,242(100),30(100) multiline autovscroll vscroll
+	"City" edit member "City" 131(50),32(100),111(100),24(100) autohscroll toptag
+		OnLostFocus "City_LostFocus"
+	"PostCode" edit member "PostCode" 131(50),56(100),111(100),24(100) autohscroll toptag
+	OnChoose "PostCode_Choose"
+	"Country" combobox member "Country" 0,56(100),127(50),24(100) icon toptag
+	"txtSuburb" edit member "Suburb" tag ENU "" 0,32(100),127(50),24(100) autohscroll toptag
+	Script VBScript
+<%
+Sub City_LostFocus()
+
+	On Error Resume Next
+	blnCheckPostCode = False
+	blnCheckPostCode = Form.Object.City.Definition.Properties("CheckPostCode")
+	On Error Goto 0
+	
+	If Len(RTrim(This.Parent.Postcode.value))=0 And blnCheckPostCode Then
+
+		' Locate the Post Codes for this Address
+
+		Form.Object.LocatePostCodes False
+
+	End If
+
+End Sub
+
+Sub PostCode_Choose()
+
+	Form.Object.LocatePostCodes True
+
+End Sub
+%>
+}
+
+modify form "stdBaseAddress" for "stdAddress" as "stdAddress"
+{
+}
+
+form "stdDuration_SF" for "stdDuration" 402,14
+{
+	"Start" datetime member "Start" 0,0,198,14 sidetag tagset(1)
+	"Finish" datetime member "Finish" 202(50),0,200(50),14 sidetag
+}
+
+form "stdDuration_SD" for "stdDuration" 402,14
+{
+	"Start" datetime member "Start" 0,0,198,14 sidetag tagset(1)
+	"Duration" edit member "Duration" 202(50),0,200(100),14 sidetag
+}
+
+form "stdPhoneNumber" for "stdPhoneNumber" 280,14
+{
+	"CountryCode" edit member "CountryCode" 0,0,46,14 autohscroll
+	"AreaCode" edit member "AreaCode" 46,0,48,14 autohscroll
+	"Number" edit member "Number" 93,0,187(100),14 autohscroll
+}
+
+form "stdPersonNameComp" for "stdPersonName" 254,110
+{
+	"Title" combobox member "Title" 0,0,254(100),14 sidetag tagset(1)
+	"FirstName" edit member "FirstName" 0,16,254(100),14 autohscroll sidetag tagset(1)
+	"MiddleName" edit member "MiddleName" 0,32,254(100),14 autohscroll sidetag tagset(1)
+	"LastName" edit member "LastName" 0,48,254(100),14 autohscroll sidetag tagset(1)
+	"Suffix" edit member "Suffix" 0,64,254(100),14 autohscroll sidetag tagset(1)
+	"Initial" edit member "Initial" 0,80,254(100),14 autohscroll sidetag tagset(1)
+	"KnownAs" edit member "KnownAs" 0,96,254(100),14 autohscroll sidetag tagset(1)
+}
+
+form "stdPersonNameComp_JPN" for "stdPersonName" 206,46
+{
+	"LastName" edit member "LastName" 0,0,206(100),14 autohscroll sidetag tagset(1)
+	"FirstName" edit member "FirstName" 0,16,206(100),14 autohscroll sidetag tagset(1)
+	"KnownAs" edit member "KnownAs" 0,32,206(100),14 autohscroll sidetag tagset(1)
+}
+
+form "stdPhoneNumberComp" for "stdPhoneNumber" 201,62
+{
+	"CountryCode" edit member "CountryCode" 0,0,200(100),14 autohscroll sidetag tagset(1)
+	"AreaCode" edit member "AreaCode" 0,16,200(100),14 autohscroll sidetag tagset(1)
+	"Number" edit member "Number" 0,32,200(100),14 autohscroll sidetag tagset(1)
+		OnLostFocus "Number_LostFocus"
+	"Extn" edit member "Extn" 0,48,200(100),14 autohscroll sidetag tagset(1)
+	Script VBScript
+<%
+Sub Number_LostFocus()   
+
+	' Format the Subscriber Number as required
+	' This is to ensure consistency between the composite edit
+	' and the component forms
+	
+	If Not IsNull(Form.Object.Number) Then	
+		Form.Object.Number = Form.Object.FormatSubscriber(Form.Object.Number)
+	End If
+
+End Sub
+%>
+}
+
+form "CompositeEdit" for "stdCompositeEdit" 226,14
+{
+	"txtField" edit tag ITA "" 0,0,226(100),14 autohscroll choose
+		OnLostFocus "txtField_LostFocus"
+	OnChoose "txtfield_OnChoose"
+	OnInit "Form_Init"
+	OnPreSave "Form_PreSave"
+	Script VBScript
+<%
+Sub Form_Init()
+	UpdateText
+End Sub
+
+Sub txtField_LostFocus()
+	' When focus is lost parse into components
+	If Form.Object.ParseComposite(Form.txtField.Value) Then UpdateText
+End Sub
+
+Sub txtfield_OnChoose()
+	Form.Object.ParseComposite Form.txtField.Value
+	If Form.Object.EditDetails(Wnd) Then 
+		
+		' Call the underlying class to allow any formatting required
+		
+		Form.Object.AfterEditDetails
+
+		' Update the Value Displayed
+		
+		UpdateText
+	End If
+End Sub
+
+Sub Form_PreSave()
+	' When focus or prior to save then parse into components
+	If Not Form.Object.ParseComposite(Form.txtField.Value) Then Form.Object.EditDetails Wnd
+End Sub
+
+Sub UpdateText
+	Form.txtField.Value=Form.Object.BuildComposite
+	Form.txtField.IsDirty=Form.Object.IsDirty
+	If Form.txtField.IsDirty Then
+		Form.FireChangeEvent
+	End If
+End Sub
+%>
+}
+
+form "stdTimeStamp" for "stdTimeStamp" 150,14
+{
+	"Start" datetime member "Start" 1,0,149(100),14 Format ""
+		timeformat 
+			DEU "HH:mm", 
+			ENU "hh:mm tt", 
+			FRA "HH:mm", 
+			ITA "HH:mm", 
+			PLK "HH:mm"
+	
+}
+
+form "stdPeriodStartFinish" for "stdPeriodStartFinish" 321,14
+{
+	"Start" datetime member "Start" 0,0,148,14
+	"Finish" datetime member "Finish" 152,0,166,14 sidetag
+}
+
+form "stdPeriodStartDuration" for "stdPeriodStartFinish" 258,14
+{
+	"Start" datetime member "Start" 0,0,150,14
+	"Duration" edit member "Duration" 154,0,100,14 sidetag
+}
+
+form "stdTimeStampSF" for "stdTimeStamp" 354,14
+{
+	"Start" datetime member "Start" 0,0,176(50),14
+		timeformat 
+			DEU "HH:mm", 
+			ENU "hh:mm tt", 
+			FRA "HH:mm", 
+			PLK "HH:mm"
+	
+	"Finish" datetime member "Finish" 178(50),0,176(100),14 Format ""
+		timeformat 
+			DEU "HH:mm", 
+			ENU "hh:mm tt", 
+			FRA "HH:mm", 
+			PLK "HH:mm"
+	 sidetag
+}
+
+form "stdDateStampSF" for "stdDateStamp" 232,14
+{
+	"Start" date member "Start" 0,0,100(50),14
+	"Finish" date member "Finish" 104(50),0,128(100),14 sidetag
+}
+
+form "stdCountry" for "stdCountry" 306,240
+{
+	"Code" expression ENU "Key" 0,2,154,8 sidetag
+		text 
+			ZHT "代碼(&C)", 
+			ZHS "代码(&C)", 
+			DEU "&Code", 
+			ELL "&Κώδικας", 
+			ENU "&Code", 
+			FRA "&Code", 
+			ITA "&Codice", 
+			JPN "コード(&C)", 
+			KOR "코드(&C)", 
+			PLK "&Kod", 
+			THA "รหัส (&C)"
+	 tagset(1)
+	"Name" edit member "Name" 0,12,306(100),14 autohscroll sidetag tagset(1)
+	"STDCode" edit member "STDCode" 0,28,162,14 autohscroll sidetag tagset(1)
+	"FormName" edit member "FormName" 0,44,258,14 autohscroll sidetag tagset(1)
+	"txtPostCodeSearchForm" edit member "PostCodeSearchForm" tag ENU "" 0,61,258,14 autohscroll sidetag tagset(1)
+	"HasStates" checkbox member "HasStates" 0,76,75,9 autosize
+		OnChange "HasStates_Change"
+	"StateName" edit member "StateName" 15,88,243,14 autohscroll sidetag tagset(1)
+	"StateCode" checkbox member "StateCode" 15,104,162,9 autosize
+	"Tabs" tabset  0,116,306(100),124(100)
+	{
+		"States" tab
+			ZHT "省", 
+			ZHS "省", 
+			DEU "Bundesländer", 
+			ELL "Πολιτείες", 
+			ENU "States", 
+			FRA "Etats", 
+			ITA "Stati", 
+			JPN "都道府県", 
+			KOR "주", 
+			PLK "Województwa", 
+			THA "รัฐ"
+		
+		{
+			"States" control "Elk9.grid" 0,0,284(100),90(100)
+			{
+				"_cx" = "5080"
+				"_cy" = "5080"
+				"Enabled" = "-1"
+				"FolderName" = "States"
+				"ConfirmDelete" = "0"
+				"AllowDelete" = "-1"
+				"AllowOpen" = "0"
+				"AllowAdds" = "-1"
+				"Toolbar" = "-1"
+				"ManualFill" = "0"
+				"Configurable" = "0"
+				"MaxRows" = "0"
+				"PrintButton" = "-1"
+				"Collapsable" = "0"
+				"ShowGroupBox" = "0"
+				"OpenOnAdd" = "0"
+				"Filter" = ""
+				"GridID" = "{A2DBA63B-DC22-4C16-BB29-1DFE3CEB0321}"
+				"BackColor" = "2147483653"
+				"ForeColor" = "4294967295"
+				"BandOnMember" = ""
+				"BandFolder" = ""
+				"ExpandMember" = ""
+				"ExpandExistence" = ""
+				"RowColor" = ""
+				"ColumnCount" = "2"
+				"Column1_Expr" = "Name"
+				"Column1_Flags" = "8"
+				"Column1_Align" = "0"
+				"Column1_Format" = ""
+				"Column1_ColorExpression" = ""
+				"Column2_Expr" = "Code"
+				"Column2_Flags" = "0"
+				"Column2_Align" = "0"
+				"Column2_Format" = ""
+				"Column2_ColorExpression" = ""
+				"TotalCount" = "1"
+				"Total1_Expr" = "TOTAL"
+				"Caption_String1Lang" = "1033"
+				"Caption_String1Val" = "States"
+				"Caption_String2Lang" = "1036"
+				"Caption_String2Val" = "États"
+				"Caption_String3Lang" = "1031"
+				"Caption_String3Val" = "States"
+				"Caption_String4Lang" = "1045"
+				"Caption_String4Val" = "Regiony"
+				"Caption_String5Lang" = "1054"
+				"Caption_String5Val" = "รัฐ"
+				"Caption_String6Lang" = "1041"
+				"Caption_String6Val" = "都道府県"
+				"Caption_String7Lang" = "1042"
+				"Caption_String7Val" = "주"
+				"Caption_String8Lang" = "1040"
+				"Caption_String8Val" = "Stati"
+				"Caption_StringCount" = "8"
+				"Column1_Caption_String1Lang" = "1033"
+				"Column1_Caption_String1Val" = "Name"
+				"Column1_Caption_String2Lang" = "1036"
+				"Column1_Caption_String2Val" = "Nom"
+				"Column1_Caption_String3Lang" = "1031"
+				"Column1_Caption_String3Val" = "Name"
+				"Column1_Caption_String4Lang" = "1045"
+				"Column1_Caption_String4Val" = "Nazwa"
+				"Column1_Caption_String5Lang" = "1054"
+				"Column1_Caption_String5Val" = "ชื่อ"
+				"Column1_Caption_String6Lang" = "1041"
+				"Column1_Caption_String6Val" = "名前"
+				"Column1_Caption_String7Lang" = "1040"
+				"Column1_Caption_String7Val" = "Nome"
+				"Column1_Caption_String8Lang" = "1042"
+				"Column1_Caption_String8Val" = "이름"
+				"Column1_Caption_StringCount" = "8"
+				"Column2_Caption_String1Lang" = "1033"
+				"Column2_Caption_String1Val" = "Abbreviation"
+				"Column2_Caption_String2Lang" = "1036"
+				"Column2_Caption_String2Val" = "Code"
+				"Column2_Caption_String3Lang" = "1031"
+				"Column2_Caption_String3Val" = "Abkürzung"
+				"Column2_Caption_String4Lang" = "1045"
+				"Column2_Caption_String4Val" = "Skrót"
+				"Column2_Caption_String5Lang" = "1054"
+				"Column2_Caption_String5Val" = "คำย่อ"
+				"Column2_Caption_String6Lang" = "1041"
+				"Column2_Caption_String6Val" = "コード"
+				"Column2_Caption_String7Lang" = "1040"
+				"Column2_Caption_String7Val" = "Codice"
+				"Column2_Caption_String8Lang" = "1042"
+				"Column2_Caption_String8Val" = "단축"
+				"Column2_Caption_StringCount" = "8"
+				"Total1_Caption_String1Lang" = "1033"
+				"Total1_Caption_String1Val" = "Total"
+				"Total1_Caption_String2Lang" = "1045"
+				"Total1_Caption_String2Val" = "Łącznie"
+				"Total1_Caption_String3Lang" = "1054"
+				"Total1_Caption_String3Val" = "รวม"
+				"Total1_Caption_String4Lang" = "1041"
+				"Total1_Caption_String4Val" = "Total"
+				"Total1_Caption_String5Lang" = "1042"
+				"Total1_Caption_String5Val" = "총계"
+				"Total1_Caption_StringCount" = "5"
+			}
+		}
+		"PostCodes" tab
+			ZHT "郵遞區號 ", 
+			ZHS "邮编", 
+			DEU "Postleitzahlen", 
+			ELL "Ταχυδρομικοί κώδικες", 
+			ENU "Zip Codes", 
+			ENG "Postcodes", 
+			ENA "Postcodes", 
+			ENC "Postcodes", 
+			ENZ "Postcodes", 
+			ENS "Postcodes", 
+			FRA "Codes postaux", 
+			ITA "Codici postali", 
+			JPN "郵便番号", 
+			KOR "우편번호 ", 
+			PLK "Kody pocztowe (Zip)", 
+			THA "รหัสไปรษณีย์"
+		
+		{
+			"PostCodes" control "Elk9.grid" 0,0,284(100),90(100)
+			{
+				"_cx" = "5080"
+				"_cy" = "5080"
+				"Enabled" = "-1"
+				"FolderName" = "PostCodes"
+				"ConfirmDelete" = "0"
+				"AllowDelete" = "-1"
+				"AllowOpen" = "-1"
+				"AllowAdds" = "-1"
+				"Toolbar" = "-1"
+				"ManualFill" = "0"
+				"Configurable" = "0"
+				"MaxRows" = "0"
+				"PrintButton" = "0"
+				"Collapsable" = "0"
+				"ShowGroupBox" = "0"
+				"OpenOnAdd" = "0"
+				"Filter" = ""
+				"GridID" = "{A4D93D6C-A9BB-46B6-8101-5DA67F42DCC2}"
+				"BackColor" = "2147483653"
+				"ForeColor" = "4294967295"
+				"BandOnMember" = ""
+				"BandFolder" = ""
+				"ExpandMember" = ""
+				"ExpandExistence" = ""
+				"RowColor" = ""
+				"ColumnCount" = "5"
+				"Column1_Expr" = "PostCode"
+				"Column1_Caption_String8Lang" = "4105"
+				"Column1_Caption_String8Val" = "Postcode"
+				"Column1_Caption_String9Lang" = "5129"
+				"Column1_Caption_String9Val" = "Postcode"
+				"Column1_Caption_String10Lang" = "7177"
+				"Column1_Caption_String10Val" = "Postcode"
+				"Column1_Flags" = "0"
+				"Column1_Align" = "0"
+				"Column1_Format" = ""
+				"Column1_ColorExpression" = ""
+				"Column2_Expr" = "Suburb"
+				"Column2_Flags" = "8"
+				"Column2_Align" = "0"
+				"Column2_Format" = ""
+				"Column2_ColorExpression" = ""
+				"Column3_Expr" = "City"
+				"Column3_Flags" = "8"
+				"Column3_Align" = "0"
+				"Column3_Format" = ""
+				"Column3_ColorExpression" = ""
+				"Column4_Expr" = "stdState"
+				"Column4_Flags" = "0"
+				"Column4_Align" = "0"
+				"Column4_Format" = ""
+				"Column4_ColorExpression" = ""
+				"Column5_Expr" = "MailType"
+				"Column5_Flags" = "0"
+				"Column5_Align" = "0"
+				"Column5_Format" = ""
+				"Column5_ColorExpression" = ""
+				"TotalCount" = "1"
+				"Total1_Expr" = "TOTAL"
+				"Caption_String8Lang" = "4105"
+				"Caption_String8Val" = "Postcodes"
+				"Caption_String9Lang" = "5129"
+				"Caption_String9Val" = "Postcodes"
+				"Caption_String10Lang" = "7177"
+				"Caption_String10Val" = "Postcodes"
+				"Caption_String1Lang" = "2057"
+				"Caption_String1Val" = "Postcodes"
+				"Caption_String2Lang" = "1033"
+				"Caption_String2Val" = "Post codes"
+				"Caption_String3Lang" = "1031"
+				"Caption_String3Val" = "Post codes"
+				"Caption_String4Lang" = "1036"
+				"Caption_String4Val" = "Codes postaux"
+				"Caption_String5Lang" = "1045"
+				"Caption_String5Val" = "Kody pocztowe"
+				"Caption_String6Lang" = "1054"
+				"Caption_String6Val" = "รหัสไปรษณีย์"
+				"Caption_String7Lang" = "3081"
+				"Caption_String7Val" = "Postcodes"
+				"Caption_StringCount" = "7"
+				"Column1_Caption_String1Lang" = "2057"
+				"Column1_Caption_String1Val" = "Postcode"
+				"Column1_Caption_String2Lang" = "1033"
+				"Column1_Caption_String2Val" = "Postcode"
+				"Column1_Caption_String3Lang" = "1031"
+				"Column1_Caption_String3Val" = "Postleitzahl"
+				"Column1_Caption_String4Lang" = "1036"
+				"Column1_Caption_String4Val" = "Code postal"
+				"Column1_Caption_String5Lang" = "1054"
+				"Column1_Caption_String5Val" = "รหัสไปรษณีย์"
+				"Column1_Caption_String6Lang" = "1041"
+				"Column1_Caption_String6Val" = "郵便番号"
+				"Column1_Caption_String7Lang" = "1045"
+				"Column1_Caption_String7Val" = "Kod pocztowy"
+				"Column1_Caption_StringCount" = "7"
+				"Column2_Caption_String1Lang" = "1033"
+				"Column2_Caption_String1Val" = "Suburb"
+				"Column2_Caption_String2Lang" = "1036"
+				"Column2_Caption_String2Val" = "Banlieue"
+				"Column2_Caption_String3Lang" = "1031"
+				"Column2_Caption_String3Val" = "Vorort"
+				"Column2_Caption_String4Lang" = "1045"
+				"Column2_Caption_String4Val" = "Przedmieścia"
+				"Column2_Caption_String5Lang" = "1054"
+				"Column2_Caption_String5Val" = "ตำบล"
+				"Column2_Caption_String6Lang" = "1041"
+				"Column2_Caption_String6Val" = "詳細"
+				"Column2_Caption_String7Lang" = "1040"
+				"Column2_Caption_String7Val" = "Zona"
+				"Column2_Caption_String8Lang" = "1042"
+				"Column2_Caption_String8Val" = "구(군)"
+				"Column2_Caption_StringCount" = "8"
+				"Column3_Caption_String1Lang" = "1033"
+				"Column3_Caption_String1Val" = "City"
+				"Column3_Caption_String2Lang" = "1036"
+				"Column3_Caption_String2Val" = "Ville"
+				"Column3_Caption_String3Lang" = "1031"
+				"Column3_Caption_String3Val" = "Stadt"
+				"Column3_Caption_String4Lang" = "1045"
+				"Column3_Caption_String4Val" = "Miasto"
+				"Column3_Caption_String5Lang" = "1054"
+				"Column3_Caption_String5Val" = "เมือง"
+				"Column3_Caption_String6Lang" = "1041"
+				"Column3_Caption_String6Val" = "市区町村"
+				"Column3_Caption_String7Lang" = "1040"
+				"Column3_Caption_String7Val" = "Citt"
+				"Column3_Caption_String8Lang" = "1042"
+				"Column3_Caption_String8Val" = "도(시)"
+				"Column3_Caption_StringCount" = "8"
+				"Column4_Caption_String1Lang" = "1033"
+				"Column4_Caption_String1Val" = "State"
+				"Column4_Caption_String2Lang" = "1036"
+				"Column4_Caption_String2Val" = "État"
+				"Column4_Caption_String3Lang" = "1031"
+				"Column4_Caption_String3Val" = "Bundesstaat"
+				"Column4_Caption_String4Lang" = "1045"
+				"Column4_Caption_String4Val" = "Stan"
+				"Column4_Caption_String5Lang" = "1054"
+				"Column4_Caption_String5Val" = "รัฐ"
+				"Column4_Caption_String6Lang" = "1041"
+				"Column4_Caption_String6Val" = "都道府県"
+				"Column4_Caption_String7Lang" = "1040"
+				"Column4_Caption_String7Val" = "Stato"
+				"Column4_Caption_String8Lang" = "1042"
+				"Column4_Caption_String8Val" = "주"
+				"Column4_Caption_StringCount" = "8"
+				"Column5_Caption_String1Lang" = "1033"
+				"Column5_Caption_String1Val" = "Type"
+				"Column5_Caption_String2Lang" = "1036"
+				"Column5_Caption_String2Val" = "Type"
+				"Column5_Caption_String3Lang" = "1031"
+				"Column5_Caption_String3Val" = "Briefart"
+				"Column5_Caption_String4Lang" = "1045"
+				"Column5_Caption_String4Val" = "Typ"
+				"Column5_Caption_String5Lang" = "1054"
+				"Column5_Caption_String5Val" = "ประเภท"
+				"Column5_Caption_String6Lang" = "1041"
+				"Column5_Caption_String6Val" = "タイプ"
+				"Column5_Caption_String7Lang" = "1040"
+				"Column5_Caption_String7Val" = "Tipo posta"
+				"Column5_Caption_String8Lang" = "1042"
+				"Column5_Caption_String8Val" = "유형"
+				"Column5_Caption_StringCount" = "8"
+				"Total1_Caption_String1Lang" = "1033"
+				"Total1_Caption_String1Val" = "Total"
+				"Total1_Caption_String2Lang" = "1036"
+				"Total1_Caption_String2Val" = "Total"
+				"Total1_Caption_String3Lang" = "1031"
+				"Total1_Caption_String3Val" = "Total"
+				"Total1_Caption_String4Lang" = "1045"
+				"Total1_Caption_String4Val" = "Łącznie"
+				"Total1_Caption_String5Lang" = "1054"
+				"Total1_Caption_String5Val" = "รวม"
+				"Total1_Caption_String6Lang" = "1041"
+				"Total1_Caption_String6Val" = "合計"
+				"Total1_Caption_String7Lang" = "1042"
+				"Total1_Caption_String7Val" = "총계"
+				"Total1_Caption_StringCount" = "7"
+			}
+		}
+	}
+	OnInit "Form_Init"
+	Script VBScript
+<%
+Sub Form_Init()
+	StateName.Enabled=Object.HasStates
+	Tabs.States.States.Enabled=Object.HasStates
+	StateCode.Enabled=Object.HasStates
+End Sub
+
+Sub HasStates_Change()
+	Form.StateName.Enabled=Form.Object.HasStates
+	Form.StateCode.Enabled=Form.Object.HasStates
+	Form.Tabs.States.States.Enabled=Form.Object.HasStates
+End Sub
+%>
+}
+
+form "stdAddressState" for "stdBaseAddress" 277,78
+{
+	"Address" edit member "Address" 0,0,276(100),38(100) multiline autovscroll vscroll
+	"City" edit member "City" 0,38(100),96(50),24(100) autohscroll toptag
+		OnLostFocus "City_LostFocus"
+	"State" combobox member "State" 100(50),38(100),100(100),24(100) toptag
+	"PostCode" edit member "PostCode" 204(100),38(100),73(100),24(100) autohscroll choose toptag
+	OnChoose "PostCode_Choose"
+	"Country" combobox member "Country" 0,64(100),277(100),14(100) icon
+		OnChange "Country_Change"
+	OnInit "Form_Init"
+	Script VBScript
+<%
+Sub City_LostFocus()
+
+	On Error Resume Next
+	blnCheckPostCode = False
+	blnCheckPostCode = Form.Object.City.Definition.Properties("CheckPostCode")
+	On Error Goto 0
+	
+	If Len(RTrim(This.Parent.Postcode.value))=0 And blnCheckPostCode Then
+
+		' Locate the Post Codes for this Address
+
+		Form.Object.LocatePostCodes False
+
+	End If
+
+End Sub
+
+Sub Country_Change()
+	If Not Form.Object.Country.IsNull Then
+		If Form.Object.Country.HasStates Then
+			sStateName=Form.Object.Country.StateName
+			If sStateName="" Then sStateName=System.LoadString("stdStateName")
+			Form.State.Tag=sStateName
+		End If
+	End if
+End Sub
+
+Sub Form_Init()
+	If Not Form.Object.Country.IsNull Then
+		If Form.Object.Country.HasStates Then
+			sStateName=Form.Object.Country.StateName
+			If sStateName="" Then sStateName=System.LoadString("stdStateName")
+			If sStateName<>"" Then Form.State.Tag=sStateName
+		End If
+	End if
+End Sub
+
+Sub PostCode_Choose()
+	Form.Object.LocatePostCodes True
+End Sub
+%>
+}
+
+form "stdAddressSuburb" for "stdBaseAddress" 277,78
+{
+	"Address" edit member "Address" 0,0,277(100),38(100) multiline autovscroll vscroll
+	"City" edit member "City" 0,38(100),106(50),24(100) autohscroll toptag
+		OnLostFocus "City_LostFocus"
+	"Suburb" edit member "Suburb" 110(50),38(100),92(100),24(100) autohscroll toptag
+		OnLostFocus "Suburb_LostFocus"
+	"PostCode" edit member "PostCode" 206(100),38(100),70(100),24(100) autohscroll choose toptag
+	OnChoose "PostCode_Choose"
+	"Country" combobox member "Country" 0,64(100),277(100),14(100) icon
+	Script VBScript
+<%
+Sub City_LostFocus()
+
+	On Error Resume Next
+	blnCheckPostCode = False
+	blnCheckPostCode = Form.Object.City.Definition.Properties("CheckPostCode")
+	On Error Goto 0
+	
+	If Len(RTrim(This.Parent.Postcode.value))=0 And blnCheckPostCode Then
+
+		' Locate the Post Codes for this Address
+
+		Form.Object.LocatePostCodes False
+
+	End If
+
+End Sub
+
+Sub Suburb_LostFocus()
+
+	On Error Resume Next
+	blnCheckPostCode = False
+	blnCheckPostCode = Form.Object.Suburb.Definition.Properties("CheckPostCode")
+	On Error Goto 0
+	
+	If Len(RTrim(This.Parent.Postcode.value))=0 And blnCheckPostCode Then
+
+		' Locate the Post Codes for this Address
+
+		Form.Object.LocatePostCodes False
+
+	End If
+
+End Sub
+
+Sub PostCode_Choose()
+	Form.Object.LocatePostCodes True
+End Sub
+%>
+}
+
+form "SelectPostCode" for "stdBaseAddress" 282,189
+{
+	"Tabs" tabset  0,0,282(100),189(100)
+	{
+		"Suburb" tab
+			ZHT "市區", 
+			ZHS "区", 
+			DEU "Vorort", 
+			ELL "Προάστιο", 
+			ENU "Suburb", 
+			FRA "Banlieue", 
+			ITA "Zona", 
+			JPN "詳細", 
+			KOR "구(군)", 
+			PLK "Przedmieścia", 
+			THA "ตำบล"
+		
+		{
+			"SuburbPostCodes" control "Elk9.ListView.1" 0,1,260(100),154(100)
+			Events
+			{
+				"Click" "SuburbPostCodes_Click"
+				"DblClick" "SuburbPostCodes_DblClick"
+			}
+			{
+				"_cx" = "5080"
+				"_cy" = "5080"
+				"ShowIcons" = "-1"
+				"MaxItems" = "9999"
+				"FormControl" = ""
+				"BackColor" = "2147483653"
+				"BorderStyle" = "1"
+				"Enabled" = "-1"
+				"ForeColor" = "4294967295"
+				"ContextMenuEnabled" = "-1"
+			}
+			OnActivate "Suburb_Activate"
+		}
+		"City" tab
+			ZHT "城市", 
+			ZHS "城市", 
+			DEU "Stadt", 
+			ELL "Πόλη", 
+			ENU "City", 
+			FRA "Ville", 
+			ITA "Città", 
+			JPN "市区町村", 
+			KOR "도(시)", 
+			PLK "Miasto", 
+			THA "เมือง"
+		
+		{
+			"CityPostCodes" control "Elk9.ListView.1" 0,0,260(100),155(100)
+			Events
+			{
+				"Click" "CityPostCodes_Click"
+			}
+			{
+				"_cx" = "5080"
+				"_cy" = "5080"
+				"ShowIcons" = "-1"
+				"MaxItems" = "9999"
+				"FormControl" = ""
+				"BackColor" = "2147483653"
+				"BorderStyle" = "1"
+				"Enabled" = "-1"
+				"ForeColor" = "4294967295"
+				"ContextMenuEnabled" = "-1"
+			}
+			OnActivate "City_Activate"
+		}
+		"Country" tab
+			ZHT "國家", 
+			ZHS "国家", 
+			DEU "Land", 
+			ELL "Χώρα", 
+			ENU "Country", 
+			FRA "Pays", 
+			ITA "Paese", 
+			JPN "国", 
+			KOR "국가", 
+			PLK "Kraj", 
+			THA "ประเทศ"
+		
+		{
+			"CountryPostCodes" control "Elk9.ListView.1" 0,0,260(100),155(100)
+			Events
+			{
+				"Click" "CountryPostCodes_Click"
+			}
+			{
+				"_cx" = "5080"
+				"_cy" = "5080"
+				"ShowIcons" = "-1"
+				"MaxItems" = "9999"
+				"FormControl" = ""
+				"BackColor" = "2147483653"
+				"BorderStyle" = "1"
+				"Enabled" = "-1"
+				"ForeColor" = "4294967295"
+				"ContextMenuEnabled" = "-1"
+			}
+			OnActivate "Country_Activate"
+		}
+	}
+	Script VBScript
+<%
+Sub Suburb_Activate()
+	aryPostCodes = Form.Object.Properties("ElkFolders").value
+	
+	With SuburbPostCodes.Control
+		.MaxItems = 9999
+		.Folder = aryPostCodes(2)
+		.Fill
+	End With	
+
+End Sub
+
+Sub City_Activate()
+
+	aryPostCodes = Form.Object.Properties("ElkFolders").value
+
+	With CityPostCodes.Control
+		.MaxItems = 9999
+		.Folder = aryPostCodes(1)
+		.Fill
+	End With
+
+End Sub
+
+Sub Country_Activate()
+
+	aryPostCodes = Form.Object.Properties("ElkFolders").value
+
+	With CountryPostCodes.Control
+		.MaxItems = 9999
+		.Folder = aryPostCodes(0)
+		.Fill
+	End With
+
+End Sub
+
+Sub SuburbPostCodes_DblClick()
+	
+	UpdatePostCode(SuburbPostCodes)
+End Sub
+
+Sub UpdatePostCode(objListView)
+
+	Dim objPostCode
+
+	If Not objListView.Control.SelectedItemisFolder Then
+		Set objPostCode = objListView.Control.SelectedItem
+		If Not IsNullObject(objPostCode) Then
+			With Form.Object		
+				.PostCode = objPostCode.PostCode
+				.Suburb = objPostCode.Suburb
+				.State = objPostCode.stdState.Value
+				.City = objPostCode.City
+				.Country = objPostCode.stdCountry.Value
+			End With
+		End If
+	End If
+End Sub
+
+Sub SuburbPostCodes_Click(SelectedItem, Context, IsFolder)
+
+	If Not SelectedItem Is Nothing Then
+		UpdatePostCode(SuburbPostCodes)
+	End If
+
+End Sub
+
+Sub CityPostCodes_Click(SelectedItem, Context, IsFolder)
+
+	If Not SelectedItem Is Nothing Then
+		UpdatePostCode(CityPostCodes)
+	End If
+
+End Sub
+
+Sub CountryPostCodes_Click(SelectedItem, Context, IsFolder)
+
+	If Not Selecteditem Is Nothing Then
+		UpdatePostCode(CountryPostCodes)
+	End If
+End Sub
+%>
+}
+
+form "SelectPostCodeUS" for "stdBaseAddress" 282,189
+{
+	"Tabs" tabset  0,0,282(100),189(100)
+	{
+		"City" tab
+			ZHT "城市", 
+			ZHS "城市", 
+			DEU "Stadt", 
+			ELL "Πόλη", 
+			ENU "City", 
+			FRA "Ville", 
+			ITA "Città", 
+			JPN "市区町村", 
+			KOR "도(시)", 
+			PLK "Miasto", 
+			THA "เมือง"
+		
+		{
+			"CityPostCodes" control "Elk9.ListView.1" 0,0,260(100),155(100)
+			Events
+			{
+				"Click" "CityPostCodes_Click"
+			}
+			{
+				"_cx" = "5080"
+				"_cy" = "5080"
+				"ShowIcons" = "-1"
+				"MaxItems" = "9999"
+				"FormControl" = ""
+				"BackColor" = "2147483653"
+				"BorderStyle" = "1"
+				"Enabled" = "-1"
+				"ForeColor" = "4294967295"
+				"ContextMenuEnabled" = "-1"
+			}
+			OnActivate "City_Activate"
+		}
+		"State" tab
+			ZHT "省", 
+			ZHS "省", 
+			DEU "Bundesland", 
+			ELL "Πολιτεία", 
+			ENU "State", 
+			FRA "Etat", 
+			ITA "Stato", 
+			JPN "都道府県", 
+			KOR "주", 
+			PLK "Stan", 
+			THA "รัฐ"
+		
+		{
+			"StatePostCodes" control "Elk9.ListView.1" 0,0,260(100),155(100)
+			Events
+			{
+				"Click" "StatePostCodes_Click"
+			}
+			{
+				"_cx" = "5080"
+				"_cy" = "5080"
+				"ShowIcons" = "-1"
+				"MaxItems" = "0"
+				"FormControl" = ""
+				"BackColor" = "2147483653"
+				"BorderStyle" = "1"
+				"Enabled" = "-1"
+				"ForeColor" = "4294967295"
+				"ContextMenuEnabled" = "-1"
+			}
+			OnActivate "State_Activate"
+		}
+		"Country" tab
+			ZHT "國家", 
+			ZHS "国家", 
+			DEU "Land", 
+			ELL "Χώρα", 
+			ENU "Country", 
+			FRA "Pays", 
+			ITA "Paese", 
+			JPN "国", 
+			KOR "국가", 
+			PLK "Kraj", 
+			THA "ประเทศ"
+		
+		{
+			"CountryPostCodes" control "Elk9.ListView.1" 0,0,260(100),155(100)
+			Events
+			{
+				"Click" "CountryPostCodes_Click"
+			}
+			{
+				"_cx" = "5080"
+				"_cy" = "5080"
+				"ShowIcons" = "-1"
+				"MaxItems" = "9999"
+				"FormControl" = ""
+				"BackColor" = "2147483653"
+				"BorderStyle" = "1"
+				"Enabled" = "-1"
+				"ForeColor" = "4294967295"
+				"ContextMenuEnabled" = "-1"
+			}
+			OnActivate "Country_Activate"
+		}
+	}
+	Script VBScript
+<%
+Sub City_Activate()
+
+	aryPostCodes = Form.Object.Properties("ElkFolders").value
+
+	With CityPostCodes.Control
+		.MaxItems = 9999
+		.Folder = aryPostCodes(1)
+		.Fill
+	End With
+
+End Sub
+
+Sub State_Activate()
+
+	aryPostCodes = Form.Object.Properties("ElkFolders").value
+    
+    With StatePostCodes.Control
+    	.MaxItems = 9999
+		.Folder = aryPostCodes(3)   	
+		.Fill		
+    End With
+
+End Sub
+
+Sub Country_Activate()
+
+	aryPostCodes = Form.Object.Properties("ElkFolders").value
+
+	With CountryPostCodes.Control
+		.MaxItems = 9999
+		.Folder = aryPostCodes(0)
+		.Fill
+	End With
+
+End Sub
+
+Sub UpdatePostCode(objListView)
+
+	Dim objPostCode
+
+	If Not objListView.Control.SelectedItemisFolder Then
+		Set objPostCode = objListView.Control.SelectedItem
+		If Not IsNullObject(objPostCode) Then
+			With Form.Object		
+				.PostCode = objPostCode.PostCode
+				.Suburb = objPostCode.Suburb
+				.State = objPostCode.stdState.Value
+				.City = objPostCode.City
+				.Country = objPostCode.stdCountry.Value
+			End With
+		End If
+	End If
+End Sub
+
+Sub CityPostCodes_Click(SelectedItem, Context, IsFolder)
+
+	If Not SelectedItem Is Nothing Then
+		UpdatePostCode(CityPostCodes)
+	End If
+
+End Sub
+
+Sub CountryPostCodes_Click(SelectedItem, Context, IsFolder)
+
+	If Not Selecteditem Is Nothing Then
+		UpdatePostCode(CountryPostCodes)
+	End If
+End Sub
+
+Sub StatePostCodes_Click(SelectedItem, Context, IsFolder)
+
+	If Not SelectedItem Is Nothing Then
+		UpdatePostCode(StatePostCodes)
+	End If
+End Sub
+%>
+}
+
+form "stdAddressUS" for "stdBaseAddress" 226,62
+{
+	"Address" edit member "Address" 0,0,225(100),22(100) multiline autovscroll vscroll tagset(1)
+	"City" edit member "City" 0,22(100),96(100),24(100) autohscroll toptag tagset(1)
+		OnLostFocus "City_LostFocus"
+	"State" combobox member "State" 100(100),22(100),40(100),24(100) toptag
+	"lblZip" text
+		tag 
+			ZHT "郵遞區號(&Z):", 
+			ZHS "邮编(&Z)：", 
+			DEU "&Postleitzahl:", 
+			ELL "&Ταχυδρομικός Κώδικας", 
+			ENU "&Zip Code:", 
+			FRA "&Code postal:", 
+			ITA "Codice &Zip:", 
+			JPN "郵便番号(&Z):", 
+			KOR "우편번호(&Z):", 
+			PLK "&Kod pocztowy (Zip):", 
+			THA "รหัสไปรษณีย์ (&Z):"
+	 145(100),22(100),52(100),8(100)
+	"PostCode" edit member "PostCode" 144(100),32(100),82(100),14(100) autohscroll choose
+	OnChoose "PostCode_Choose"
+	"Country" combobox member "Country" 0,50(100),226(100),14(100) icon tagset(1)
+	Script VBScript
+<%
+Sub City_LostFocus()
+
+	On Error Resume Next
+	blnCheckPostCode = False
+	blnCheckPostCode = Form.Object.City.Definition.Properties("CheckPostCode")
+	On Error Goto 0
+	
+	If Len(RTrim(This.Parent.Postcode.value))=0 And blnCheckPostCode Then
+
+		' Locate the Post Codes for this Address
+
+		Form.Object.LocatePostCodes False
+
+	End If
+
+End Sub
+
+Sub PostCode_Choose()
+	Form.Object.LocatePostCodes True
+End Sub
+%>
+}
+
+form "stdAddressAU" for "stdBaseAddress" 226,62
+{
+	"Address" edit member "Address" 0,0,224(100),22(100) multiline autovscroll vscroll
+	"Suburb" edit member "Suburb" 0,22(100),96(100),24(100) autohscroll toptag
+		OnChange "Suburb_Change"
+		OnLostFocus "Suburb_LostFocus"
+	"State" combobox member "State" 100(100),22(100),40(100),24(100) toptag
+	"PostCode" edit member "PostCode" 144(100),31(100),82(100),15(100) autohscroll choose
+	OnChoose "PostCode_Choose"
+	"Country" combobox member "Country" 0,48(100),226(100),14(100) icon tagset(1)
+	"lblZip" text
+		tag 
+			ENU "&Post Code:", 
+			ENG "&Post Code:", 
+			ENA "&Post Code:", 
+			ENZ "&Post Code:", 
+			PLK "&Kod pocztowy:"
+	 146(100),23(100),52(100),8(100)
+	Script VBScript
+<%
+Sub Suburb_LostFocus()
+
+	On Error Resume Next
+	blnCheckPostCode = False
+	blnCheckPostCode = Form.Object.Suburb.Definition.Properties("CheckPostCode")
+	On Error Goto 0
+	
+	If Len(RTrim(This.Parent.Postcode.value))=0 And blnCheckPostCode Then
+
+		' Locate the Post Codes for this Address
+
+		Form.Object.LocatePostCodes False
+
+	End If
+
+End Sub
+
+Sub PostCode_Choose()
+	Form.Object.LocatePostCodes True
+End Sub
+
+Sub Suburb_Change()
+	Form.Object.City.Value = Form.Object.Suburb.Value
+End Sub
+%>
+}
+
+form "stdState" for "stdState" 305,30
+{
+	"Code" edit member "Code" 0,0,98,14 autohscroll sidetag tagset(1)
+	"Name" edit member "Name" 0,16,305(100),14 autohscroll sidetag tagset(1)
+}
+
+form "stdPostCode" for "stdPostCode" 305,78
+{
+	"PostCode" edit member "PostCode" 0,0,100,14 autohscroll sidetag tagset(1)
+	"Suburb" edit member "Suburb" 0,16,305(100),14 autohscroll sidetag tagset(1)
+	"City" edit member "City" 0,32,305(100),14 autohscroll sidetag tagset(1)
+	"stdState" combobox member "stdState" 0,48,305,14 sidetag tagset(1)
+	"MailType" edit member "MailType" 0,64,305(100),14 autohscroll sidetag tagset(1)
+}
+
+modify form "SelectPostCode" for "stdBaseAddress" as "SelectPostCodeAU"
+{
+	modify tabset "Tabs"
+	{
+		Insert "State" before "Country"
+			ZHT "省", 
+			ZHS "省", 
+			DEU "Bundesland", 
+			ELL "Πολιτεία", 
+			ENU "State", 
+			FRA "Etat", 
+			ITA "Stato", 
+			JPN "都道府県", 
+			KOR "주", 
+			PLK "Stan", 
+			THA "รัฐ"
+		
+		{
+			"StatePostCodes" control "Elk9.ListView.1" 0,0,260(100),155(100)
+			Events
+			{
+				"Click" "StatePostCodes_Click"
+			}
+			{
+				"_cx" = "5080"
+				"_cy" = "5080"
+				"ShowIcons" = "-1"
+				"MaxItems" = "0"
+				"FormControl" = ""
+				"BackColor" = "2147483653"
+				"BorderStyle" = "1"
+				"Enabled" = "-1"
+				"ForeColor" = "4294967295"
+				"ContextMenuEnabled" = "-1"
+			}
+			OnActivate "State_Activate"
+		}
+	}
+	Script VBScript
+<%
+Sub State_Activate()
+
+	aryPostCodes = Form.Object.Properties("ElkFolders").value
+    
+    With StatePostCodes.Control
+    	.MaxItems = 9999
+		.Folder = aryPostCodes(3)   	
+		.Fill		
+    End With
+
+End Sub
+
+Sub StatePostCodes_Click(SelectedItem, Context, IsFolder)
+
+	If Not SelectedItem Is Nothing Then
+		UpdatePostCode(StatePostCodes)
+	End If
+
+End Sub
+
+Sub UpdatePostCode(objListView)
+
+	Dim objPostCode
+
+	If Not objListView.Control.SelectedItemisFolder Then
+		Set objPostCode = objListView.Control.SelectedItem
+		If Not IsNullObject(objPostCode) Then
+			With Form.Object		
+				.PostCode = objPostCode.PostCode
+				.Suburb = objPostCode.Suburb
+				.State = objPostCode.stdState.Value
+				.City = objPostCode.City
+				.Country = objPostCode.stdCountry.Value
+			End With
+		End If
+	End If
+End Sub
+%>
+}
+
+form "stdAddressJP" for "stdBaseAddress" 305,134
+{
+	"Country" combobox member "Country" 0,0,304(100),14 icon sidetag tagset(1)
+	"PostCode" edit member "PostCode" 0,16,136,14 autohscroll sidetag tagset(1)
+		OnLostFocus "PostCode_LostFocus"
+	"State" combobox member "State" 0,32,305(100),14 sidetag tagset(1)
+	"City" edit member "City" 0,48,304(100),14 autohscroll sidetag tagset(1)
+	"Address" edit member "Address" 0,64,304(100),70(100) multiline autovscroll vscroll sidetag tagset(1)
+	Script VBScript
+<%
+Sub PostCode_LostFocus()
+
+	' Locate the PostCode in the Table and Populate the Other Members
+
+	Set objThisPostCode = Nothing
+	On Error Resume Next
+	Set objThisPostCode = Form.Object.Country.Value.Folders("PostCodes").Scan("PostCode='" & This.Value & "'").Fetch
+	On Error goto 0
+
+	If Not objThisPostCode Is Nothing Then
+		With Form.Object
+			.State = objThisPostCode.stdState.Value
+			.City = objThisPostCode.City
+			.Suburb = objThisPostCode.Suburb
+		End With
+	End If
+
+End Sub
+%>
+}
+
+form "stdWebStartDuration" for "stdTimeStamp" 271,14
+{
+	"Start" datetime member "Start" 0,0,150,14
+		timeformat 
+			DEU "HH:mm", 
+			ENU "hh:mm tt", 
+			FRA "HH:mm", 
+			PLK "HH:mm"
+	
+	"Finish" datetime member "Finish" 152,0,150,14
+		timeformat 
+			ZHS "持续时间(&D)", 
+			DEU "&Dauer", 
+			ELL "&Διάρκεια", 
+			ENU "&Duration", 
+			FRA "&Durée", 
+			ITA "&Durata", 
+			JPN "期間(&D)", 
+			KOR "기간(&D)", 
+			PLK "&Czas trwania", 
+			THA "ระยะเวลา (&D)"
+	 sidetag
+}
+
+form "stdStartDuration" for "stdTimeStamp" 271,14
+{
+	"Start" datetime member "Start" 0,0,150,14
+		timeformat 
+			DEU "HH:mm", 
+			ENU "hh:mm tt", 
+			FRA "HH:mm", 
+			PLK "HH:mm"
+	
+	"ocxDuration" control "Elk9.DurationCtrl.1" 152,0,119,13 sidetag
+		ZHS "持续时间&", 
+		DEU "&Dauer", 
+		ELL "&Διάρκεια", 
+		ENU "&Duration", 
+		FRA "&Durée", 
+		ITA "&Durata", 
+		JPN "期間(&D)", 
+		KOR "기간(&D)", 
+		PLK "&Czas trwania", 
+		THA "ระยะเวลา (&D)"
+	
+	Events
+	{
+		"OnClick" "ocxDuration_OnClick"
+	}
+$
+	00030000d8130000d81300001300050000800b00ffff09000000000000000000
+	00000000000000001300ffffffff
+$
+	OnInit "Form_Init"
+	OnPreSave "Form_PreSave"
+	Script VBScript
+<%
+Sub Form_Init()     
+  if IsNull(Form.Object.Start) or IsNull(Form.Object.Finish) then
+    ocxDuration.Control.Minutes=0
+  else 
+    ocxDuration.Control.Minutes=DateDiff("n",Form.Object.Start,Form.Object.Finish)
+  end if  
+End Sub
+
+Sub ocxDuration_OnClick()
+  if not IsNull(Form.Object.Start) then
+   Form.Object.Finish.Value = DateAdd("n",This.Control.Minutes,Form.Object.Start)
+  end if  
+End Sub
+
+Sub Form_PreSave()
+  If not IsNull(Form.Object.Start) Then
+   Form.Object.Finish.Value = DateAdd("n",ocxDuration.Control.Minutes,Form.Object.Start)
+  End If  
+End Sub
+%>
+}
+
+form "stdAddressSG" for "stdBaseAddress" 226,62
+{
+	"Address" edit member "Address" 0,0,224(100),22(100) multiline autovscroll vscroll
+	"District" edit member "District" 0,22(100),110(50),24(100) autohscroll toptag
+	"PostCode" edit member "PostCode" 113(50),22(100),113(100),24(100) autohscroll toptag
+	"Country" combobox member "Country" 0,48(100),226(100),14(100) icon tagset(1)
+}
+
+form "stdPicklist" for "stdPicklist" 305,121
+{
+	"Description" edit member "Description" 0,14,305(100),14 autohscroll sidetag tagset(1)
+	"ListOrder" edit member "ListOrder" 0,28,114,14 autohscroll sidetag tagset(1)
+	"Default" checkbox member "IsDefault" 50,45,64,9 autosize tagset(1)
+	"Tabset" tabset  0,56,305(100),65(100)
+	{
+	}
+	"expKey" expression ENU "Key" 0,0,178,14 sidetag
+		text 
+			ZHS "代码", 
+			DEU "Code", 
+			ELL "Κώδικας", 
+			ENU "Code", 
+			FRA "Code", 
+			JPN "コード", 
+			KOR "코드", 
+			PLK "Kod", 
+			THA "รหัส"
+	 tagset(1)
+	"Retired" checkbox member "Retired" 232(100),2,72(100),9
+}
+
+form "stdAddressHK" for "stdBaseAddress" 226,86
+{
+	"Address" edit member "Address" 0,0,226(100),23(100) multiline autovscroll vscroll
+	"Region" edit member "Region" 0,22(100),226(100),24(100) autohscroll toptag
+	"BuildingCode" edit member "BuildingCode" 0,48(100),110(50),24(100) autohscroll toptag
+	"PostCode" edit member "PostCode" 113(50),48(100),113(100),24(100) autohscroll toptag
+	"Country" combobox member "Country" 0,72(100),226(100),14(100) icon
+}
+
+form "stdAddressMY" for "stdBaseAddress" 226,92
+{
+	"Address" edit member "Address" 0,0,226(100),22(100) multiline autovscroll vscroll
+	"District" edit member "District" 0,22(100),110(50),24(100) autohscroll toptag
+	"PostCode" edit member "PostCode" 113(50),22(100),113(100),24(100) autohscroll toptag tagset(1)
+	"City" edit member "City" 0,48(100),110(50),24(100) autohscroll toptag
+	"State" combobox member "State" 113(50),48(100),113(100),24(100) toptag tagset(1)
+	"Country" combobox member "Country" 0,76(100),226(100),14(100) icon
+}
+
+form "stdSignature" for "stdSignature" 300,100
+{
+	"ErrorMsg" expression ENU "System.LoadString(\"stdSignatureError\")" 0,0,250(100),82(100) font ( 10) fore(scarlet) wrap control
+	"Signature" control "Elk9.Signature.1" 1,0,299(100),100(100) ENU "" bind "Value" to "Signature"
+	{
+		"_cx" = "5080"
+		"_cy" = "5080"
+		"BackColor" = "2147483653"
+		"ForeColor" = "4294967295"
+	}
+	OnInit "Form_Init"
+	Script VBScript
+<%
+Sub Form_Init()
+	Dim bOK : bOK=Form.Signature.Control.IsValid and CBool(Form.Object.CheckTamper)
+	Form.Signature.Visible=bOK
+	Form.ErrorMsg.Visible=not bOK
+End Sub
+
+Sub SetSignedData(byval Data)
+	If IsNull(Form.Object.Signature.Value) Then
+		Form.Signature.Control.SignedData=Data
+	ElseIf Data<>Form.Signature.Control.SignedData Then
+		Form.Signature.Visible=False
+		Form.ErrorMsg.Visible=True
+	End If
+End Sub
+%>
+}
+
+form "stdColor" for "stdColor" 110,14
+{
+	"ocxColorValue" control "VE9Gen.ColorPicker" 0,0,110(100),14(100) ENU "" bind "ControlColor" to "ColorValue"
+	{
+	}
+}
+
+form "stdStartDurationCE" for "stdTimeStamp" 151,29
+{
+	"Start" datetime member "Start" 0,0,150(100),14
+		timeformat 
+			DEU "HH:mm", 
+			ENU "hh:mm tt", 
+			FRA "HH:mm", 
+			PLK "HH:mm"
+	
+	"ocxDuration" control "Elk9.DurationCtrl.1" 0,15,151(100),14 sidetag
+		ZHS "持续时间(&D)", 
+		DEU "&Dauer", 
+		ELL "&Διάρκεια", 
+		ENU "&Duration", 
+		FRA "&Durée", 
+		ITA "&Durata", 
+		JPN "期間(&D)", 
+		KOR "기간(&D)", 
+		PLK "&Czas trwania", 
+		THA "ระยะเวลา (&D)"
+	
+	Events
+	{
+		"OnClick" "ocxDuration_OnClick"
+	}
+$
+	00030000d8130000d81300001300050000800b00ffff09000000000000000000
+	00000000000000001300ffffffff
+$
+	OnInit "Form_Init"
+	OnPreSave "Form_PreSave"
+	Script VBScript
+<%
+Sub Form_Init()     
+  if IsNull(Form.Object.Start) or IsNull(Form.Object.Finish) then
+    ocxDuration.Control.Minutes=0
+  else 
+    ocxDuration.Control.Minutes=DateDiff("n",Form.Object.Start,Form.Object.Finish)
+  end if  
+End Sub
+
+Sub ocxDuration_OnClick()
+  if not IsNull(Form.Object.Start) then
+   Form.Object.Finish.Value = DateAdd("n",This.Control.Minutes,Form.Object.Start)
+  end if  
+End Sub
+
+Sub Form_PreSave()
+  If not IsNull(Form.Object.Start) Then
+   Form.Object.Finish.Value = DateAdd("n",ocxDuration.Control.Minutes,Form.Object.Start)
+  End If  
+End Sub
+%>
+}
+
+form "MP_stdBaseAddress" for "stdBaseAddress" 174,97
+{
+	"Address" edit member "Address" tag ENU "" 0,0,174(100),50(100) multiline autovscroll sidetag tagset(1)
+	"City" edit member "City" tag ENU "" 0,51(100),174(100),15(100) autohscroll sidetag tagset(1)
+		OnLostFocus "City_LostFocus"
+	"PostCode" edit member "PostCode" tag ENU "" 0,67(100),111(50),14(100) autohscroll sidetag tagset(1)
+	OnChoose "PostCode_Choose"
+	"Country" combobox member "Country" tag ENU "" 0,83(100),174(100),14(100) sidetag tagset(1)
+	Script VBScript
+<%
+Sub City_LostFocus()
+
+	On Error Resume Next
+	blnCheckPostCode = False
+	blnCheckPostCode = Form.Object.City.Definition.Properties("CheckPostCode")
+	On Error Goto 0
+	
+	If Len(RTrim(This.Parent.Postcode.value))=0 And blnCheckPostCode Then
+
+		' Locate the Post Codes for this Address
+
+		Form.Object.LocatePostCodes False
+
+	End If
+
+End Sub
+
+Sub PostCode_Choose()
+
+	Form.Object.LocatePostCodes True
+
+End Sub
+%>
+}
+
+form "MP_stdAddressUS" for "stdBaseAddress" 217,71
+{
+	"Address" edit member "Address" tag ENU "" 0,0,217(100),36(100) multiline autovscroll sidetag tagset(1)
+	"City" edit member "City" tag ENU "" 0,37(100),217(100),15(100) autohscroll sidetag tagset(1)
+	"State" combobox member "State" tag ENU "" 0,53(100),93(30),15(100) sidetag tagset(1)
+	"PostCode" edit member "PostCode" 143(60),54(100),74(100),14(100) autohscroll
+	"lblZip" text
+		tag 
+			ZHT "郵遞區號(&Z):", 
+			ZHS "邮编(&Z)：", 
+			DEU "&Postleitzahl:", 
+			ELL "&Ταχυδρομικός Κώδικας", 
+			ENU "&Zip Code:", 
+			FRA "&Code postal:", 
+			ITA "Codice &Zip:", 
+			JPN "郵便番号(&Z):", 
+			KOR "우편번호(&Z):", 
+			PLK "&Kod pocztowy (Zip):", 
+			THA "รหัสไปรษณีย์ (&Z):"
+	 97(30),55(100),43(60),9(100)
+}
+
+form "MP_stdeMailAddress" for "stdeMailAddress" 220,14
+{
+	"eMailAddress" edit member "eMailAddress" tag ENU "" 0,0,220(100),14 autohscroll
+}
+
+form "stdAddressUK" for "stdBaseAddress" 190,84
+{
+	"txtAddress" edit member "Address" tag ENU "" 0,0,190(100),22(100) multiline autovscroll vscroll
+	"txtCity" edit member "City" tag ENU "" 0,23(100),190(100),23(100) autohscroll toptag
+	"txtRegion" edit member "Region" tag ENU "" 0,46(100),114(77),23(100) autohscroll toptag
+	"lblPostCode" text
+		tag 
+			ENU "&Post Code:", 
+			ENG "&Post Code:", 
+			ENA "&Post Code:", 
+			ENZ "&Post Code:", 
+			PLK "&Kod pocztowy:"
+	 120(77),46(100),46(77),9(100)
+	"txtPostCode" edit member "PostCode" tag ENU "" 119(77),56(100),71(100),14(100) autohscroll choose tagset(1)
+		OnLostFocus "txtPostCode_LostFocus"
+	OnChoose "txtPostCode_Choose"
+	"cboCountry" combobox member "Country" 0,70(100),190(100),14(100)
+	Script VBScript
+<%
+Sub txtPostCode_Choose()
+	Call Form.txtPostCode_ChooseEx()
+End Sub
+
+Sub txtPostCode_ChooseEx()
+	'Function can be extended if necessary
+	Form.Object.LocatePostCodes True
+End Sub
+
+Sub txtPostCode_LostFocus()
+	'Function can be extended if necessary
+	Call Form.txtPostCode_LostFocusEx()
+End Sub
+
+Sub txtPostCode_LostFocusEx()
+	'stub
+End Sub
+%>
+}
+
+form "stdCountryPostCodeSearch" for "stdBaseAddress" 288,203
+{
+	"oleForm" control "Elk9.Form.1" 0,0,288(100),203(100) ENU "oleForm"
+	{
+		"_cx" = "16748"
+		"_cy" = "11642"
+		"AutoSave" = "-1"
+		"Border" = "0"
+		"Context" = ""
+		"BackColor" = "4294967295"
+		"Enabled" = "-1"
+		"ForeColor" = "4294967295"
+		"ShowTabs" = "0"
+	}
+	OnInit "Form_Init"
+	Script VBScript
+<%
+Sub Form_Init()
+	Form.oleForm.Control.AeSystem = System
+	Form.oleForm.Control.ContextName = "stdCountryPostCodeSearch"
+	Form.oleForm.Control.AeObject = Form.Object
+
+End Sub
+%>
+}
+
+modify form "SelectPostCode" for "stdBaseAddress" as "SelectPostCodeUK"
+{
+	OnInit "Form_Init"
+	Script VBScript
+<%
+Sub Form_Init()
+
+	Form.Tabs.Visible = True
+	Form.Tabs.Suburb.Visible = False
+
+	DoDefault()
+End Sub
+%>
+}

@@ -1,0 +1,27 @@
+﻿// Active Elk definition file generated from binary format
+// Date:	2004-05-14 14:58:31
+// User:	admin
+
+library "FormIcon"
+{
+uses "Elk9", "stdbaseentities"
+aspect "Elk9.Aspect" "FormIcon"
+
+
+
+}
+layout
+<%
+<?xml version="1.0"?>
+
+<AeDesigner_doc version="3">
+	<workspace CurrentView="0">
+		<View Number="0" Type="Class diagram" Name="FormIcon"/>
+	</workspace>
+	<class_diagram name="FormIcon" width="1000" height="1000">
+		<Viewport magnificationX="100" magnificationY="100" originX="0" originY="0"/>
+	</class_diagram>
+	<lang_used>1033,0,5129,3079,1078,3076,1031,2057,1029,1036,1028,1042,6153,1053,1034,1054,1057,2052,1040,3081,1041
+	</lang_used>
+</AeDesigner_doc>
+%>

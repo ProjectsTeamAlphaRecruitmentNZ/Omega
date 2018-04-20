@@ -1,0 +1,122 @@
+﻿
+
+form "Object" for "SystemObj" 302,183
+{
+	"Title" edit member "Title" 0,0,300(100),14 autohscroll sidetag tagset(1)
+	"Tabs" tabset  0,18,302(100),165(100)
+	{
+		"Descrip" tab
+			ZHT "說明", 
+			ZHS "描述", 
+			DEU "Beschreibung", 
+			ELL "Περιγραφή", 
+			ENU "Description", 
+			FRA "Description", 
+			ITA "Descrizione", 
+			JPN "詳細", 
+			KOR "설명", 
+			PLK "Opis", 
+			THA "คำอธิบาย"
+		
+		{
+			"Descrip" edit member "Descrip" 0,0,279(100),135(100) multiline autovscroll vscroll
+		}
+	}
+}
+
+form "BaseSystemClass" for "SystemObj" 304,215
+{
+}
+
+modify form "Object" for "ClassObj" as "ClassObj"
+{
+	before "Tabs" Height 18
+	{
+		"cboClass" combobox
+			tag 
+				ZHS "类(&C)", 
+				DEU "&Klasse", 
+				ELL "&Κλάση", 
+				ENU "&Class", 
+				FRA "&Classe", 
+				ITA "&Classe", 
+				JPN "クラス(&C)", 
+				KOR "세그먼트 대상(&C)", 
+				PLK "&Klasa", 
+				THA "คลาส (&C)"
+		 0,0,302(100),14 sidetag tagset(1)
+	}
+	OnInit "Form_Init"
+	OnPreSave "Form_PreSave"
+	Script VBScript
+<%
+' Load Class Types into the cq_class combo
+
+Sub LoadClasses
+
+	Dim objClass
+	Dim blnIncludeClass
+	Dim strClass()
+	ReDim strClass(2,1)
+	Dim strComboClass()
+	Dim intClasses
+
+	intClasses = 0
+
+	For Each objClass in System.Classes
+		blnIncludeClass = False
+		On Error Resume Next
+		blnIncludeClass = ValidClass(objClass)
+		On Error Goto 0
+		If blnIncludeClass Then
+			intClasses = intClasses + 1
+			ReDim Preserve strClass(2,intClasses)
+			strClass(1,IntClasses) = objClass.Name
+			strClass(2,Intclasses) = objclass.title
+		End If
+	Next
+
+	' Invert the strClass into StrComboClass... required because VBScript dynamic arrays only allow the 
+	' last dimension to be resized if you want to preserve the data so strClass is wide and shallow...
+	' and what we actually want to skinny and deep!  Also ensures that StrComboClass is zero based
+
+	If (intClasses >= 0) Then
+		ReDim StrComboClass(intClasses-1,1)
+		For intLoop = 1 To IntClasses
+			StrComboClass(intLoop-1,0) = strClass(1,intLoop)
+			StrComboClass(intLoop-1,1) = strClass(2,intLoop)
+		Next
+	Else
+		ReDim StrComboClass(1,1)
+		StrComboClass(0,0) = ""
+		StrComboClass(0,1) = ""
+	End If
+	Form.cboClass.Choices = strComboClass
+
+	' Set the cq_class combo to the value in the object member
+
+	Form.cboClass.value = Form.Object.ClassName.Value
+    Form.cboclass.readonly = true
+End Sub
+
+Function ValidClass(tobjClassDef)
+	ValidClass = True 
+End Function
+
+Sub Form_Init()
+	DoDefault()
+	LoadClasses
+End Sub
+
+Sub Form_PreSave()
+  DoDefault()
+
+	' Update the ClassName Data Member from the unlinked combo box
+
+	if not Form.Object.ClassName.ReadOnly then
+		Form.Object.ClassName = Form.cboClass.Value
+	end if
+
+End Sub
+%>
+}

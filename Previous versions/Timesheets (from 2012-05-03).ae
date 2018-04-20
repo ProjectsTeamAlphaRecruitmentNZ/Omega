@@ -1,0 +1,689 @@
+﻿// Active Elk definition file generated from binary format
+// Date:	2011-04-28 21:22:19
+// User:	Thurstan
+
+library "Timesheets"
+{
+title(Singular) ENU "Omega Timesheets"
+version "1"
+uses "Elk9"
+aspect "Elk9.Aspect" "Timesheets"
+
+class "Timesheet"
+{
+	title(Singular) ENU "Timesheet"
+	properties
+	{
+		"Forms" "'timesheet'"
+		"weblink" "ClientTimesheetConfirm.asp?TSKey=%1"
+			title(Singular) ENU "weblink"
+		"emailtitle" "Timesheet for %1 from Alpha Personnel Recruitment Ltd"
+			title(Singular) ENU "emailtitle"
+		"MergeData" 0
+			properties
+			{
+				"Columns" 0
+					properties
+					{
+						"Client Comments" 0
+							title(Singular) ENU "ClientComments"
+						"Monday Start Time" 0
+							title(Singular) ENU "MondayStartTime"
+						"Monday Finish Time" 0
+							title(Singular) ENU "MondayFinishTime"
+						"Monday Total" 0
+							title(Singular) ENU "MondayTotal"
+						"Tuesday Start Time" 0
+							title(Singular) ENU "TuesdayStartTime"
+						"Tuesday Finish Time" 0
+							title(Singular) ENU "TuesdayFinishTime"
+						"Tuesday Total" 0
+							title(Singular) ENU "TuesdayTotal"
+						"Wednesday Start Time" 0
+							title(Singular) ENU "WednesdayStartTime"
+						"Wednesday Finish Time" 0
+							title(Singular) ENU "WednesdayFinishTime"
+						"Wednesday Total" 0
+							title(Singular) ENU "WednesdayTotal"
+						"Thursday Start Time" 0
+							title(Singular) ENU "ThursdayStartTime"
+						"Thursday Finish Time" 0
+							title(Singular) ENU "ThursdayFinishTime"
+						"Thursday Total" 0
+							title(Singular) ENU "ThursdayTotal"
+						"Friday Start Time" 0
+							title(Singular) ENU "FridayStartTime"
+						"Friday Finish Time" 0
+							title(Singular) ENU "FridayFinishTime"
+						"Friday Total" 0
+							title(Singular) ENU "FridayTotal"
+						"Saturday Start Time" 0
+							title(Singular) ENU "SaturdayStartTime"
+						"Saturday Finish Time" 0
+							title(Singular) ENU "SaturdayFinishTime"
+						"Saturday Total" 0
+							title(Singular) ENU "SaturdayTotal"
+						"Sunday Start Time" 0
+							title(Singular) ENU "SundayStartTime"
+						"Sunday Finish Time" 0
+							title(Singular) ENU "SundayFinishTime"
+						"Sunday Total" 0
+							title(Singular) ENU "SundayTotal"
+						"Week Total" 0
+							title(Singular) ENU "WeekTotal"
+						"Monday Break Start" 0
+							title(Singular) ENU "MondayBreakStart"
+						"Monday Break Finish" 0
+							title(Singular) ENU "MondayBreakFinish"
+						"Tuesday Break Start" 0
+							title(Singular) ENU "TuesdayBreakStart"
+						"Tuesday Break Finish" 0
+							title(Singular) ENU "TuesdayBreakFinish"
+						"Wednesday Break Start" 0
+							title(Singular) ENU "WednesdayBreakStart"
+						"Wednesday Break Finish" 0
+							title(Singular) ENU "WednesdayBreakFinish"
+						"Thursday Break Start" 0
+							title(Singular) ENU "ThursdayBreakStart"
+						"Thursday Break Finish" 0
+							title(Singular) ENU "ThursdayBreakFinish"
+						"Friday Break Start" 0
+							title(Singular) ENU "FridayBreakStart"
+						"Friday Break Finish" 0
+							title(Singular) ENU "FridayBreakFinish"
+						"Saturday Break Start" 0
+							title(Singular) ENU "SaturdayBreakStart"
+						"Saturday Break Finish" 0
+							title(Singular) ENU "SaturdayBreakFinish"
+						"Sunday Break Start" 0
+							title(Singular) ENU "SundayBreakStart"
+						"Sunday Break Finish" 0
+							title(Singular) ENU "SundayBreakFinish"
+						"Monday Date" 0
+							title(Singular) ENU "MondayDate"
+						"Tuesday Date" 0
+							title(Singular) ENU "TuesdayDate"
+						"Wednesday Date" 0
+							title(Singular) ENU "WednesdayDate"
+						"Thursday Date" 0
+							title(Singular) ENU "ThursdayDate"
+						"Friday Date" 0
+							title(Singular) ENU "FridayDate"
+						"Saturday Date" 0
+							title(Singular) ENU "SaturdayDate"
+						"Sunday Date" 0
+							title(Singular) ENU "SundayDate"
+						"Stage" 0
+							title(Singular) ENU "Stage.Display"
+						"Temp Comments" 0
+							title(Singular) ENU "TempComments"
+						"Monday Leave" 0
+							title(Singular) ENU "MondayLeave.Display"
+						"Tuesday Leave" 0
+							title(Singular) ENU "TuesdayLeave.Display"
+						"Wednesday Leave" 0
+							title(Singular) ENU "WednesdayLeave.Display"
+						"Friday Leave" 0
+							title(Singular) ENU "FridayLeave.Display"
+						"Thursday Leave" 0
+							title(Singular) ENU "ThursdayLeave.Display"
+						"Saturday Leave" 0
+							title(Singular) ENU "SaturdayLeave.Display"
+						"Sunday Leave" 0
+							title(Singular) ENU "SundayLeave.Display"
+						"Week Ending" 0
+							title(Singular) ENU "WeekEndingDate"
+					}
+			}
+	}
+	cancreatenew "IIF(WeekDay(Date())=1, FALSE, TRUE)"
+	members
+	{
+		"MondayStartTime" data Time
+		{
+			title(Singular) ENU "Monday Start Time"
+		}
+		"MondayFinishTime" data Time
+		{
+			title(Singular) ENU "Monday Finish Time"
+		}
+		"MondayTotal" data Numeric(10,2)
+		{
+			title(Singular) ENU "Monday Total"
+		}
+		"TuesdayStartTime" data Time
+		{
+			title(Singular) ENU "Tuesday Start Time"
+		}
+		"TuesdayFinishTime" data Time
+		{
+			title(Singular) ENU "Tuesday Finish Time"
+		}
+		"TuesdayTotal" data Numeric(10,2)
+		{
+			title(Singular) ENU "Tuesday Total"
+		}
+		"WednesdayStartTime" data Time
+		{
+			title(Singular) ENU "Wednesday Start Time"
+		}
+		"WednesdayFinishTime" data Time
+		{
+			title(Singular) ENU "Wednesday Finish Time"
+		}
+		"WednesdayTotal" data Numeric(10,2)
+		{
+			title(Singular) ENU "Wednesday Total"
+		}
+		"ThursdayStartTime" data Time
+		{
+			title(Singular) ENU "Thursday Start Time"
+		}
+		"ThursdayFinishTime" data Time
+		{
+			title(Singular) ENU "Thursday Finish Time"
+		}
+		"ThursdayTotal" data Numeric(10,2)
+		{
+			title(Singular) ENU "Thursday Total"
+		}
+		"FridayStartTime" data Time
+		{
+			title(Singular) ENU "Friday Start Time"
+		}
+		"FridayFinishTime" data Time
+		{
+			title(Singular) ENU "Friday Finish Time"
+		}
+		"FridayTotal" data Numeric(10,2)
+		{
+			title(Singular) ENU "Friday Total"
+		}
+		"SaturdayStartTime" data Time
+		{
+			title(Singular) ENU "Saturday Start Time"
+		}
+		"SaturdayFinishTime" data Time
+		{
+			title(Singular) ENU "Saturday Finish Time"
+		}
+		"SaturdayTotal" data Numeric(10,2)
+		{
+			title(Singular) ENU "Saturday Total"
+		}
+		"SundayStartTime" data Time
+		{
+			title(Singular) ENU "Sunday Start Time"
+		}
+		"SundayFinishTime" data Time
+		{
+			title(Singular) ENU "Sunday Finish Time"
+		}
+		"SundayTotal" data Numeric(10,2)
+		{
+			title(Singular) ENU "Sunday Total"
+		}
+		"WeekTotal" data Numeric(10,2)
+		{
+			title(Singular) ENU "Week Total"
+		}
+		"MondayBreakStart" data Time
+		{
+			title(Singular) ENU "Monday Break Start"
+		}
+		"MondayBreakFinish" data Time
+		{
+			title(Singular) ENU "Monday Break Finish"
+		}
+		"TuesdayBreakStart" data Time
+		{
+			title(Singular) ENU "Tuesday Break Start"
+		}
+		"TuesdayBreakFinish" data Time
+		{
+			title(Singular) ENU "Tuesday Break Finish"
+		}
+		"WednesdayBreakStart" data Time
+		{
+			title(Singular) ENU "Wednesday Break Start"
+		}
+		"WednesdayBreakFinish" data Time
+		{
+			title(Singular) ENU "Wednesday Break Finish"
+		}
+		"ThursdayBreakStart" data Time
+		{
+			title(Singular) ENU "Thursday Break Start"
+		}
+		"ThursdayBreakFinish" data Time
+		{
+			title(Singular) ENU "Thursday Break Finish"
+		}
+		"FridayBreakStart" data Time
+		{
+			title(Singular) ENU "Friday Break Start"
+		}
+		"FridayBreakFinish" data Time
+		{
+			title(Singular) ENU "Friday Break Finish"
+		}
+		"SaturdayBreakStart" data Time
+		{
+			title(Singular) ENU "Saturday Break Start"
+		}
+		"SaturdayBreakFinish" data Time
+		{
+			title(Singular) ENU "Saturday Break Finish"
+		}
+		"SundayBreakStart" data Time
+		{
+			title(Singular) ENU "Sunday Break Start"
+		}
+		"SundayBreakFinish" data Time
+		{
+			title(Singular) ENU "Sunday Break Finish"
+		}
+		"MondayDate" data Date
+		{
+			title(Singular) ENU "Monday Date"
+			readonly
+			default "DateAdd('d', 2-WeekDay(Date()), Date())"
+			validate
+			{
+				"{8706D73B-A9FD-4739-8F91-892EB126BDC2}" validError "not IsNull(MondayDate)" 
+				ENU "A Date must be entered for Monday"
+			}
+		}
+		"TuesdayDate" data Date
+		{
+			title(Singular) ENU "Tuesday Date"
+			readonly
+			default "DateAdd('d', 3-WeekDay(Date()), Date())"
+			validate
+			{
+				"{A1B3ABB9-D852-40EA-A892-AC2E0697BD95}" validError "not IsNull(TuesdayDate)" 
+				ENU "A Date must be entered for Tuesday"
+			}
+		}
+		"WednesdayDate" data Date
+		{
+			title(Singular) ENU "Wednesday Date"
+			readonly
+			default "DateAdd('d', 4-WeekDay(Date()), Date())"
+			validate
+			{
+				"{B0846565-A73C-4461-ADD2-C93E36BBB324}" validError "not IsNull(WednesdayDate)" 
+				ENU "A Date must be entered for Wednesday"
+			}
+		}
+		"ThursdayDate" data Date
+		{
+			title(Singular) ENU "Thursday Date"
+			readonly
+			default "DateAdd('d', 5-WeekDay(Date()), Date())"
+			validate
+			{
+				"{6221DCEE-E7CF-4ADB-8081-F057D828E970}" validError "not IsNull(ThursdayDate)" 
+				ENU "A Date must be entered for Thursday"
+			}
+		}
+		"FridayDate" data Date
+		{
+			title(Singular) ENU "Friday Date"
+			readonly
+			default "DateAdd('d', 6-WeekDay(Date()), Date())"
+			validate
+			{
+				"{CC4C0676-D8FD-46A1-8DDD-39A6318724AF}" validError "not IsNull(FridayDate)" 
+				ENU "A Date must be entered for Friday"
+			}
+		}
+		"SaturdayDate" data Date
+		{
+			title(Singular) ENU "Saturday Date"
+			readonly
+			default "DateAdd('d', 7-WeekDay(Date()), Date())"
+			validate
+			{
+				"{7827FFAA-09C0-445F-A03C-63D2D15E4838}" validError "not IsNull(SaturdayDate)" 
+				ENU "A Date must be entered for Saturday"
+			}
+		}
+		"SundayDate" data Date
+		{
+			title(Singular) ENU "Sunday Date"
+			readonly
+			default "DateAdd('d', 8-WeekDay(Date()), Date())"
+			validate
+			{
+				"{5C930152-BD41-41CE-979A-B1E8794E23E9}" validError "not IsNull(SundayDate)" 
+				ENU "A Date must be entered for Sunday"
+			}
+		}
+		"Stage" enum "Timesheet_Stage" forced
+		{
+			title(Singular) ENU "Stage"
+			default "\"Ready\""
+		}
+		"TempComments" data LongVarChar
+		{
+			title(Singular) ENU "Temp Comments"
+			default "\"\""
+		}
+		"ClientComments" data LongVarChar
+		{
+			title(Singular) ENU "Client Comments"
+			default "\"\""
+		}
+		"MondayLeave" enum "Timesheet_Leave" forced
+		{
+			title(Singular) ENU "Monday Leave"
+		}
+		"TuesdayLeave" enum "Timesheet_Leave" forced
+		{
+			title(Singular) ENU "Tuesday Leave"
+		}
+		"WednesdayLeave" enum "Timesheet_Leave" forced
+		{
+			title(Singular) ENU "Wednesday Leave"
+		}
+		"FridayLeave" enum "Timesheet_Leave" forced
+		{
+			title(Singular) ENU "Friday Leave"
+		}
+		"ThursdayLeave" enum "Timesheet_Leave" forced
+		{
+			title(Singular) ENU "Thursday Leave"
+		}
+		"SaturdayLeave" enum "Timesheet_Leave" forced
+		{
+			title(Singular) ENU "Saturday Leave"
+		}
+		"SundayLeave" enum "Timesheet_Leave" forced
+		{
+			title(Singular) ENU "Sunday Leave"
+		}
+		"WeekEndingDate" data Date
+		{
+			title(Singular) ENU "Week Ending"
+			readonly
+			default "DateAdd('d', 8-WeekDay(Date()), Date())"
+		}
+	}
+	sort [ENU] "SundayDate" desc
+	prompt ""
+		ENU "Candidate.Name.Prompt & ' at ' & Job.Department.Prompt & ' - W.E ' & WeekEndingDate"
+	icon ""
+		ENU "'clock'"
+}
+
+enum "Timesheet_Stage" VarChar(20)
+{
+	title(Singular) ENU "Timesheet_Stage"
+	values
+	{
+		value "Ready"
+		{
+			ENU "Ready"
+		}
+		value "In Progress"
+		{
+			ENU "In Progress"
+		}
+		value "Client Query"
+		{
+			ENZ "Queried by Client"
+		}
+		value "Temp Submitted"
+		{
+			ENU "Submitted by Temp"
+		}
+		value "Client Approved"
+		{
+			ENZ "Approved by Client"
+		}
+	}
+}
+
+enum "Timesheet_Leave" VarChar(20)
+{
+	title(Singular) ENU "Timesheet_Leave"
+	values
+	{
+		value "Annual"
+		{
+			ENU "Annual Leave"
+		}
+		value "Bereavement"
+		{
+			ENU "Bereavement Leave"
+		}
+		value "Sick"
+		{
+			ENU "Sick Leave"
+		}
+		value "Stat"
+		{
+			ENU "Stat Day in Lieu"
+		}
+		value "Public Hol - W"
+		{
+			ENU "Pub Holiday - Worked"
+		}
+		value "Public Hol - NW"
+		{
+			ENZ "Pub Holiday - Not Worked"
+		}
+	}
+}
+
+icon "clock"
+{
+	large16
+$
+	4752454154454C4B000A0010410410010682004010B83801010E88C4A26007FC
+	5A2B168CC65E03F8B2001F1701BFDF90491C10FEF893BC2083F958003EE08203
+	E620099CCA69360001E693B824F6753C9E4B81F4394CD68C0F924BE943F7F49D
+	FF257FB00031678482351A81C160F0986000111202452C7117B59800E8B4801B
+	B6C00316DE0056DC8009EBA8012D78002D2F60068DF8007F3C1D4006B2D94C00
+	61250FB10451B800BE4219800B8411A800B2451E000B04F26000D2683380115A
+	4002FF4E004CA592A003C9709C003D1004A003E91459B5268EB6A501E800EA3E
+	12000C83C15000A44821800D5CC0025D1081002109B963E984B20040990BB0F3
+	3184008228EF90441E1203CE00502350600439305F0F2E13C00892E93400942C
+	90000A834128002C06D678B21C452000AB1B5F322057114001DC3A074001504C
+	120002E8AB295D2184560009817042000CA25C7C000E5328BA000F53C4ED000F
+	83DCF5000E9358C9000D028489000A3181FB1EC3C0780036CD43457419449600
+	5C1440027C5B0EC00350AE260003D0EE3A400950E1000F0394DC964EC394003C
+	4EE3A225344C4000B51E85C7D0526EC801A06478055728770ED0616C5A168002
+	9E7B000F99FA162708D000E0310B48A4E1350003F8DD33229338BB000BE20C65
+	0006D0F4275D06A81882176492F8891BC003BCE837C003E8DF340003388E1C1A
+	61C8500008D141923A0D331C003A8BF2A4002904507C003609F210003F0E1349
+	801F624360C22E00031C8117A7A129063E4D7998BC1F860002D915C001C0619E
+	4CA28C91000CF2346C000F2328B6000A110417000D526224370BC2A800268618
+	54761364D31096440D027C865F4911CE5931CB2AF0697DC7C1202E884941DC00
+	2EC6B728F5344BEAE0DE360002BC74161D9115C62488D2280030C849C0FC366B
+	72D4620E56834CCA000AE1C2062C05A7C09D2423826854658DE29B272B45440C
+	A4185FB2304A0ADFC276512186061CF0314AF000AA14023000ED302F7344A96B
+	07E1A294248510D2912DB0A258576ECDD2ECA78A4F43C6B82E4A15E86E12EE53
+	3CCF8D4A121DA311A982C49120800384C7A40A517A4D3C8F03A800288560C9F4
+	17EB034CC9998EA372892484C6E0BC25AC32D876870C22471327C52C40B41F46
+	2000E2366892084E6ECE737CDBB3898744DF3326622C557ECE3340C6000C2234
+	78000B31C6DD2F0831A964F43D1F4BD3F53D5F5BD7F63D9F6BDBF73DDF7BDFF8
+	3E14500100BE50090DF680100C040140601C070180802402F64030200A02C0C0
+	340E03C1004409013028FD1EA3EA02A0580B8180320680C81903006C0E01D03C
+	01801BE87A00240F8180400841141C8380841182404B0401300482A450010270
+	500A41182A0560B01682E05E0AC180230420801883204C025E80010660A01083
+	406A0D81B8380720E41C03A0767141181607A040098032C80F81F84004410421
+	0430861102284508C11C1C0480921282584C09A13827C03224140288248AC148
+	1C0450A6152398550AA114220380AC0AC1184C0AE07804AB02240042C0590541
+	681C05B0B91CE3985D0BD1DA2D82E0440841280C00B1A4870450BE0841F86008
+	91CA458610C418C320548BA0E81A82209806C32C3B2241982602305C11822C8B
+	0A8190338680D322C220010D40A8358250D85888906D0520883703893F1CC378
+	700E329239C5D0E41CE1007400B2048707502C0A83B47096A1DC3407896A1902
+	20480F20841487A00D0994A8590681EC21CCA0D219C3E07D96A14C2D87E0FE08
+	8200801033AC294C6105376398830DC2102ACF68B81242C82110007E758858DA
+	21A2E4CA0EE21E8448B0A716C16022068094444EB086224108350E516E4588A1
+	1738645C770902324908D11D3AC000860B223C168018E31CC480911254663C09
+	31122500B09512C4504984A04425C4C09930C1503786867E15029C7708E26C18
+	04B0480FC4E16305F070460720701102D83A06C1E22E05B8F02744AC9213C27E
+	4B91114027A160A11300E04C838144112BD838002274518A4128130448A59AE4
+	4C2D04A0461644486A0E42982285B8B81482B0A70542502008D1514CC8707E15
+	20901186B0BE104248AA0EA1D4248AB12A0D0258400402B056BD297A17C20094
+	042058570200401302584B04366017B567A61F8580970481001189412808EE58
+	2109829C350B17AE0DC5802C12E2C82604C094224448AC06F66DE90B30842D05
+	A8A916C1B506BE2BD2F54808000000000000000000000000
+$
+	small16
+$
+	4752454154454C4B000A0010408410010682004010B83800810E88C4A26007FC
+	5A2AFF823E07F047007E3A078230242006000E4527002025326944BA4B297049
+	1E00F8D47E310481C160F0986000111286C52870776D1800CFA48017B4C00346
+	9E0078D4800A950A7400782B118006F260F00069230D8006A2E95EA8A9548014
+	88D408010857ADA18BC510025CCE5500260D3794321107485F2DAD6712D001CA
+	D061001E8EE74001CED664801668235800E64418001359CBD1B4B60077391B80
+	07BB81A6007F375980077B1963875F5A9E0E970801788D3B4A8C1676CEF800CB
+	5324800BF3A14800F366AE400FA6FB3C009933F1CFA4E1C801409C4D001D2DB6
+	A801BEC2D83C188AF0030CF58678B9DBBC44B5B91E7836801025F2A001B4BD56
+	801C6AF4A800D726C7D520AD7688B1A058000C626C86000EC2F4A6000D024070
+	000CA2808B0007F1898625062135A534CC08548518C003C0EC395541C456000A
+	D2387F000AC1D85C000ED388D9000E4334BE000871503E000DD34DCF25C60120
+	00358B6290002D07A178002205D87CB82387A000BE2407B86466185D719C4F51
+	26198A639926599A679A2699AA6B9B26D9BA6F9C2719CA739D2759DA779E2799
+	EA7B9F2740040200C04015430140601C08020090280B4500C0340E03C100380D
+	02411A0D0E0480E04C14054150581703818065110681006C1C0741E07C200842
+	2020234380E092A80742509827080280A42A41C2B0382CAA02D0B81D0742F0C0
+	0E0C50E0C833AA0340D6C40BC360C837AC4380BC1D0E43AB403B0F01A438130F
+	6A70F83F0741C100410C84243ABE10C44080450BC150EC0E11847444210C8480
+	E0331244A12C0E131131340E0C8320384E0341750C1B0841013C4D06E6B40400
+	0000000000000000
+$
+}
+
+
+sysclass "Timesheet" from "Timesheet"
+{
+}
+
+
+}
+layout
+<%
+<?xml version="1.0"?>
+
+<AeDesigner_doc version="3">
+	<workspace CurrentView="0">
+		<View Number="0" Type="Class diagram" Name="Timesheets"/>
+	</workspace>
+	<class_diagram name="Timesheets" width="1500" height="1500">
+		<Viewport magnificationX="100" magnificationY="100" originX="201" originY="237"/>
+		<class name="Timesheet" left="413" top="16" right="547" bottom="844">
+			<member name="MondayStartTime" type="data"/>
+			<member name="MondayFinishTime" type="data"/>
+			<member name="MondayTotal" type="data"/>
+			<member name="TuesdayStartTime" type="data"/>
+			<member name="TuesdayFinishTime" type="data"/>
+			<member name="TuesdayTotal" type="data"/>
+			<member name="WednesdayStartTime" type="data"/>
+			<member name="WednesdayFinishTime" type="data"/>
+			<member name="WednesdayTotal" type="data"/>
+			<member name="ThursdayStartTime" type="data"/>
+			<member name="ThursdayFinishTime" type="data"/>
+			<member name="ThursdayTotal" type="data"/>
+			<member name="FridayStartTime" type="data"/>
+			<member name="FridayFinishTime" type="data"/>
+			<member name="FridayTotal" type="data"/>
+			<member name="SaturdayStartTime" type="data"/>
+			<member name="SaturdayFinishTime" type="data"/>
+			<member name="SaturdayTotal" type="data"/>
+			<member name="SundayStartTime" type="data"/>
+			<member name="SundayFinishTime" type="data"/>
+			<member name="SundayTotal" type="data"/>
+			<member name="WeekTotal" type="data"/>
+			<member name="MondayBreakStart" type="data"/>
+			<member name="MondayBreakFinish" type="data"/>
+			<member name="TuesdayBreakStart" type="data"/>
+			<member name="TuesdayBreakFinish" type="data"/>
+			<member name="WednesdayBreakStart" type="data"/>
+			<member name="WednesdayBreakFinish" type="data"/>
+			<member name="ThursdayBreakStart" type="data"/>
+			<member name="ThursdayBreakFinish" type="data"/>
+			<member name="FridayBreakStart" type="data"/>
+			<member name="FridayBreakFinish" type="data"/>
+			<member name="SaturdayBreakStart" type="data"/>
+			<member name="SaturdayBreakFinish" type="data"/>
+			<member name="SundayBreakStart" type="data"/>
+			<member name="SundayBreakFinish" type="data"/>
+			<member name="MondayDate" type="data"/>
+			<member name="TuesdayDate" type="data"/>
+			<member name="WednesdayDate" type="data"/>
+			<member name="ThursdayDate" type="data"/>
+			<member name="FridayDate" type="data"/>
+			<member name="SaturdayDate" type="data"/>
+			<member name="SundayDate" type="data"/>
+			<member name="Stage" type="enum"/>
+			<member name="TempComments" type="data"/>
+			<member name="ClientComments" type="data"/>
+			<member name="MondayLeave" type="enum"/>
+			<member name="TuesdayLeave" type="enum"/>
+			<member name="WednesdayLeave" type="enum"/>
+			<member name="FridayLeave" type="enum"/>
+			<member name="ThursdayLeave" type="enum"/>
+			<member name="SaturdayLeave" type="enum"/>
+			<member name="SundayLeave" type="enum"/>
+			<member name="WeekEndingDate" type="data"/>
+			<hide show_base_members="1"/>
+		</class>
+		<note text="This Library needs the Following Modifications: A username/password on class Candidate, with changes to Candidate form to include list of timesheets.  Changes to class &quot;Job&quot; giving validation warnings on the &quot;Reports To&quot; member for blank and no email address.  Also the class &quot;TempAssignment&quot; needs additional code to create a timesheet when a new Assignment is created. Also Links to Candidate, Job, JobAssignment and Contact.  On Contact needs to be a date field &quot;LastTimesheetCreatedDate&quot;.  Also on Contact and TempJob a grid listing the Timesheets." left="0" top="162" right="381" bottom="380"/>
+		<note text="Additionally, there needs to be a few fields added to stdConfiguration to hold the HTML email that is sent to the reports to person on the job." left="1" top="386" right="409" bottom="620"/>
+		<hide name="TempAssignment" pos_x="900" pos_y="116" show_base_members="1">
+			<link_in_list name="Candidate" forced="0"/>
+			<link_in_list name="Job" forced="0"/>
+			<link_in_list name="Invoice" forced="0"/>
+		</hide>
+		<hide name="Contact" pos_x="654" pos_y="867" show_base_members="1">
+			<link_in_list name="DDI" forced="0"/>
+			<link_in_list name="Fax" forced="0"/>
+			<link_in_list name="Person" forced="0"/>
+			<link_in_list name="eMailAddress" forced="0"/>
+			<link_in_list name="MobileNumber" forced="0"/>
+			<link_in_list name="Supervisor" forced="0"/>
+			<link_in_list name="stdRecordStamp" forced="0"/>
+			<link_in_list name="Organisation" forced="0"/>
+			<link_in_list name="PrimeDepartment" forced="0"/>
+			<link_in_list name="NextCallBy" forced="0"/>
+		</hide>
+		<hide name="Job" pos_x="654" pos_y="471" show_base_members="1">
+			<link_in_list name="stdRecordStamp" forced="0"/>
+			<link_in_list name="Department" forced="0"/>
+			<link_in_list name="Consultant" forced="0"/>
+			<link_in_list name="PrefSupplierTitle" forced="0"/>
+			<link_in_list name="PrimeAssignment" forced="1"/>
+		</hide>
+		<hide name="JobAssignment" pos_x="657" pos_y="126" show_base_members="1">
+			<link_in_list name="ContactablePhone" forced="0"/>
+			<link_in_list name="Invoice" forced="0"/>
+			<link_in_list name="stdRecordStamp" forced="0"/>
+			<link_in_list name="Candidate" forced="0"/>
+			<link_in_list name="Job" forced="0"/>
+		</hide>
+		<hide name="Candidate" pos_x="90" pos_y="375" show_base_members="1">
+			<link_in_list name="WorkPhone" forced="0"/>
+			<link_in_list name="DOB" forced="0"/>
+			<link_in_list name="Interviewer" forced="0"/>
+			<link_in_list name="AlternateContact" forced="0"/>
+			<link_in_list name="NextCallBy" forced="0"/>
+			<link_in_list name="EmploymentDetail" forced="0"/>
+			<link_in_list name="Phone" forced="0"/>
+			<link_in_list name="Address" forced="0"/>
+			<link_in_list name="stdRecordStamp" forced="0"/>
+			<link_in_list name="WorkeMailAddress" forced="0"/>
+			<link_in_list name="Name" forced="0"/>
+			<link_in_list name="eMailAddress" forced="0"/>
+			<link_in_list name="Fax" forced="0"/>
+			<link_in_list name="Mobile" forced="0"/>
+		</hide>
+	</class_diagram>
+	<lang_used>1033,5129,10,6,615,105,1,1041,3081,1040,2052,1057,1054,1034,1053,6153,1042,1028,1036,1029,2057,1031,3076,1078,3079,61,0
+	</lang_used>
+</AeDesigner_doc>
+%>

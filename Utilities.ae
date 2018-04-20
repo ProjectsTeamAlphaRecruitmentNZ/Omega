@@ -1,0 +1,1317 @@
+﻿// Active Elk definition file generated from binary format
+// Date:	2004-06-24 16:13:19
+// User:	NCG
+
+library "Utilities"
+{
+aspect "Elk9.Aspect" "Utilities"
+script VBScript
+<%
+' This file is divided into the following sections:
+' ** Constants **
+' ** Text related functions **
+' ** Scripting related functions **
+' ** ClassInst related functions **
+' ** Form related functions **  
+'		- Form Control
+'       - Grid Control
+'       - Tabset Controls
+'		- Chooser Control	
+' ** Filter Related Functions **
+' ** Folder Related Functions **
+' ** User Related Functions **
+' ** Configuration Related Functions **
+' ** Unique ID Numbers **
+' ** File Related Functions **
+
+' ** Constants **
+
+' member types
+Const aeDataMember = 0
+Const aeEnumMember = 1
+Const aeClassMember = 2
+Const aeJoinMember = 3
+
+' data member types
+Const aeUnknown = 0
+Const aeChar = 1
+Const aeVarChar = 2
+Const aeLongVarChar = 3
+Const aeWChar = 4
+Const aeWVarChar = 5
+Const aeWLongVarChar = 6
+Const aeBinary = 7
+Const aeVarBinary = 8
+Const aeLongVarBinary = 9
+Const aeDate = 10
+Const aeTime = 11
+Const aeTimeStamp = 12
+Const aeBit = 13
+Const aeTinyInt = 14
+Const aeSmallInt = 15
+Const aeInteger = 16
+Const aeBigInt = 17
+Const aeReal = 18
+Const aeDouble = 19
+Const aeNumeric = 20
+Const aeGuid = 23
+
+' delete status values
+Const aestatusNormal = 0
+Const aestatusDeleting = 1
+Const aestatusDeleted = 2
+
+' ** Text related functions **
+
+' checks the first argument. If it is null, returns the second argument, otherwise returns
+' the first
+Function UT_NVL(Thing, Default)
+	If Not IsNull(Thing) Then
+		UT_NVL = Thing
+	Else
+		UT_NVL = Default
+	End If
+End Function
+
+' shortens the first argument, if necessary, by adding "..."
+' eg. ShortenCenter("Blah blah blah blah blah") => "Blah ... blah"
+
+Const UT_ShortenString = "..."
+
+' shortens the string by adding "..." at the start
+Function UT_ShortenStart(InString, Length)
+	UT_ShortenStart = InString
+	If Len(UT_ShortenStart) > Length Then
+		UT_ShortenStart = UT_ShortenString & " " & _
+			Right(UT_ShortenStart, Length - (Len(UT_ShortenString) + 1))
+	End If
+End Function
+
+' shortens the string by adding "..." at the end
+Function UT_ShortenEnd(InString, Length)
+	UT_ShortenEnd = InString
+	If Len(UT_ShortenEnd) > Length Then
+		UT_ShortenEnd = Left(UT_ShortenEnd, Length - (Len(UT_ShortenString) + 1)) & _
+			" " & UT_ShortenString
+	End If
+End Function
+
+' shortens the string by adding "..." in the middle
+Function UT_ShortenCenter(InString, Length)
+	UT_ShortenCenter = InString
+	If Len(UT_ShortenCenter) > Length Then
+		UT_ShortenCenter = Left(InString, (Length / 2) - (Len(UT_ShortenString) + 1)) & _
+			" " & UT_ShortenString & " " & _
+			Right(InString, (Length / 2) - 1)
+	End If
+End Function
+
+Const UT_Start = 1
+Const UT_Center = 2
+Const UT_End = 3
+Function UT_Shorten(InString, Length, Where)
+	UT_Shorten = InString
+	
+	If Len(UT_Shorten) > Length Then
+		Select Case Where
+			Case UT_Start
+				UT_Shorten = UT_ShortenStart(InString, Length)
+			Case UT_Center
+				UT_Shorten = UT_ShortenCenter(InString, Length)
+			Case UT_End
+				UT_Shorten = UT_ShortenEnd(InString, Length)
+		End Select
+	End If
+End Function
+
+' ** Scripting related functions **
+
+' some functions to help with creating progress bars
+
+' pass in a count and a message to display in the title bar
+' this will return a progress bar object
+Public Function UT_InitProgress(nCount, sMessage)
+	Dim oProgress
+	Set oProgress = New UT_Progress
+	oProgress.InitProgress nCount, sMessage
+	
+	Set UT_InitProgress = oProgress
+End Function
+
+Class UT_Progress
+	Private objProgress
+	Private nProgress
+	
+	Sub Class_Initialize
+		Set objProgress = CreateObject("ActivElk.ProgressDlg")
+	End Sub
+	
+	Sub Class_Terminate
+		TermProgress
+	End Sub
+	
+	Public Sub InitProgress(nCount, sMessage)
+	    If objProgress Is Nothing Then
+	        Set objProgress = CreateObject("ActivElk.ProgressDlg")
+	    End If
+	    
+	    objProgress.Visible = True
+	    objProgress.Initialize nCount, sMessage
+	    
+	    nProgress = 0
+	End Sub
+	
+	Public Sub TermProgress()
+	    If Not objProgress Is Nothing Then
+	        objProgress.Visible = False
+	        Set objProgress = Nothing
+	    End If
+	End Sub
+	
+	Public Function ProgressCancelled()
+	    ProgressCancelled = False
+	    
+	    If Not objProgress Is Nothing Then
+	        ProgressCancelled = objProgress.Cancelled
+	    End If
+	End Function
+	
+	Public Sub UpdateProgress(iCount, sMessage)
+	    If Not objProgress Is Nothing Then
+	        nProgress = nProgress + iCount
+	        objProgress.Update sMessage, nProgress
+	    End If
+	End Sub
+End Class
+
+' open a message box. care should be taken in case a user is not present
+Function UT_MsgBox(sPrompt, Buttons, sTitle)
+	If False Then
+		Dim oMsg
+		Set oMsg = System.Classes.UT_MsgBox.CreateGhostInstance()
+		
+		oMsg.Caption = sPrompt
+		
+		Dim oDlg
+		Set oDlg = CreateObject("Elk9.Dialog")
+		oDlg.AeSystem = System
+		oDlg.AeObject = oMsg
+		oDlg.Buttons = Buttons
+		oDlg.Title = sTitle
+		
+		UT_MsgBox = oDlg.DoModal
+	Else
+		Dim WshShell
+		Set WshShell = CreateObject("WScript.Shell")
+		
+		UT_MsgBox = WshShell.Popup(sPrompt, , sTitle, Buttons)
+	End If
+End Function
+
+' returns true if the system is running under webworks
+Function UT_SystemIsWebWorks()
+	If System.Aspect("Elk9.Aspect").Properties("WebWorks") = "True" Then
+		UT_SystemIsWebWorks = True
+	Else
+		UT_SystemIsWebWorks = False
+	End If
+End Function
+
+' A wrapper around CreateObject() with error checking
+Function UT_CreateObject(ClassID)
+	Set UT_CreateObject = Nothing
+	
+	On Error Resume Next
+	Set UT_CreateObject = CreateObject(ClassID)
+	On Error GoTo 0
+End Function
+
+' Run a script (wizard) with the given ID against the given object
+' Allows the width and height of the Wizard to be set.
+' Gets rid of MsgBox calls for errors from earlier version, but if 
+' oClassInst isn't an IAeClassInst then no notice of the error will
+' be made.
+' If it is an IAeClassInst then the error message will be passed to
+' the Properties of this class.
+Function UT_DoScriptWithObjectEx(tStrScriptID, tStrProcedure, oClassInst, iWidth, iHeight)
+	Dim objWizard
+	Dim objScriptAspect
+	Dim strScript
+	Dim bReturn
+
+	Set objWizard = CreateObject("Elk9.Wizard")
+	objWizard.AeSystem = System
+	objWizard.AeObject = oClassInst
+
+	bReturn = True
+	Set objScriptAspect = System.Aspect("Ve9.ScriptAspect")
+
+	Dim strError: strError = ""
+	If Not IsNullObject(objScriptAspect) Then
+		On Error Resume Next
+		strScript = ""
+		strScript = objScriptAspect.GetScript(tstrScriptID).xml.xml
+		On Error Goto 0
+		If Len(RTrim(strScript))=0 Then
+			strError = RTrim(tstrProcedure) & " : Unable to load Script " & tstrScriptID & " from Ve9.ScriptAspect"
+			bReturn = False
+		Else
+			objWizard.script = strScript
+			If iWidth > 0 Then
+				objWizard.width = iWidth
+			End If
+			If iHeight > 0 Then
+				objWizard.height = iHeight
+			End If
+			bReturn = objWizard.DoModal
+		End If
+	Else
+		strError = "[stdComponents:2] " & RTrim(tstrProcedure) & " : Unable to load aspect Ve9.ScriptAspect from System"
+		bReturn = False
+	End If
+    
+    If strError <> "" And TypeName(oClassInst) = "IAEClassInst" Then
+    	oClassInst.Properties("DoScriptError") = strError
+    End If
+    
+	' Pass Script Return value back to caller
+	UT_DoScriptWithObjectEx = bReturn
+End Function
+          
+          
+'  run a script (wizard) with the given ID against the given object
+Function UT_DoScriptWithObject(tStrScriptID, tStrProcedure, oClassInst)
+	UT_DoScriptWithObject = UT_DoScriptWithObjectEx(tStrScriptID, tStrProcedure, oClassInst, 0, 0)
+End Function
+
+' run a script
+Function UT_DoScript(tStrScriptID, tStrProcedure)
+	UT_DoScript = UT_DoScriptWithObject(tStrScriptID, tStrProcedure, Nothing)
+End Function
+
+' ** ClassInst related functions **
+
+' open an expression editor dialog
+
+Sub UT_EditExpression(objClass, Member)
+	UT_EditExpressionEx objClass, objClass.CreateGhostInstance, Member
+End Sub
+
+' open an expression editor dialog against the given class, instance and member
+
+Sub UT_EditExpressionEx(objClass, Instance, Member)
+	Dim Expr
+	Set Expr = CreateObject("AeExpr.AeExprEditorDialog")
+		
+	Expr.Class = objClass
+	Expr.AeObject = Instance
+	Expr.Expression = Member
+		
+	If Expr.DoModal() = 1 Then
+		Member.Value = Expr.Expression
+	End If
+		
+	Set Expr = Nothing
+End Sub
+
+' Evaluate an expression against an instance. If you pass in a 
+' variable sErrors, it will get the value of any errors, otherwise 
+' an exception will be thrown via HandleError
+Function UT_Evaluate(Instance, Expression, sErrors)
+	Dim objExpr
+	Set objExpr = CreateObject("ActivElk.Filter")
+	
+	Dim Errors
+	If objExpr.Parse(Expression, Instance.Class, Errors) Then
+		UT_Evaluate = objExpr.Evaluate(Instance)
+	ElseIf Not IsNull(sErrors) Then
+		' still try to evaluate
+		On Error Resume Next
+		UT_Evaluate = objExpr.Evaluate(Instance)
+		On Error GoTo 0
+		sErrors = Errors
+	Else
+		System.HandleError Err, Errors, "UT_Evaluate"
+	End If
+End Function
+
+' Returns a class instance, given a key
+Function UT_GetObject(strKey,strClass)
+    Set UT_GetObject = System.Classes(strClass).GetInstance(strKey)
+End Function
+
+' returns true if this member can be modified
+Function UT_CanModifyMember(oMember)	
+	Dim oAspect
+	Set oAspect = System.Aspect("Elk9.Aspect")
+	
+	UT_CanUIModifyClassInst = oAspect.CanModifyInstance(oMember)
+End Function
+
+' returns true if this instance can be modified
+Function UT_CanModifyInstance(oClassInst)	
+	Dim oAspect
+	Set oAspect = System.Aspect("Elk9.Aspect")
+	
+	UT_CanUIModifyClassInst = oAspect.CanModifyInstance(oClassInst)
+End Function
+
+' copy the value of one member to another
+' they obviously need to be the same type
+Sub UT_CopyMemberValue(oFromMember, oToMember)
+	Select Case oFromMember.Definition.MemberType
+		Case aeJoinmember
+			oToMember.Value = oFromMember.Value
+		Case aeClassMember
+		    oToMember.Copy oFromMember.Value
+		Case aeEnumMember
+			oToMember.Value = oFromMember.Value		
+		Case aeDataMember
+			oToMember.Value = oFromMember.Value
+	End Select
+End Sub
+
+' clear the value of a member (acts a bit like Clear() does on a class member but wont 
+' crash elk) on embedded class members and works with data members and join members
+Sub UT_Clear(Member)
+	stop
+	Select Case Member.Definition.MemberType
+		Case aeJoinmember
+			Member.Value = Nothing
+		Case aeClassMember
+		    ' Can't use Clear here as using it on an embedded member will crash elk
+		    ' on certain versions
+		Case aeEnumMember
+		    Member.Value = Null
+		Case aeDataMember
+			Member.Value = Null
+	End Select
+End Sub
+
+' assign a value to a numeric
+Function UT_AssignValue(Value, Scale)
+	Dim sValue
+	If IsNull(Value) Then
+		sValue = 0
+	Else
+		sValue = Value
+	End If
+	
+	UT_AssignValue = Round(sValue, Scale)
+End Function
+
+' returns true if a member is null
+Function UT_MemberIsNull(Member)
+	UT_MemberIsNull = True
+
+	Select Case Member.Definition.MemberType
+		Case aeDataMember
+			UT_MemberIsNull = IsNull(Member)
+		Case aeEnumMember
+			UT_MemberIsNull = IsNull(Member)
+		Case aeClassMember
+			If Not Member.Value Is Nothing Then
+				UT_MemberIsNull = Member.Value.IsNull
+			End If
+		Case aeJoinMember
+			UT_MemberIsNull = Member.IsNull
+	End Select
+End Function
+
+' returns the display value of a member
+Function UT_DisplayValue(Member)
+	UT_DisplayValue = ""
+
+	If UT_MemberIsNull(Member) Then: Exit Function
+
+	If Member.Definition.MemberType = aeJoinMember Then
+		UT_DisplayValue = Member.Value.Prompt
+	ElseIf Member.Definition.MemberType = aeClassMember Then
+		UT_DisplayValue = Member.Value.Prompt
+	ElseIf Member.Definition.MemberType = aeEnumMember Then
+		UT_DisplayValue = CStr(Member.Value.Display)
+	ElseIf Not IsNull(Member.Value) Then
+		UT_DisplayValue = CStr(Member.Value)
+	End If
+End Function
+
+' returns the children of a Member (for a ClassMember, returns the children, 
+' for all others returns Nothing)
+Function UT_GetMemberChildren(oMember)
+	Set UT_GetMemberChildren = Nothing
+
+	Select Case oMember.Definition.MemberType
+		Case aeDataMember
+			Exit Function
+		Case aeEnumMember
+			Exit Function
+		Case aeClassMember
+			Set UT_GetMemberChildren = oMember.Value.Members
+		Case aeJoinMember
+			Exit Function
+	End Select
+End Function
+
+' returns True if this member is dirty (recursively)
+Function UT_MemberIsDirty(oMember)
+	UT_MemberIsDirty = oMember.IsDirty
+
+	If UT_MemberIsDirty Then: Exit Function
+
+	Dim Children
+	Set Children = UT_GetMemberChildren(oMember)
+
+	If Children Is Nothing Then: Exit Function
+
+	Dim Child
+	For Each Child In Children
+		UT_MemberIsDirty = UT_MemberIsDirty(Child)
+
+		If UT_MemberIsDirty Then: Exit Function
+	Next
+End Function
+
+' Returns true if any of the members of this classinst are dirty
+Function UT_ClassInstIsDirty(oClassInst, CheckSubFolders)
+	UT_ClassInstIsDirty = False
+
+	Dim oMember
+	For Each oMember In oClassInst.Members
+		UT_ClassInstIsDirty = UT_MemberIsDirty(oMember)
+
+		If UT_ClassInstIsDirty Then: Exit Function
+	Next
+	
+	If Not CheckSubFolders Then: Exit Function
+	
+	Dim Folder
+	For Each Folder In oClassInst.Folders
+		Dim oTheClassInst
+		For Each oTheClassInst In Folder                                   
+			' pass false this time to prevent infinite recursion
+		    UT_ClassInstIsDirty = UT_ClassInstIsDirty(oTheClassInst, False)
+		Next
+	Next
+End Function
+
+' ** Form related functions **
+
+' pass in a form object, this function will return the FormForm interface, if it has one
+Function UT_GetFormForm(oForm)
+	Set UT_GetFormForm = Nothing
+	Dim FormType: FormType = TypeName(oForm)
+	If FormType = "FormForm" Then
+		Set UT_GetFormForm = oForm
+	ElseIf FormType = "FormJoin" Then
+		Set UT_GetFormForm = oForm.TargetForm
+	End If
+End Function
+
+' returns the child form elements of this element, if it has any
+Function UT_GetFormElementChildren(oElem)
+	Set UT_GetFormElementChildren = Nothing
+	Dim oFormForm
+	Set oFormForm = UT_GetFormForm(oElem)
+
+	If Not oFormForm Is Nothing Then
+		Set UT_GetFormElementChildren = oFormForm.Controls
+	End If
+End Function
+
+' sets the enabled state of a form element, and any children (recursively)
+Sub UT_SetFormElementEnabled(oElem, Enabled)
+	oElem.Enabled = Enabled
+
+	Dim Children: Set Children = UT_GetFormElementChildren(oElem)
+
+	If Not Children Is Nothing Then
+		Dim Child
+		For Each Child In Children
+			UT_SetFormElementEnabled Child, Enabled
+		Next
+	End If
+End Sub
+
+' - Grid control
+
+' remove a column from a grid
+Sub UT_RemoveGridColumn(Grid, Expression)
+	Dim nCols: nCols = Grid.Columns.Count
+
+	' save current grid settings
+	ReDim Expressions(nCols)
+	ReDim Titles(nCols)
+	ReDim Alignments(nCols)
+	ReDim ReadOnlys(nCols)
+	ReDim Totals(nCols)
+	ReDim AutoAdds(nCols)
+	ReDim Resizes(nCols)
+	ReDim Formats(nCols)
+
+	Dim Column, i, nNewCols
+	i = 0
+	nNewCols = 0
+
+	Dim ColumnFound: ColumnFound = False
+
+	For Each Column In Grid.Columns
+		If Column.Expression <> Expression Then
+			Expressions(nNewCols) = Column.Expression
+			Titles(nNewCols) = Column.Title
+			Alignments(nNewCols) = Column.Alignment
+			ReadOnlys(nNewCols) = Column.ReadOnly
+			Totals(nNewCols) = Column.Total
+			AutoAdds(nNewCols) = Column.AutoAdd
+			Resizes(nNewCols) = Column.Resizable
+			Formats(nNewCols) = Column.Format
+
+			nNewCols = nNewCols + 1
+		Else
+			ColumnFound = True
+		End If
+
+		i = i + 1
+	Next
+
+	If Not ColumnFound Then: Exit Sub
+
+	ReDim Preserve Expressions(nNewCols)
+
+	Grid.Columns.Clear
+	Grid.UpdateStatus
+
+	' add the remaining columns back in
+	For i = 0 To UBound(Expressions) - 1
+		' intVal = ElkGridColumns.Add(Expression, [Title], [Alignment], [ReadOnly], [Total], [AutoAdd], [Resize], [Format])
+		ColumnNo = Grid.Columns.Add( _
+			Expressions(i), Titles(i), Alignments(i), ReadOnlys(i), Totals(i), AutoAdds(i), ReSizes(i), Formats(i))
+	Next
+
+	Grid.Fill
+End Sub
+
+' inserts a grid column  at the end with the given title and expression
+Sub UT_InsertGridColumn(Grid, ColumnName, Expression)
+	Dim nCols: nCols = Grid.Columns.Count
+
+	' save current grid settings
+	ReDim Expressions(nCols)
+	ReDim Titles(nCols)
+	ReDim Alignments(nCols)
+	ReDim ReadOnlys(nCols)
+	ReDim Totals(nCols)
+	ReDim AutoAdds(nCols)
+	ReDim Resizes(nCols)
+	ReDim Formats(nCols)
+
+	Dim Column, i
+	i = 0
+
+	For Each Column In Grid.Columns
+		If Column.Expression <> Expression Then
+			Expressions(i) = Column.Expression
+			Titles(i) = Column.Title
+			Alignments(i) = Column.Alignment
+			ReadOnlys(i) = Column.ReadOnly
+			Totals(i) = Column.Total
+			AutoAdds(i) = Column.AutoAdd
+			Resizes(i) = Column.Resizable
+			Formats(i) = Column.Format
+
+			i = i + 1
+		Else
+			Exit Sub
+		End If
+	Next                                 
+	
+	Grid.Columns.Clear
+	Grid.UpdateStatus
+
+	For i = 0 To UBound(Expressions) - 1
+		' intVal = ElkGridColumns.Add(Expression, [Title], [Alignment], [ReadOnly], [Total], [AutoAdd], [Resize], [Format])
+		ColumnNo = Grid.Columns.Add( _
+			Expressions(i), Titles(i), Alignments(i), ReadOnlys(i), Totals(i), AutoAdds(i), ReSizes(i), Formats(i))
+	Next
+
+	UT_ColumnNo = Grid.Columns.Add(Expression, ColumnName)
+
+	Grid.Fill
+End Sub
+
+' - Tabset Controls
+
+'Finds the index of a tab in a tabset using the name of the tab. Index is needed when setting the current tab of a tabset
+
+Function UT_FindTab(TabSet,TabName)        		
+	Dim iCount: iCount = 0  
+	UT_FindTab  = 0
+	
+	Do While iCount < TabSet.Count
+	   	If Lcase(TabSet.Item(iCount).Name) = Lcase(TabName) Then
+	   		UT_FindTab = iCount
+	   		Exit Do
+	    End If
+		iCount = iCount + 1
+	Loop
+End Function
+
+'- Chooser control
+
+'Sets the filter on a chooser control
+
+Function UT_FilterChooser(strFilter,ctrlChooser)
+	Dim aeExpression,strError
+
+	Set aeExpression = CreateObject("ActivElk.Filter")
+
+	If aeExpression.Parse(strFilter,ctrlChooser.Folder.TargetClass,strError) Then
+		Set ElkFolder = CreateObject("Elk9.Folder")
+		ElkFolder.Folder = ctrlChooser.Folder
+		ElkFolder.Filter = aeExpression
+		ctrlChooser.ElkFolder = ElkFolder
+	End If      
+    FilterChooser = strError
+End Function
+
+
+' ** Filter Related Functions **
+
+' pass in a date and it returns a string suitable to be included in a filter expression
+Function UT_DateString(tdDate)
+	UT_DateString = "{^" & DatePart("yyyy",tdDate) & "-" _
+      & Right("0" & DatePart("m",tdDate),2) & "-" _
+      & Right("0" & DatePart("d",tdDate),2) & " " _
+      & Right("0" & DatePart("h",tdDate),2) & ":" _
+      & Right("0" & DatePart("n",tdDate),2) & ":" _
+      & Right("0" & DatePart("s",tdDate),2) & ".999}"
+End Function
+
+' gives you the value of a thing as a string
+' if NULL, returns an empty string
+Function UT_ElkVal(sVal)
+	If IsNull(sVal) Then
+		UT_ElkVal = ""
+	Else
+		UT_ElkVal = CStr(sVal)
+	End If
+End Function
+
+' correctly quotes a value so that it can be used in a quoted expression (in say an AeFolderScan
+' expression)
+Function UT_ElkQuote(sVal)
+	UT_ElkQuote = Replace(UT_ElkVal(sVal), "'", "' & Chr(39) & '")
+End Function
+
+' create an expression of the form: KeyField = 'Key'
+' where "=" can be any operator you feel like passing in
+Function UT_FilterExpr(KeyField, Key, Compare)
+	If Compare = "=" And IsNull(Key) Then
+		UT_FilterExpr = "IsNull(" & KeyField & ")"
+	Else
+		UT_FilterExpr = KeyField & " " & Compare & " '" & UT_ElkQuote(Key) & "'"
+	End If
+End Function
+
+' create an expression of the form: KeyField = 'Key'
+' where "=" can be any operator you feel like passing in
+Function UT_FilterExpr(KeyField, Key, Compare)
+	UT_FilterExpr = KeyField & " " & Compare & " '" & UT_ElkQuote(Key) & "'"
+End Function
+
+' ** Folder Related Functions **
+
+' copy the contents of one folder into another (but do not save changes)
+Sub UT_CopyFolderNT(objSourceFolder, objDestFolder)
+	UT_CopyFolder objSourceFolder, objDestFolder, Nothing
+End Sub
+
+' copy the contents of one folder into another
+Sub UT_CopyFolder(objSourceFolder, objDestFolder, Transaction)
+	Dim objClassInst, objJoinMember, objNewObject
+	Set objJoinMember = objSourceFolder.JoinMember
+	Set objNewObject = objDestFolder.Object
+	For Each objClassInst In objSourceFolder
+		Dim objNewClassInst
+		Set objNewClassInst = objDestFolder.CreateNewInstance(objClassInst.Class)
+		
+		objNewClassInst.Copy objClassInst
+		
+		' fix the join member created from
+		objNewClassInst.Members(objJoinMember.Name).Value = objNewObject
+		
+		If Not Transaction Is Nothing Then
+			objNewClassInst.Save Transaction
+		End If
+	Next
+End Sub
+
+' Create an IElkFolder based on the given IAeFolder
+Function UT_ElkFolder(oAeFolder)
+	Set UT_ElkFolder = CreateObject("Elk9.Folder")
+	UT_ElkFolder.Folder = oAeFolder
+End Function
+
+'Counts how many objects are in a IElkFolder with the filter applied
+Function UT_ElkFolderCount(oAeElkFolder)
+   	If oAeElkFolder.Filter is nothing Then
+    	UT_ElkFolderCount = oAeElkFolder.Folder.Count
+    Else
+    	UT_ElkFolderCount = 0
+    	
+    	' sometimes the filter is invalid (eg. when the user selects only one
+    	' option from a multi-search).
+    	On Error Resume Next
+    	UT_ElkFolderCount = oAeElkFolder.Folder.Count(oAeElkFolder.Filter.Format(oAeElkFolder.Folder.Targetclass))
+    	On Error GoTo 0
+    End If
+End Function
+
+' ** Functions for searching folders **
+
+' returns true if the given folder has only one item in it
+' matching a filter
+Function UT_OnlyOneItemExpr(Folder, Filter)
+	UT_OnlyOneItemExpr = False
+	
+	Dim oScan: Set oScan = UT_ScanExprObj(Folder, Filter, "", 2, "")
+	
+	If Not oScan.EndOfScan Then
+		oScan.Fetch
+		
+		If oScan.EndOfScan Then
+			UT_OnlyOneItemExpr = True
+		End If
+	End If
+End Function
+
+' returns true if the given folder has only one item in it
+' this may look like a bit of a hack, but it is the only way
+' to know for sure, as Count() will not count unsaved instances
+Function UT_OnlyOneItem(Folder)
+	UT_OnlyOneItem = UT_OnlyOneItemExpr(Folder, "")
+End Function
+
+' returns true if the given folder has only one item in it
+' matching a filter
+Function UT_AtLeastOneItemExpr(Folder, Filter)
+	UT_AtLeastOneItemExpr = False
+	
+	Dim oScan: Set oScan = UT_ScanExprObj(Folder, Filter, "", 1, "")
+	
+	If Not oScan.EndOfScan Then
+		UT_AtLeastOneItemExpr = True
+	End If
+End Function
+
+' returns true if the given folder has only one item in it
+' this may look like a bit of a hack, but it is the only way
+' to know for sure, as Count() will not count unsaved instances
+Function UT_AtLeastOneItem(Folder)
+	UT_OnlyOneItem = UT_AtLeastOneItemExpr(Folder, "")
+End Function
+
+' pass in an AeFolder, a classinst and a member name
+' and it will return TRUE if no other class inst in that folder has the 
+' same value for that member
+Function UT_IsUniqueObj(Folder, ClassInst, MemberName)
+	UT_IsUniqueObj = Not Folder.Exists(MemberName & " = '" & UT_ElkQuote(ClassInst.Members(MemberName)) & "' And Key <> '" & ClassInst.Key & "'")
+End Function
+
+' pass in the name of a top-level folder, a classinst and a member name
+' and it will return TRUE if no other class inst in that folder has the 
+' same value for that member
+Function UT_IsUnique(FolderName, ClassInst, MemberName)
+	UT_IsUnique = UT_IsUniqueObj(System.Folders(FolderName), ClassInst, MemberName)
+End Function
+
+' pass in an AeFolder and a Filter expression, returns true if an object exists matching
+' that filter
+Function UT_ExistsExprObj(Folder, Filter)
+	UT_ExistsExprObj = Folder.Exists(Filter)
+End Function
+
+' pass in an AeFolder, a keyfield and a key, returns true if an object exists with
+' that key
+Function UT_ExistsObj(Folder, KeyField, Key)
+	UT_ExistsObj = UT_ExistsExprObj(Folder, UT_FilterExpr(KeyField, Key, "="))
+End Function
+
+' pass in an AeFolder, a keyfield, a key and a comparison operator, returns true if
+' there is a matching object
+Function UT_ExistsCompareObj(Folder, KeyField, Key, Compare)
+	UT_ExistsCompareObj = UT_ExistsExprObj(Folder, UT_FilterExpr(KeyField, Key, Compare))
+End Function
+
+' pass in an AeFolder object and a filter expression and it will return an AeFolderScan object
+' if you want all rows, pass in 0 for nRows
+Function UT_ScanExprObj(Folder, Filter, Fields, nRows, Order)
+	Set UT_ScanExprObj = Folder.Scan(Filter, Fields, nRows, Order)
+End Function
+
+' pass in an AeFolder object and the key for some objects in that folder and it will
+' return an AeFolderScan for those objects
+Function UT_ScanObj(Folder, KeyField, Key, Fields, nRows, Order)
+	Set UT_ScanObj = UT_ScanExprObj(Folder, UT_FilterExpr(KeyField, Key, "="), Fields, nRows, Order)
+End Function
+
+' pass in the name of a top-level folder and a filter expression and it will return
+' an AeFolderScan object
+Function UT_ScanExpr(FolderName, Filter, Fields, nRows, Order)
+	Set UT_ScanExpr = UT_ScanExprObj(System.Folders(FolderName), Filter, Fields, nRows, Order)
+End Function
+
+' pass in the name of a top-level folder and a key field and it will return
+' an AeFolderScan object
+Function UT_Scan(FolderName, KeyField, Key, Fields, nRows, Order)
+	Set UT_Scan = UT_ScanObj(System.Folders(FolderName), KeyField, Key, Fields, nRows, Order)
+End Function
+
+' checks for the existance of an object matching a filter in the folder
+Function UT_ExistsExprObj(Folder, Filter)
+	UT_ExistsExprObj = Folder.Exists(Filter)
+End Function
+
+' checks for the existance of an object matching a filter in the named top-level folder
+Function UT_ExistsExpr(FolderName, Filter)
+	UT_ExistsExpr = UT_ExistsExprObj(System.Folders(FolderName), Filter)
+End Function
+
+' checks for the existance of an object in the folder
+Function UT_ExistsObj(Folder, KeyField, Key)
+	UT_ExistsObj = UT_ExistsExprObj(Folder, UT_FilterExpr(KeyField, Key, "="))
+End Function
+
+' checks for the existance of an object in the named top-level folder
+Function UT_Exists(FolderName, KeyField, Key)
+	UT_Exists = UT_ExistsObj(System.Folders(FolderName), KeyField, Key)
+End Function
+	
+' pass in an AeFolder and a filter and it returns the first object matching the filter
+Function UT_FetchExprObj(Folder, Filter)
+	Set UT_FetchExprObj = Nothing
+	
+	Dim ScanObj: Set ScanObj = UT_ScanExprObj(Folder, Filter, "", 1, "")
+	
+	If Not ScanObj.EndOfScan Then
+		Set UT_FetchExprObj = ScanObj.Fetch
+	End If
+		
+	Set ScanObj = Nothing
+End Function
+	
+' pass in the name of a top-level folder and a filter expression, it will fetch the first object
+' matching the expression (you must properly quote the expression)
+Function UT_FetchExpr(FolderName, Filter)
+	Set UT_FetchExpr = UT_FetchExprObj(System.Folders(FolderName), Filter)
+End Function
+
+' pass in an AeFolder object and the key of a ClassInst in that object and it will
+' return that object. Note you cant use it for looking for a Boolean value
+' (it gets parsed as something like: KeyField = 'True', which compares as a string
+' For that, use FetchExprObj, and pass in "True" or "False" for the filter
+' expression
+Function UT_FetchObj(Folder, KeyField, Key)
+	Set UT_FetchObj = UT_FetchExprObj(Folder, UT_FilterExpr(KeyField, Key, "="))
+End Function
+
+' pass in the name of a top-level folder, and the key of an object in that folder
+' and it will return that object if found
+Function UT_Fetch(FolderName, KeyField, Key)
+	Set UT_Fetch = UT_FetchObj(System.Folders(FolderName), KeyField, Key)
+End Function
+
+' pass in a Folder and the key of an object to look for
+' If found, it will set the AeJoinMember "Thing" you pass in
+' to that value
+Sub UT_SetJoinMemberFromFolderObj(Folder, KeyField, Key, Thing)
+	If Key = "" Then: Exit Sub
+	    
+	Dim ClassInst: Set ClassInst = UT_FetchObj(Folder, KeyField, Key)
+	    
+	If Not ClassInst Is Nothing Then	        
+		Thing.Value = ClassInst
+	End If
+	    
+	Set ClassInst = Nothing
+End Sub
+
+' pass in an AeFolder, a KeyField describing a member and an AeJoinMember.
+' It will search the folder for an object whose keyfield is equal to the
+' join member. If it is not found, it will create one (but not save it)
+' and return it. This is useful to call from form code (let the user save)
+Function UT_FetchOrCreateObjFromJoinNT(Folder, KeyField, oAeJoinMember)
+	Set UT_FetchOrCreateObjFromJoinNT = Nothing
+	
+	If oAeJoinMember.IsNull Then: Exit Function
+	
+	Set UT_FetchOrCreateObjFromJoinNT = UT_FetchObj(Folder, KeyField, oAeJoinMember.Key)
+
+	If UT_FetchOrCreateObjFromJoinNT Is Nothing Then
+		' not found, no problem, just create one
+		Set UT_FetchOrCreateObjFromJoinNT = Folder.CreateNewInstance
+		UT_FetchOrCreateObjFromJoinNT.Members(KeyField) = oAeJoinMember.Value
+	End If	
+End Function
+	
+' pass in a AeFolder, a KeyField describing a member and a AeJoinMember. It will
+' search the folder For an object whose keyfield is equal To the Join-member.
+' If it is not found, it will create one (and save it) and return it
+Function UT_FetchOrCreateObjFromJoin(Folder, KeyField, oAeJoinMember, Transaction)
+	Set UT_FetchOrCreateObjFromJoin = Nothing
+		
+	Set UT_FetchOrCreateObjFromJoin = UT_FetchOrCreateObjFromJoinNT(Folder, KeyField, oAeJoinMember)
+
+	If Not UT_FetchOrCreateObjFromJoin Is Nothing Then
+		If UT_FetchOrCreateObjFromJoinNT.IsNew Then
+			UT_FetchOrCreateObjFromJoin.Save Transaction
+		End If
+	End If
+End Function
+
+' pass in an AeFolder, a keyfield and a key. It searches the folder for that key. If it is not
+' found it will create a new classinst in the folder and gives it that key
+' If you pass in Nothing for the Transaction, it will create and save the
+' newly created object in one go, instead of inside your Transaction
+Function UT_FetchOrCreateObj(Folder, KeyField, Key, Transaction)
+	Set UT_FetchOrCreateObj = Nothing
+	If Key = "" Then: Exit Function
+	
+	Set UT_FetchOrCreateObj = UT_FetchObj(Folder, KeyField, Key)
+	If UT_FetchOrCreateObj Is Nothing Then
+		' not found, no problem, just create one
+		Set UT_FetchOrCreateObj = Folder.CreateNewInstance
+		UT_FetchOrCreateObj.Members(KeyField) = Key
+		UT_FetchOrCreateObj.Save Transaction
+	End If
+End Function
+
+' Pass in the name of a top-level folder, a keyfield and a key. Searches the folder for that key.
+' if it is not found, it creates a new classinst with that key
+Function UT_FetchOrCreate(FolderName, KeyField, Key, Transaction)
+	Set UT_FetchOrCreate = UT_FetchOrCreateObj(System.Folders(FolderName), KeyField, Key, Transaction)
+End Function
+
+' Sum the values of a member over a folder for all objects matching a filter
+Function UT_SumExprObj(Folder, Field, Filter)
+	UT_SumExprObj = 0
+
+	Dim oAeClassInst
+	For Each oAeClassInst In UT_ScanExprObj(Folder, Filter, Field, 0, "")
+		UT_SumExprObj = UT_SumExprObj + oAeClassInst.Members(Field)
+	Next
+End Function
+
+' Sum the values of a member over a folder for all objects with the given keyfield value
+Function UT_SumObj(Folder, Field, KeyField, Key)
+	UT_SumObj = UT_SumExprObj(Folder, Field, UT_FilterExpr(KeyField, Key, "="))
+End Function
+
+
+' ** User Related Functions **
+
+' Given a stdPerson record, returns the associated stdUser record
+' from the top-level folder called "Users"
+Function UT_UserFromContact(Contact)
+	Set UT_UserFromContact = UT_Fetch("Users", "Name.FirstName & ' ' & Name.LastName", Contact.Name.FirstName & " " & Contact.Name.LastName)
+End Function
+
+
+
+' ** Configuration Related Functions **
+
+' Given the name of an entry in stdConfiguration
+' return the value of that entry
+Function UT_Conf(EntryName)
+	UT_Conf = ""
+
+	Dim oConfScan
+	Set oConfScan = System.Folders.Configurations.Scan
+	
+	If Not oConfScan.EndOfScan Then
+		Dim oConf
+		Set oConf = oConfScan.Fetch
+		
+		If IsObject(oConf.Members(EntryName).Value) Then
+			Set UT_Conf = oConf.Members(EntryName).Value
+		Else
+			UT_Conf = oConf.Members(EntryName).Value
+		End If
+	End If
+End Function
+
+' Given the name of an entry in stdConfiguration
+' return the value of that entry. If not found (or NULL),
+' use the default specified
+Function UT_ConfDef(EntryName, Default)
+	Dim oConfScan
+	Set oConfScan = System.Folders.Configurations.Scan
+	
+	If Not oConfScan.EndOfScan Then
+		Dim oConf
+		Set oConf = oConfScan.Fetch
+		
+		If IsObject(oConf.Members(EntryName).Value) Then
+			Set UT_ConfDef = oConf.Members(EntryName).Value
+		Else
+			UT_ConfDef = oConf.Members(EntryName).Value
+		End If
+	End If
+
+	If IsNull(UT_ConfDef) Then
+		If IsObject(Default) Then
+			Set UT_ConfDef = Default
+		Else
+			UT_ConfDef = Default
+		End If
+	End If
+End Function
+
+' ** Unique ID Numbers **
+
+' return the next unique ID number for the given class and category
+' eg. ID = UT_UniqueID("InternalBranch - Invoice", "{GUID}", "Auckland", 100000)
+' would give you the next unique invoice number for the
+' auckland branch. The description field is optional but allows you to see
+' a more descriptive prompt for the unique id class
+Function UT_UniqueID(Category, Identifier, Description, Default)
+	Dim objIDNumbers
+	Set objIDNumbers = System.Folders.UT_IDNumber
+    
+    ' get (or create) our unique ID number object
+    Do
+		Dim objUT_IDNumber
+		Set objUT_IDNumber = UT_FetchExprObj(objIDNumbers, _
+								UT_FilterExpr("Category", Category, "=") & _
+								" And " & _
+								UT_FilterExpr("Name", Identifier, "="))
+		
+		If Not objUT_IDNumber Is Nothing Then Exit Do
+		
+		' create the transaction object we are going to save the new instance in
+		Dim Trans: Set Trans = System.BeginTransaction		
+
+		' If the IDNumber object for this class/category has not been created yet, 
+		' Then we should create one
+		Set objUT_IDNumber = objIDNumbers.CreateNewInstance
+		
+		objUT_IDNumber.Category 	= Category
+		objUT_IDNumber.Name 		= Identifier
+		objUT_IDNumber.NextID 		= Default
+		objUT_IDNumber.Description 	= Description
+		
+		' save the object
+		objUT_IDNumber.Save Trans
+		
+		' if it fails this is because validation failed.
+		' probably because this object was duplicated
+		If Trans.Validate.Status = 0 Then 
+			Trans.Commit
+			Exit Do
+		End If
+		
+	Loop While True
+	
+	UT_UniqueID = objUT_IDNumber.GenerateNextID()
+End Function
+
+' gives you a number based on the values of the current members in a folder
+' it is probably way better to use the UT_UniqueID function above
+' which has a more capable interface
+Function UT_AutoNumberFromFolder(Folder, Field, Default)
+	UT_AutoNumberFromFolder = Default
+
+	On Error Resume Next
+		UT_AutoNumberFromFolder = UT_ScanExprObj(Folder, "", "", 1, Field & " DESC").Fetch.Members(Field) + 1
+	On Error GoTo 0
+End Function
+
+
+' ** File Related Functions **
+
+' a class that can be used to store temporary files
+' you create one of these and set the "File" to the path to the file
+' when this class is deleted, the file is also deleted
+' a useful idiom is to store one of these in a property on a class
+' instance, so that when the class instance is freed, the
+' file will go away (useful for files being displayed in forms)
+Class TempFile
+	Public File
+	
+	Sub Delete()
+		If File <> "" Then
+			Dim oFSO
+			Set oFSO = CreateObject("Scripting.FileSystemObject")
+			
+			On Error Resume Next
+			oFSO.DeleteFile File, True
+			On Error GoTo 0
+			
+			File = ""
+		End If
+	End Sub
+	
+	Sub Class_Initialize()
+		File = ""
+	End Sub
+	
+	Sub Class_Terminate()
+		Delete
+	End Sub
+	
+	' call this method to add a reference to this temporary file
+	Sub AddRef(Inst)
+		Dim i: i = Inst.Properties.Count
+		Inst.Properties("TempFiles" & CStr(i)) = Me
+	End Sub
+End Class
+
+' pass in the name of a temporary file, this function will return
+' a TempFile object. keep a reference to the object as long as you want the
+' temporary file to exist
+Function UT_TempFile(strPath)
+	Dim oFile
+	Set oFile = New TempFile
+	oFile.File = strPath
+	
+	Set UT_TempFile = oFile
+End Function
+%>
+
+class "UT_IDNumber"
+{
+	/* A class for generating unique ID numbers */
+	title(Singular) ENZ "UT_IDNumber"
+	properties
+	{
+		"Forms" "'UT_IDNumber'"
+		"NoSync" 0
+			title(Singular) ENU "NoSync"
+	}
+	members
+	{
+		"Category" data VarChar(255)
+		{
+			title(Singular) ENZ "Category"
+		}
+		"Name" data VarChar(255)
+		{
+			title(Singular) ENZ "Name"
+		}
+		"NextID" data Integer
+		{
+			title(Singular) ENZ "Next ID Number"
+			critical validError 
+			ENZ "Next ID number changed unexpectedly, please reload."
+		}
+		"Description" data VarChar(255)
+		{
+			title(Singular) ENZ "Description"
+			default "\"\""
+		}
+	}
+	prompt ""
+		ENZ "Category & \" - \" & Description & \" (\" & NextID & \")\""
+	script VBScript
+<%
+Function GenerateNextID()
+	' generate the unique ID
+	While True
+
+		' please note we have to create the transaction object before reloading
+		' otherwise you get nasty side-effects like the validation events not firing
+		' the second time around etc.
+		Dim Trans: Set Trans = System.BeginTransaction	
+
+		' reload instance from database
+		Reload 0
+		
+		' get next number
+		NextID = NextID + 1
+		GenerateNextID = NextID.Value
+		
+		' try to save object
+		Save Trans
+		
+		' if it fails this is because the value has changed between
+		' loading and saving - we go round again
+		If Trans.Validate.Status = 0 Then 
+			Trans.Commit
+			Exit Function
+		End If
+		
+	Wend
+End Function
+%>
+}
+
+class "UT_MsgBox"
+{
+	title(Singular) ENU "Message Box"
+	properties
+	{
+		"Forms" "'UT_MsgBox'"
+	}
+	members
+	{
+		"Caption" data VarChar(255)
+		{
+			title(Singular) ENU "Caption"
+		}
+	}
+	prompt ""
+		ENU "Caption"
+}
+
+
+sysclass "UT_IDNumber" from "UT_IDNumber"
+{
+	
+	folder "UT_IDNumber"
+	{
+		title(Singular) ENZ "Unique ID Numbers"
+		properties
+		{
+			"FolderSets" 0
+				properties
+				{
+					"Admin" 0
+				}
+			"Hidden" "True"
+		}
+	}
+}
+
+sysclass "UT_MsgBox" from "UT_MsgBox"
+{
+}
+
+
+}
+layout
+<%
+<?xml version="1.0"?>
+
+<AeDesigner_doc version="3">
+	<workspace CurrentView="2">
+		<View Number="0" Type="Class diagram" Name="Utilities"/>
+		<View Number="1" Type="Class script" Name="UT_IDNumber"/>
+		<View Number="2" Type="Library script" Name="Utilities"/>
+	</workspace>
+	<class_diagram name="Utilities" width="1000" height="1000">
+		<Viewport magnificationX="100" magnificationY="100" originX="0" originY="0"/>
+		<class name="UT_IDNumber" left="29" top="26" right="163" bottom="116">
+			<member name="NextID" type="data"/>
+			<member name="Category" type="data"/>
+			<member name="Name" type="data"/>
+			<member name="Description" type="data"/>
+			<hide show_base_members="1"/>
+		</class>
+		<class name="UT_MsgBox" left="300" top="27" right="434" bottom="117">
+			<member name="Caption" type="data"/>
+			<hide show_base_members="1"/>
+		</class>
+	</class_diagram>
+	<lang_used>1078,3079,3076,13321,2052,3081,1057,1053,1034,1054,1040,1042,1041,1036,1031,2057,1029,1028,0,5129,6153,1033,103
+	</lang_used>
+</AeDesigner_doc>
+%>

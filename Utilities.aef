@@ -1,0 +1,9 @@
+
+
+form "UT_IDNumber" for "UT_IDNumber" 304,56
+{
+	"ID" edit member "NextID" 0,0,304(100),14 autohscroll sidetag tagset(1)
+	"Category" edit member "Category" 0,14,304(100),14 autohscroll sidetag tagset(1)
+	"Name" edit member "Name" 0,28,304(100),14 autohscroll sidetag tagset(1)
+	"Description" edit member "Description" 0,42,304(100),14 autohscroll sidetag tagset(1)
+}

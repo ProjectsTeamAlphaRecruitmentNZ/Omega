@@ -1,0 +1,293 @@
+﻿
+
+form "LG_Event" for "LG_Event" 305,208
+{
+	"TimeStamp" form member "TimeStamp" 0,0,305(100),14 context "StartFinish" sidetag tagset(1)
+	"Process" edit member "Process" 0,16,305(100),14 sidetag tagset(1)
+	"Tabset" tabset  0,32,305(100),176(100)
+	{
+		"Notes" tab
+			DEU "Anmerkungen", 
+			ELL "Σημειώσεις", 
+			ENU "Notes", 
+			ESP "Notas", 
+			FRA "Notes", 
+			JPN "メモ", 
+			KOR "메모", 
+			PLK "Uwagi", 
+			THA "หมายเหตุ"
+		
+		{
+			"Notes" edit member "Notes" 0,0,282(100),146(100) multiline autovscroll vscroll
+		}
+		"Details" tab
+			DEU "Details", 
+			ELL "Λεπτομέρειες", 
+			ENU "Details", 
+			ESP "Detalles", 
+			FRA "Détails", 
+			JPN "詳細", 
+			KOR "상세정보", 
+			PLK "Szczegóły", 
+			THA "รายละเอียด"
+		
+		{
+			"LG_Details" control "Elk9.grid" 0,0,282(100),146(100)
+			{
+				"_cx" = "5080"
+				"_cy" = "5080"
+				"Enabled" = "0"
+				"FolderName" = "LG_Details"
+				"ConfirmDelete" = "0"
+				"AllowDelete" = "0"
+				"AllowSort" = "-1"
+				"AllowOpen" = "-1"
+				"AllowAdds" = "0"
+				"Toolbar" = "-1"
+				"ManualFill" = "0"
+				"Configurable" = "-1"
+				"MaxRows" = "0"
+				"PrintButton" = "0"
+				"Collapsable" = "0"
+				"ShowGroupBox" = "0"
+				"OpenOnAdd" = "0"
+				"Filter" = ""
+				"GridID" = "{F895794C-993A-4659-BAF8-FF2FE1DCC6B8}"
+				"BackColor" = "2147483653"
+				"ForeColor" = "4294967295"
+				"BandOnMember" = ""
+				"BandFolder" = ""
+				"ExpandMember" = ""
+				"ExpandExistence" = ""
+				"RowColor" = ""
+				"ShowTooltips" = "-1"
+				"FixedColumnCount" = "0"
+				"SortCol" = "-1"
+				"SortCol2" = "-1"
+				"SortCol3" = "-1"
+				"SortDirection" = "0"
+				"SortDirection2" = "0"
+				"SortDirection3" = "0"
+				"ColumnCount" = "0"
+				"TotalCount" = "1"
+				"Total1_Expr" = "TOTAL"
+				"Caption_StringCount" = "0"
+				"OpenInDialog" = "0"
+				"OpenInDouble" = "0"
+				"Reload" = "0"
+				"RowHeight" = "0"
+				"ExtraMembers" = ""
+				"DialogsSave" = "0"
+				"ExpandFilter" = ""
+				"GroupCol" = "-1"
+				"GroupCol2" = "-1"
+				"GroupCol3" = "-1"
+				"SaveState" = "-1"
+				"Total1_Caption_String1Lang" = "1034"
+				"Total1_Caption_String1Val" = "Total"
+				"Total1_Caption_String2Lang" = "1033"
+				"Total1_Caption_String2Val" = "Total"
+				"Total1_Caption_String3Lang" = "1045"
+				"Total1_Caption_String3Val" = "Łącznie"
+				"Total1_Caption_String4Lang" = "1042"
+				"Total1_Caption_String4Val" = "총계"
+				"Total1_Caption_StringCount" = "4"
+			}
+		}
+		"Errors" tab
+			DEU "Fehler", 
+			ELL "Σφάλματα", 
+			ENU "Errors", 
+			ESP "Errores", 
+			FRA "Erreurs", 
+			JPN "エラー", 
+			KOR "오류", 
+			PLK "Błędy", 
+			THA "ข้อผิดพลาด"
+		
+		{
+			"LG_ErrorDetails" control "Elk9.grid" 0,0,282(100),146(100)
+				DEU "LG_Ereignis", 
+				ENU "LG_Event", 
+				ESP "LG_Event"
+			
+			{
+				"_cx" = "5080"
+				"_cy" = "5080"
+				"Enabled" = "-1"
+				"FolderName" = "LG_ErrorDetails"
+				"ConfirmDelete" = "0"
+				"AllowDelete" = "0"
+				"AllowSort" = "-1"
+				"AllowOpen" = "-1"
+				"AllowAdds" = "0"
+				"Toolbar" = "-1"
+				"ManualFill" = "0"
+				"Configurable" = "-1"
+				"MaxRows" = "0"
+				"PrintButton" = "0"
+				"Collapsable" = "0"
+				"ShowGroupBox" = "0"
+				"OpenOnAdd" = "0"
+				"Filter" = ""
+				"GridID" = "{1305B495-F534-4510-AFEE-DD38F73531F8}"
+				"BackColor" = "2147483653"
+				"ForeColor" = "4294967295"
+				"BandOnMember" = ""
+				"BandFolder" = ""
+				"ExpandMember" = ""
+				"ExpandExistence" = ""
+				"RowColor" = ""
+				"ShowTooltips" = "-1"
+				"FixedColumnCount" = "0"
+				"SortCol" = "-1"
+				"SortCol2" = "-1"
+				"SortCol3" = "-1"
+				"SortDirection" = "0"
+				"SortDirection2" = "0"
+				"SortDirection3" = "0"
+				"ColumnCount" = "0"
+				"TotalCount" = "1"
+				"Total1_Expr" = "TOTAL"
+				"Caption_StringCount" = "0"
+				"OpenInDialog" = "0"
+				"OpenInDouble" = "0"
+				"Reload" = "0"
+				"RowHeight" = "0"
+				"ExtraMembers" = ""
+				"DialogsSave" = "0"
+				"ExpandFilter" = ""
+				"GroupCol" = "-1"
+				"GroupCol2" = "-1"
+				"GroupCol3" = "-1"
+				"SaveState" = "-1"
+				"Total1_Caption_String1Lang" = "1034"
+				"Total1_Caption_String1Val" = "Total"
+				"Total1_Caption_String2Lang" = "1033"
+				"Total1_Caption_String2Val" = "Total"
+				"Total1_Caption_String3Lang" = "1031"
+				"Total1_Caption_String3Val" = "Total"
+				"Total1_Caption_String4Lang" = "1036"
+				"Total1_Caption_String4Val" = "Total"
+				"Total1_Caption_String5Lang" = "1045"
+				"Total1_Caption_String5Val" = "Łącznie"
+				"Total1_Caption_String6Lang" = "1054"
+				"Total1_Caption_String6Val" = "รวม"
+				"Total1_Caption_String7Lang" = "1042"
+				"Total1_Caption_String7Val" = "총계"
+				"Total1_Caption_String8Lang" = "1041"
+				"Total1_Caption_String8Val" = "合計"
+				"Total1_Caption_StringCount" = "8"
+			}
+		}
+		"Warnings" tab
+			DEU "Warnungen", 
+			ELL "Προειδοποιήσεις", 
+			ENU "Warnings", 
+			ESP "Avisos", 
+			FRA "Avertissements", 
+			JPN "警告", 
+			KOR "경고", 
+			PLK "Ostrzeżenia", 
+			THA "คำเตือน"
+		
+		{
+			"LG_WarningDetails" control "Elk9.grid" 0,0,282(100),146(100)
+				DEU "LG_Ereignis", 
+				ENU "LG_Event", 
+				ESP "LG_Event"
+			
+			{
+				"_cx" = "5080"
+				"_cy" = "5080"
+				"Enabled" = "-1"
+				"FolderName" = "LG_WarningDetails"
+				"ConfirmDelete" = "0"
+				"AllowDelete" = "0"
+				"AllowSort" = "-1"
+				"AllowOpen" = "-1"
+				"AllowAdds" = "0"
+				"Toolbar" = "-1"
+				"ManualFill" = "0"
+				"Configurable" = "-1"
+				"MaxRows" = "0"
+				"PrintButton" = "0"
+				"Collapsable" = "0"
+				"ShowGroupBox" = "0"
+				"OpenOnAdd" = "0"
+				"Filter" = ""
+				"GridID" = "{3DDBF540-16AD-4443-9E09-7F8348861716}"
+				"BackColor" = "2147483653"
+				"ForeColor" = "4294967295"
+				"BandOnMember" = ""
+				"BandFolder" = ""
+				"ExpandMember" = ""
+				"ExpandExistence" = ""
+				"RowColor" = ""
+				"ShowTooltips" = "-1"
+				"FixedColumnCount" = "0"
+				"SortCol" = "-1"
+				"SortCol2" = "-1"
+				"SortCol3" = "-1"
+				"SortDirection" = "0"
+				"SortDirection2" = "0"
+				"SortDirection3" = "0"
+				"ColumnCount" = "0"
+				"TotalCount" = "1"
+				"Total1_Expr" = "TOTAL"
+				"Caption_StringCount" = "0"
+				"OpenInDialog" = "0"
+				"OpenInDouble" = "0"
+				"Reload" = "0"
+				"RowHeight" = "0"
+				"ExtraMembers" = ""
+				"DialogsSave" = "0"
+				"ExpandFilter" = ""
+				"GroupCol" = "-1"
+				"GroupCol2" = "-1"
+				"GroupCol3" = "-1"
+				"SaveState" = "-1"
+				"Total1_Caption_String1Lang" = "1034"
+				"Total1_Caption_String1Val" = "Total"
+				"Total1_Caption_String2Lang" = "1033"
+				"Total1_Caption_String2Val" = "Total"
+				"Total1_Caption_String3Lang" = "1045"
+				"Total1_Caption_String3Val" = "Łącznie"
+				"Total1_Caption_String4Lang" = "1042"
+				"Total1_Caption_String4Val" = "총계"
+				"Total1_Caption_StringCount" = "4"
+			}
+		}
+	}
+}
+
+modify form "LG_Event" for "LG_Info" as "LG_Info"
+{
+	before "Tabset" Height 16
+	{
+		"StatusCode" combobox member "StatusCode" 0,0,305(100),14 sidetag tagset(1)
+	}
+}
+
+form "LG_Detail" for "LG_Detail" 305,215
+{
+	"LG_Event" hyperlink member "LG_Event" 0,0,304(100),9 sidetag tagset(1)
+	"EmbeddedForm" form member "stdTimeStamp" 0,10,305(100),14 context "Start" sidetag tagset(1)
+	"DetailNotes" edit member "DetailNotes" 0,27,305(100),188(100) multiline autohscroll autovscroll vscroll toptag
+}
+
+form "LG_ErrorDetail" for "LG_ErrorDetail" 305,215
+{
+	"LG_Event" hyperlink member "LG_Event" 0,0,304(100),9 sidetag tagset(1)
+	"EmbeddedForm" form member "stdTimeStamp" 0,10,305(100),14 context "Start" sidetag tagset(1)
+	"ClassName" edit member "ClassName" 0,24,305,14 autohscroll sidetag tagset(1)
+	"MemberName" edit member "MemberName" 0,39,305(100),14 autohscroll sidetag tagset(1)
+	"ErrorDetailNotes" edit member "ErrorDetailNotes" 0,55,305(100),160(100) multiline autohscroll autovscroll vscroll toptag
+}
+
+form "LG_WarningDetail" for "LG_WarningDetail" 305,215
+{
+	"EmbeddedForm" form member "stdTimeStamp" 0,10,305(100),14 context "Start" sidetag tagset(1)
+	"LG_Event" hyperlink member "LG_Event" 0,0,304(100),9 sidetag tagset(1)
+	"WarningDetailNotes" edit member "WarningDetailNotes" 0,27,305(100),188(100) multiline autohscroll autovscroll vscroll toptag
+}

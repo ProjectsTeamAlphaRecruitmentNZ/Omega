@@ -1,0 +1,98 @@
+﻿// Active Elk definition file generated from binary format
+// Date:	2011-05-25 21:57:42
+// User:	GJoseph
+
+library "stdMerge"
+{
+/* (Pre-Release) */
+title(Singular)
+	ZHT "郵件合併",
+	DEU "Seriendruck",
+	ELL "Συγχώνευση Αλληλογραφίας",
+	ENU "Mail Merge",
+	ESP "Combinar correspondencia",
+	FRA "Fusion et publipostage",
+	ITA "Stampa Unione",
+	JPN "メールマージ",
+	KOR "편지 병합",
+	PLK "Korespondencja seryjna",
+	ZHS "邮件合并"
+version "10.182.46\r\nCopyright (C) StayinFront, Inc 2001-2010"
+uses "stdbaseentities", "MailMerge"
+aspect "Elk9.Aspect" "stdMerge"
+
+template "stdMerge::stdLetter_Mod" class "stdLetter"
+{
+	properties
+	{
+		"Forms" "'stdLetter'"
+	}
+	members
+	{
+		modify "Thumbnail" data 
+		{
+			title(Singular) KOR "작게 보기"
+		}
+	}
+}
+
+
+sysclass "stdLetter" from "stdLetter"
+{
+	
+	folder "Letters"
+	{
+		title(Singular)
+			ZHT "信件",
+			DEU "Briefe",
+			ELL "Επιστολές",
+			ENU "Letters",
+			ESP "Cartas",
+			FRA "Lettres",
+			ITA "Lettere",
+			JPN "手紙",
+			KOR "편지",
+			PLK "Listy",
+			ZHS "信件"
+		gender FRA feminine
+		properties
+		{
+			"AppShellHidden" True
+			"FolderSets" 0
+				properties
+				{
+					"MailMerge" 0
+				}
+		}
+	}
+}
+
+systemplate "stdMerge::stdLetter_Mod" template "stdMerge::stdLetter_Mod"
+
+}
+layout
+<%
+<?xml version="1.0" encoding="utf-8"?>
+<AeDesigner_doc version="3">
+    <class_diagram name="stdMerge" width="1000" height="1000">
+        <class name="stdbaseentities::stdLetter" included_class="1" left="33" top="55" right="167" bottom="178">
+            <member name="Document" type="class" />
+            <member name="Thumbnail" type="data" />
+            <member name="CalBackColor" type="class" />
+            <member name="CalForeColor" type="class" />
+            <member name="CalBarColor" type="class" />
+            <member name="Notes" type="data" />
+            <member name="stdTimeStamp" type="class" />
+            <hide show_base_members="1">
+                <link_in_list name="Document" forced="0" />
+                <link_in_list name="stdTimeStamp" forced="0" />
+                <link_in_list name="CalBackColor" forced="0" />
+                <link_in_list name="CalForeColor" forced="0" />
+                <link_in_list name="CalBarColor" forced="0" />
+            </hide>
+        </class>
+    </class_diagram>
+    <TargetPlatforms>1</TargetPlatforms>
+    <DefaultScriptLang>VBScript</DefaultScriptLang>
+</AeDesigner_doc>
+%>

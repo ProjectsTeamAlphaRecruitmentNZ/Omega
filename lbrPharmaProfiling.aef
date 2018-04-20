@@ -1,0 +1,134 @@
+﻿
+
+form "Prof_ProfileCategory" for "Prof_ProfileCategory" 263,134
+{
+	"ProfileCategory" edit member "ProfileCat" 0,0,126(50),14 sidetag tagset(1)
+	"CatInUse" checkbox member "CatInUse" 136(100),2,48(100),9
+	"CompulsoryCat" checkbox member "CompulsoryCat" 190(100),2,70(100),9
+	"CatCode" edit member "CatCode" 0,15,137,14 back(scarlet) autohscroll sidetag tagset(1)
+	"DefaultProfileValue" combobox member "DefaultProfileValue" 0,30,126(50),14 sidetag tagset(1)
+	"ProfileValues" control "Elk9.grid" 0,46,262(100),43(50)
+	{
+		"_cx" = "5080"
+		"_cy" = "5080"
+		"Enabled" = "-1"
+		"FolderName" = "Prof_ProfileValues"
+		"ConfirmDelete" = "0"
+		"AllowDelete" = "-1"
+		"AllowOpen" = "0"
+		"AllowAdds" = "-1"
+		"Toolbar" = "-1"
+		"ManualFill" = "0"
+		"Configurable" = "0"
+		"MaxRows" = "0"
+		"PrintButton" = "0"
+		"Collapsable" = "0"
+		"ShowGroupBox" = "0"
+		"OpenOnAdd" = "0"
+		"Filter" = ""
+		"GridID" = "{33D14477-E285-42ED-8C1C-2E38C8E7F75F}"
+		"BackColor" = "2147483653"
+		"ForeColor" = "4294967295"
+		"ColumnCount" = "2"
+		"Column1_Expr" = "ProfileVal"
+		"Column1_Caption_StringCount" = "3"
+		"Column1_Caption_String1Lang" = "3081"
+		"Column1_Caption_String1Val" = "Value"
+		"Column1_Caption_String2Lang" = "1033"
+		"Column1_Caption_String2Val" = "Value"
+		"Column1_Caption_String3Lang" = "1041"
+		"Column1_Caption_String3Val" = "値"
+		"Column1_Flags" = "8"
+		"Column1_Align" = "0"
+		"Column1_Format" = ""
+		"Column2_Expr" = "ValueInUse"
+		"Column2_Caption_StringCount" = "3"
+		"Column2_Caption_String1Lang" = "3081"
+		"Column2_Caption_String1Val" = "In Use?"
+		"Column2_Caption_String2Lang" = "1033"
+		"Column2_Caption_String2Val" = "In Use?"
+		"Column2_Caption_String3Lang" = "1041"
+		"Column2_Caption_String3Val" = "使用中?"
+		"Column2_Flags" = "0"
+		"Column2_Align" = "0"
+		"Column2_Format" = ""
+		"TotalCount" = "1"
+		"Total1_Caption_StringCount" = "1"
+		"Total1_Caption_String1Lang" = "3081"
+		"Total1_Caption_String1Val" = "Total"
+		"Total1_Expr" = "TOTAL"
+		"Caption_StringCount" = "0"
+	}
+	"ocxAppliesTo" control "Elk9.JoinSetList.1" 0,102(50),263(100),32(100) ENU ""
+	{
+		"_cx" = "5080"
+		"_cy" = "5080"
+		"Enabled" = "-1"
+		"BackColor" = "2147483653"
+		"ForeColor" = "4294967295"
+		"FolderName" = "Prof_AppliesTos"
+		"JoinMember" = "ProfileClass"
+	}
+	"Label" text
+		tag 
+			ENU "Applies to:", 
+			JPN "適用先:"
+	 0,91(50),56,9(50)
+	"lbl" text tag ENU "DO NOT CHANGE THIS CODE (Its for programming purpose)" 145,16,118(100),9 fore(scarlet)
+}
+
+form "Prof_ProfileValue" for "Prof_ProfileValue" 296,219
+{
+	"ProfileVal" edit member "ProfileVal" 0,12,142(50),14 sidetag tagset(1)
+	"ValueInUse" checkbox member "ValueInUse" 152(50),17,73(50),9
+	"ProfileCategory" hyperlink member "ProfileCategory" 0,0,168(50),9 sidetag tagset(1)
+	"Prof_SelProfiles" control "Elk9.grid" 0,133,293(100),84(100) ENU ""
+	{
+		"_cx" = "5080"
+		"_cy" = "5080"
+		"Enabled" = "0"
+		"FolderName" = "Prof_SelProfiles"
+		"ConfirmDelete" = "0"
+		"AllowDelete" = "0"
+		"AllowOpen" = "0"
+		"AllowAdds" = "0"
+		"Toolbar" = "-1"
+		"ManualFill" = "0"
+		"Configurable" = "0"
+		"MaxRows" = "0"
+		"PrintButton" = "0"
+		"Collapsable" = "0"
+		"ShowGroupBox" = "0"
+		"OpenOnAdd" = "0"
+		"Filter" = ""
+		"GridID" = "{BA20097D-2B10-4CDD-A0C7-9F3E164EAE3B}"
+		"BackColor" = "2147483653"
+		"ForeColor" = "4294967295"
+		"BandOnMember" = ""
+		"BandFolder" = ""
+		"ColumnCount" = "0"
+		"TotalCount" = "0"
+		"Caption_StringCount" = "0"
+	}
+	"txtDescription" edit member "Description" tag ENU "" 0,31,295(100),99 multiline autovscroll vscroll sidetag tagset(1)
+}
+
+form "Prof_SelProfileProfileCategory" for "Prof_SelProfile" 250,150
+{
+	"ProfileCategory" form member "ProfileCategory" 0,0,250(100),150(100)
+}
+
+form "Prof_AppliesToProfileClass" for "Prof_AppliesTo" 250,150
+{
+	"ProfileClass" form member "ProfileClass" 0,0,250(100),150
+}
+
+form "Prof_AppliesToProfileCategory" for "Prof_AppliesTo" 250,150
+{
+	"Prof_ProfileCategory" form member "ProfileCategory" 0,0,250(100),150(100)
+}
+
+form "Prof_ProfileClass" for "Prof_ProfileClass" 232,47
+{
+	"ClassName" edit member "ClassName" 0,0,162(50),14 autohscroll sidetag
+}

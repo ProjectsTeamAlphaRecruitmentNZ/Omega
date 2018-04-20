@@ -1,0 +1,212 @@
+﻿// Active Elk definition file generated from binary format
+// Date:	2010-10-19 14:44:39
+// User:	build
+
+library "SysObject"
+{
+/* Application Shell - 187 12.0.2.patch */
+version "12.2.109\r\nCopyright (C) StayinFront, Inc 2001-2010"
+aspect "Elk9.Aspect" "SysObject"
+
+class "SystemObj"
+{
+	title(Singular)
+		DEU "Systemobjekt",
+		ELL "Αντικείμενο συστήματος",
+		ENU "System object",
+		FRA "Objet système",
+		ITA "Sistema oggetto ",
+		JPN "システムオブジェクト",
+		KOR "개체 시스템 ",
+		PLK "Obiekt systemu",
+		THA "อ็อบเจกต์ระบบ",
+		ZHS "系统对象"
+	gender DEU neuter
+	properties
+	{
+		"forms" "'Object'"
+		"Hidden" "TRUE"
+		"search" 0
+			properties
+			{
+				"Name" "UCase(Title) @ UCase(value)"
+					title(Singular)
+						ZHT "頭銜",
+						DEU "Titel",
+						ELL "Τίτλος",
+						ENU "Title",
+						FRA "Titre",
+						ITA "Titolo",
+						JPN "タイトル",
+						KOR "타이틀",
+						PLK "Tytuł",
+						THA "ชื่อเรื่อง",
+						ZHS "标题"
+					properties
+					{
+						"Incremental" True
+						"hotkey" 0
+							title(Singular) ENU "T"
+					}
+			}
+		"NoMailMerge" True
+		"NoReport" True
+		"NoDesktopShortCut" True
+		"NoViewbarView" True
+		"NoBucket" True
+	}
+	virtual "ObjType"
+	members
+	{
+		"Title" data VarChar(255)
+		{
+			title(Singular)
+				ZHT "頭銜",
+				DEU "Titel",
+				ELL "Τίτλος",
+				ENU "Title",
+				FRA "Titre",
+				ITA "Titolo",
+				JPN "タイトル",
+				KOR "타이틀",
+				PLK "Tytuł",
+				THA "ชื่อเรื่อง",
+				ZHS "标题"
+			properties
+			{
+				"hotkey" 0
+					title(Singular)
+						DEU "T",
+						ENU "T",
+						FRA "T"
+			}
+			validate
+			{
+				"{51DC4785-D945-46E8-91F6-825BEBC8008D}" validError "Len(Trim(Title))>0" 
+				ZHT "頭銜不能是空的",
+				DEU "Titel darf nicht leer sein",
+				ELL "Ο τίτλος δεν πρέπει να είναι κενός",
+				ENU "Title must not be blank",
+				FRA "Le titre ne peut pas être vide",
+				ITA "Titolo non può essere non elencato",
+				JPN "タイトルを入力してください。",
+				KOR "타이틀란은 비워둘 수 없습니다.",
+				PLK "Tytuł nie może być pusty",
+				THA "ชื่อเรื่องจะต้องไม่เว้นว่าง",
+				ZHS "标题禁止空"
+			}
+		}
+		"Descrip" data LongVarChar
+		{
+			title(Singular)
+				ZHT "說明",
+				DEU "Beschreibung",
+				ELL "Περιγραφή",
+				ENU "Description",
+				FRA "Description",
+				ITA "Descrizione",
+				JPN "詳細",
+				KOR "설명",
+				PLK "Opis",
+				THA "คำอธิบาย",
+				ZHS "描述"
+			gender DEU feminine,FRA feminine
+			properties
+			{
+				"hotkey" 0
+					title(Singular)
+						DEU "B",
+						ENU "D",
+						FRA "D"
+			}
+		}
+	}
+	index "A"
+		on "Title"
+		configurations
+		{
+			"Server" include
+		}
+	index "B"
+		on "UCase(Title)"
+		configurations
+		{
+			"Server" include
+		}
+	sort [ENU] "Title" asc
+	prompt ""
+		ENU "Title"
+}
+
+class "ClassObj" from "SystemObj"
+{
+	properties
+	{
+		"Forms" "'ClassObj'"
+	}
+	members
+	{
+		"ClassName" data VarChar(32)
+		{
+			title(Singular)
+				DEU "Klasse",
+				ELL "Κλάση",
+				ENU "Class",
+				FRA "Classe",
+				ITA "Classe",
+				JPN "クラス",
+				KOR "계급",
+				PLK "Klasa",
+				THA "คลาส",
+				ZHS "类"
+			gender DEU feminine,FRA feminine
+			properties
+			{
+				"Hotkey" 0
+					title(Singular)
+						DEU "K",
+						ENU "C",
+						FRA "C"
+			}
+			canmodify "IsNew"
+		}
+	}
+	index "A"
+		on "ClassName"
+		configurations
+		{
+			"Server" include
+		}
+	sort [ENU] 
+		"ClassName" asc,
+		"Title" asc
+	prompt ""
+		ENU "IIF(IsEmpty(ClassName),\"\",System.Classes(ClassName).Title(0) & \": \" & Title)"
+	script VBScript
+<%
+Function ObjClass
+	Set ObjClass=System.Classes(This.ClassName)
+End Function
+%>
+}
+
+
+
+}
+layout
+<%
+<?xml version="1.0"?>
+<AeDesigner_doc version="3">
+	<class_diagram name="SysObject" width="1000" height="1000">
+		<class name="SystemObj" left="33" top="55" right="167" bottom="145">
+			<member name="Title" type="data"/>
+			<member name="Descrip" type="data"/>
+			<hide show_base_members="1"/></class>
+		<class name="ClassObj" left="333" top="55" right="467" bottom="145">
+			<member name="ClassName" type="data"/>
+			<hide show_base_members="1"/></class>
+		<generalization base="SystemObj" derived="ClassObj"/></class_diagram>
+	<TargetPlatforms>1</TargetPlatforms>
+	<DefaultScriptLang>VBScript</DefaultScriptLang>
+</AeDesigner_doc>
+%>

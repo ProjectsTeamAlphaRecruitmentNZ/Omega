@@ -1,0 +1,48 @@
+﻿form "frmObjectIcon" 28,24
+{
+	"imgicon" control "Forms.Image.1" 0,0,28,24 ENA "imgicon"
+	{
+	}
+	OnLoad "Form_Load"
+	OnInit "Form_Init"
+	Script VBScript
+<%
+Sub Form_Load()  
+	'-- DKL 2003-06-20 Hide the border…comment this if you want a border	
+	Me.imgIcon.Control.BorderColor = Me.Parent.BackColor
+End Sub
+
+Sub Form_Init()  
+	'-- DKL 2003-06-20 ADD THE ICON TO THE FORM	
+	Me.imgIcon.Visible = False
+	Me.imgIcon.Control.BorderColor = Me.BackColor    
+	Me.imgIcon.Control.Picture = System.LargeIcon(Me.Parent.Object.Icon(Me.Parent.Context))
+	Me.imgIcon.Visible = True
+End Sub
+%>
+}
+
+form "frmObjectIconSmall" 18,14
+{
+	"imgicon" control "Forms.Image.1" 0,0,18,14 ENA "imgicon"
+	{
+	}
+	OnLoad "Form_Load"
+	OnInit "Form_Init"
+	Script VBScript
+<%
+Sub Form_Load()  
+	'-- DKL 2003-06-20 Hide the border…comment this if you want a border	
+	Me.imgIcon.Control.BorderColor = Me.Parent.BackColor
+End Sub
+
+Sub Form_Init()  
+	'-- DKL 2003-06-20 ADD THE ICON TO THE FORM	
+	Me.imgIcon.Visible = False
+	Me.imgIcon.Control.BorderColor = Me.BackColor    
+	Me.imgIcon.Control.Picture = System.SmallIcon(Me.Parent.Object.Icon(Me.Parent.Context))
+	Me.imgIcon.Visible = True
+End Sub
+%>
+}
+

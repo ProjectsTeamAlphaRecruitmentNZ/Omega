@@ -1,0 +1,173 @@
+﻿// Active Elk definition file generated from binary format
+// Date:	2010-10-07 15:46:22
+// User:	build
+
+library "DBUserStore"
+{
+/* Application Shell - 187 12.0.2.30 */
+properties
+{
+	"UserStore" 0
+		properties
+		{
+			"ConcurrencyLevel" "Low"
+		}
+}
+version "12.2.106\r\nCopyright (C) StayinFront, Inc 2001-2010"
+aspect "Elk9.Aspect" "DBUserStore"
+
+class "UserStore"
+{
+	title(Singular)
+		ELL "ΑποθήκευσηΧρήστη",
+		ENU "UserStore",
+		ITA "Archivio Utente",
+		JPN "ユーザーストア"
+	members
+	{
+		"DateTimeAdd" data TimeStamp
+		{
+			title(Singular)
+				DEU "Wenn hinzugefügt",
+				ELL "Πότε έγινε η πρόσθεση",
+				ENU "When Added",
+				FRA "Date/heure de l'ajout",
+				ITA "Quando Aggiungi",
+				JPN "追加日時",
+				PLK "Po dodaniu",
+				THA "เมื่อเพิ่ม",
+				ZHS "何时添加"
+			gender FRA feminine
+			field "DTAdd"
+			default "Now()"
+		}
+		"Name" data VarChar(50)
+		{
+			title(Singular)
+				DEU "Eigenschaftenname",
+				ELL "Όνομα ιδιότητας",
+				ENU "Property Name",
+				FRA "Nom de la propriété",
+				ITA "Nome Proprietà",
+				JPN "プロパティ名",
+				PLK "Nazwa właściwości",
+				THA "ชื่อคุณสมบัติ",
+				ZHS "属性名称"
+		}
+		"NodeType" data SmallInt
+		{
+			title(Singular)
+				DEU "Knotentyp",
+				ELL "Τύπος Κόμβου",
+				ENU "Node Type",
+				FRA "Type de noeud",
+				ITA "Tipo Nodo",
+				JPN "ノード タイプ",
+				PLK "Typ węzła",
+				THA "ประเภทโหนด",
+				ZHS "节点类型"
+		}
+		"Data" data LongVarBinary
+		{
+			title(Singular)
+				DEU "Knotendaten",
+				ELL "Κόμβος Δεδομένων",
+				ENU "Node Data",
+				FRA "Données de noeud",
+				ITA "Dati Nodo",
+				JPN "ノード データ",
+				PLK "Dane węzła",
+				THA "ข้อมูลโหนด",
+				ZHS "节点数据"
+			gender DEU feminine,FRA feminine
+		}
+		"Parent" join "UserStore"
+		{
+			title(Singular)
+				DEU "Übergeordneter Knoten",
+				ELL "Γονικός Κόμβος",
+				ENU "Parent Node",
+				FRA "Noeud parent",
+				ITA "Nodo Principale",
+				JPN "親ノード",
+				PLK "Węzeł nadrz.",
+				THA "โหนดต้นทาง",
+				ZHS "父节点"
+			ontargetdelete delete
+			
+			folder "Nodes"
+			{
+				title(Singular)
+					DEU "Knoten",
+					ELL "Κόμβοι",
+					ENU "Nodes",
+					FRA "Noeuds",
+					ITA "Nodi",
+					JPN "ノード",
+					PLK "Węzły",
+					THA "โหนด",
+					ZHS "节点"
+			}
+			choose folder 
+			{
+			}
+		}
+	}
+	index "A"
+		on "Parent"
+		configurations
+		{
+			"Server" include
+		}
+	prompt ""
+		ENU "iif (IsNull(Parent) And CStr (User.Object.Key) = Name, User.Id, Name)"
+}
+
+
+sysclass "UserStore" from "UserStore"
+{
+	title(Singular) ENU "UserStore"
+	
+	folder "UserStore"
+	{
+		title(Singular)
+			ELL "ΑποθήκευσηΧρήστη",
+			ENU "User Store",
+			ITA "Archivio Utente",
+			JPN "ユーザーストア",
+			PLK "Magazyn użytkowników",
+			THA "ที่จัดเก็บผู้ใช้"
+		properties
+		{
+			"FolderSets" 0
+				properties
+				{
+					"Admin" 0
+				}
+			"hidden" True
+		}
+		filter "IsNull(Parent)"
+	}
+}
+
+
+}
+layout
+<%
+<?xml version="1.0"?>
+<AeDesigner_doc version="3">
+	<class_diagram name="DBUserStore" width="1000" height="1000">
+		<class name="UserStore" left="33" top="55" right="167" bottom="148">
+			<member name="Parent" type="join"/>
+			<member name="DateTimeAdd" type="data"/>
+			<member name="Name" type="data"/>
+			<member name="NodeType" type="data"/>
+			<member name="Data" type="data"/>
+			<hide show_base_members="1">
+				<link_in_list name="Parent" forced="0"/></hide>
+		</class>
+	</class_diagram>
+	<TargetPlatforms>1</TargetPlatforms>
+	<DefaultScriptLang>VBScript</DefaultScriptLang>
+</AeDesigner_doc>
+%>

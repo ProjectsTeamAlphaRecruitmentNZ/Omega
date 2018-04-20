@@ -1,0 +1,349 @@
+﻿// Active Elk definition file generated from binary format
+// Date:	2011-06-22 17:24:48
+// User:	build
+
+library "Calendar"
+{
+/* Application Shell - CRM12 12.0.2.patch */
+properties
+{
+	"ELK9 Calendar" 0
+		title(Singular)
+			ELL "ELK9 Ημερολόγιο",
+			ENU "ELK9 Calendar",
+			ESP "Calendario ELK9",
+			ITA "Calendario ELK9 ",
+			PLK "Kalendarz ELK9",
+			THA "ปฏิทิน ELK9",
+			ZHS "ELK9日历"
+		properties
+		{
+			"Common" 0
+				title(Singular)
+					ELL "ΈλεγχοςΠροβολήςΗμέρας",
+					ENU "DayViewControl"
+				properties
+				{
+					"MilitaryTime" True
+						title(Singular)
+							ELL "Ώρα ανάκλησης στα όπλα",
+							ENU "MilitaryTime",
+							JPN "軍事時間"
+					"ShowIcons" False
+						title(Singular) ENU "ShowIcons"
+				}
+			"DefaultUserPickerForm" "False"
+			"CalendarChooser" "True"
+			"HicardUserPickerForm" "False"
+		}
+	"FormChoose" 0
+		properties
+		{
+			"DayView" "True"
+				properties
+				{
+					"Context" "Calendar"
+					"Priority" 60
+				}
+			"WorkWeekView" "True"
+				properties
+				{
+					"Context" "Calendar"
+					"Priority" 55
+				}
+			"WeekView" "True"
+				properties
+				{
+					"Context" "Calendar"
+					"Priority" 50
+				}
+			"MonthView" "True"
+				properties
+				{
+					"Context" "Calendar"
+					"Priority" 45
+				}
+		}
+}
+version "12.2.118\r\nCopyright (C) StayinFront, Inc 2001-2011"
+aspect "Elk9.Aspect" "Calendar"
+script VBScript
+<%
+Function GetCalendarProperty(sProperty) ' *-- Function GetCalendarProperty(sProperty as String)
+	Dim oProps ' *-- 	Dim oProps as IAeProperties
+	Set oProps=System.Properties("Elk9 Calendar")
+	
+	Dim oProp ' *-- 	Dim oProp as IAeProperty
+	Set oProp=oProps.Properties.Item(sProperty)
+	If oProp Is Nothing Then
+		Select Case sProperty
+			Case "UsersFolder"
+				GetCalendarProperty="Users"
+			Case "UserSelectionStyle"
+				GetCalendarProperty="Standard"				
+			Case "UserPickerFormExpn"
+				GetCalendarProperty="iif(LCase(UserSelectionStyle)=""highcardinality"",""HicardUserPickerForm"",""DefaultUserPickerForm"")"								
+		End Select
+	Else
+		GetCalendarProperty=oProp.Value
+	End If
+End Function
+Function GetUserPickerFormName() ' *-- Function GetUserPickerFormName() as String
+	' Load the user picker form
+	Dim sUserFormExpr
+	' Get the form expression from properties
+	sUserFormExpr=GetCalendarProperty("UserPickerFormExpn")
+	Dim oExpr: Set oExpr = CreateObject("ActivElk.Filter") ' *-- 	Dim oExpr as new ActivElk.Filter
+	oExpr.AddSymbol "UserSelectionStyle",GetCalendarProperty("UserSelectionStyle")
+	sErrors=""
+	If oExpr.Parse(sUserFormExpr,,sErrors)=True Then
+		' Set the form
+		GetUserPickerFormName=oExpr.Evaluate
+	Else
+		GetUserPickerFormName="DefaultUserPickerForm"
+	End If	
+End Function
+Function GetCalPropMilitaryTime(defaultValue)
+	Dim ctrlProp
+	Dim militaryProp
+	GetCalPropMilitaryTime = defaultValue
+	Set ctrlProp = system.properties("Elk9 calendar").properties("Common")
+	If Not IsNull(ctrlProp) Then
+		Set militaryProp = ctrlProp.properties("MilitaryTime")
+		If Not IsNull(militaryProp) Then
+			GetCalPropMilitaryTime = militaryProp.value
+		End If
+	End If
+End Function
+%>
+
+class "DayInfo"
+{
+	title(Singular)
+		ZHT "日期資訊",
+		DEU "Tagesinformationen",
+		ELL "Πληροφορία ημέρας",
+		ENU "Day Infomation",
+		ESP "Información del día",
+		FRA "Information sur la journée",
+		ITA "Informazione Giorno",
+		JPN "日報",
+		KOR "날짜 정보",
+		PLK "Informacje o dniu",
+		THA "ข้อมูลของวัน",
+		ZHS "白天信息"
+	gender DEU feminine,FRA feminine
+	members
+	{
+		"Date" data Date
+		{
+			title(Singular)
+				ZHT "日期",
+				DEU "Datum",
+				ELL "Ημερομηνία",
+				ENU "Date",
+				ESP "Fecha",
+				FRA "Date",
+				ITA "Data",
+				JPN "日付",
+				KOR "날짜",
+				PLK "Data",
+				THA "วันที่",
+				ZHS "日期"
+			gender DEU neuter,FRA feminine
+			properties
+			{
+				"Hotkey" 0
+					title(Singular)
+						DEU "D",
+						ENU "D",
+						FRA "D"
+			}
+		}
+		"Label" data Char(40)
+		{
+			title(Singular)
+				ZHT "標籤",
+				DEU "Beschriftung",
+				ELL "Ετικέτα",
+				ENU "Label",
+				ESP "Etiqueta",
+				FRA "Libellé",
+				ITA "Etichetta",
+				JPN "ラベル",
+				KOR "라벨",
+				PLK "Etykieta",
+				THA "คำอธิบาย",
+				ZHS "标签"
+			gender DEU feminine
+			properties
+			{
+				"Hotkey" 0
+					title(Singular)
+						DEU "B",
+						ENU "L",
+						FRA "L",
+						ITA "E"
+			}
+		}
+		"Colour" data SmallInt
+		{
+			title(Singular)
+				ZHT "顏色",
+				DEU "Farbe",
+				ELL "Χρώμα",
+				ENU "Color",
+				FRA "Couleur",
+				ITA "Colore",
+				JPN "配色",
+				KOR "색콅E",
+				PLK "Kolor",
+				THA "สี",
+				ZHS "颜色"
+			gender DEU feminine,FRA feminine
+			properties
+			{
+				"Hotkey" 0
+					title(Singular)
+						DEU "F",
+						ENU "C",
+						FRA "C"
+			}
+		}
+		"Icon" data SmallInt
+		{
+			title(Singular)
+				ZHT "圖示",
+				DEU "Symbol",
+				ELL "Εικονίδιο",
+				ENU "Icon",
+				ESP "Icono",
+				FRA "Icône",
+				ITA "Icona",
+				JPN "アイコン",
+				KOR "아이콘",
+				PLK "Ikona",
+				THA "ไอคอน",
+				ZHS "图标"
+			gender DEU neuter,FRA feminine
+			properties
+			{
+				"Hotkey" 0
+					title(Singular)
+						DEU "S",
+						ENU "I",
+						FRA "I"
+			}
+		}
+		"User" join "stdUser"
+		{
+			title(Singular)
+				ZHT "使用者",
+				DEU "Benutzer",
+				ELL "Χρήστης",
+				ENU "User",
+				ESP "Usuario",
+				FRA "Utilisateur",
+				ITA "Utente",
+				JPN "ユーザー",
+				KOR "사퓖E",
+				PLK "Użytkownik",
+				THA "ผู้ใช้",
+				ZHS "用户"
+			NotNull
+			ontargetdelete delete
+			
+			folder "DayInfo"
+			{
+				properties
+				{
+					"Hidden" True
+				}
+			}
+			choose folder 
+			{
+			}
+		}
+	}
+	index "A"
+		on "Members.User"
+		configurations
+		{
+			"Server" include
+		}
+}
+stringtable
+{
+	"ChooseUser"
+		ENU "Choose a user",
+		ESP "Elegir un usuario",
+		ITA "Scegli un utente",
+		JPN "ユーザーの選択",
+		PLK "Wybierz użytkownika",
+		THA "เลือกผู้ใช้",
+		ZHS "选择用户"
+	"Calendar_Everyone"
+		ENU "Everyone",
+		ESP "Todos",
+		ITA "Tutti",
+		JPN "全員",
+		PLK "Każdy",
+		THA "ทุกคน",
+		ZHS "每个人"
+	"Calendar_Group"
+		ENU "Group",
+		ESP "Grupo",
+		ITA "Gruppo",
+		JPN "グループ",
+		KOR "그룹",
+		PLK "Grupa",
+		THA "กลุ่ม",
+		ZHS "组"
+}
+
+
+sysclass "DayInfo" from "DayInfo"
+{
+	
+	folder "DayInfo"
+	{
+		title(Singular)
+			ENU "Day Information",
+			ESP "Información del día",
+			JPN "1 日の情報",
+			PLK "Informacje o dniu",
+			THA "ข้อมูลของวัน"
+		properties
+		{
+			"hidden" True
+			"FolderSets" 0
+				properties
+				{
+					"Admin" 0
+				}
+		}
+	}
+}
+
+
+}
+layout
+<%
+<?xml version="1.0"?>
+<AeDesigner_doc version="3">
+	<class_diagram name="Calendar" width="1000" height="1000">
+		<class name="DayInfo" left="172" top="54" right="306" bottom="144">
+			<member name="Date" type="data"/>
+			<member name="Label" type="data"/>
+			<member name="Colour" type="data"/>
+			<member name="Icon" type="data"/>
+			<hide show_base_members="1"/></class>
+		<class name="stdUser" socket_class="1" left="268" top="272" right="402" bottom="362">
+			<hide show_base_members="1"/></class>
+		<link_join name="User" class="DayInfo" target="stdUser"/></class_diagram>
+	<TargetPlatforms>1</TargetPlatforms>
+	<DefaultScriptLang>VBScript</DefaultScriptLang>
+	<ScreenResolutions>
+		<form name="HicardUserPickerForm" width="800" height="600" platform="0"/></ScreenResolutions>
+</AeDesigner_doc>
+%>

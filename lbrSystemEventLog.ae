@@ -1,0 +1,1141 @@
+﻿// Active Elk definition file generated from binary format
+// Date:	2011-05-25 21:29:12
+// User:	GJoseph
+
+library "lbrSystemEventLog"
+{
+/* (Pre-Release) */
+title(Singular)
+	DEU "Systemereignisprotokoll",
+	ELL "Γεγονός Καταγραφή Συστήματος",
+	ENU "System Event Log",
+	ESP "Registro de eventos del sistema",
+	FRA "Journal d'événements système",
+	KOR "시스템 이벤트 로그",
+	PLK "Dziennik zdarzeń systemowych",
+	THA "บันทึกอีเวนต์ของระบบ"
+gender DEU neuter
+version "10.182.47\r\nCopyright (C) StayinFront, Inc 2001-2010"
+uses "stdbasecomponents"
+aspect "Elk9.Aspect" "lbrSystemEventLog"
+script VBScript
+<%
+Function LG_LogJobStarted(tstrProcessID)
+
+	Set objEventLog = System.LG_LogEvent(tstrProcessID,0)
+
+	' Ensure the Timestamp Finish is Null
+	
+	objEventLog.TimeStamp.Finish = Null
+
+	' Set the status code to "Running"
+		
+	objEventLog.StatusCode = 0
+	objEventLog.Save 	
+
+	Set LG_LogJobStarted = objEventLog
+End Function
+
+Function LG_LogEvent(tstrProcess, tintType)
+
+	' Write a System Log Entry and return the instance to the caller so they
+	' can write any details required
+
+	Set LG_LogEvent = Nothing
+
+	Select Case tintType
+		Case 0
+			Set LG_LogEvent = System.Folders("LG_SystemEvent").CreateNewInstance(System.Classes("LG_Info"))			
+		Case 1
+			Set LG_LogEvent = System.Folders("LG_SystemEvent").CreateNewInstance(System.Classes("LG_Warning"))			
+		Case 2
+			Set LG_LogEvent = System.Folders("LG_SystemEvent").CreateNewInstance(System.Classes("LG_Error"))			
+	End Select
+
+	If Not LG_LogEvent Is Nothing Then
+		With LG_LogEvent
+			.Process = tstrProcess
+			.Save
+		End With	
+	End If	
+
+End Function
+%>
+
+class "LG_Event" from "stdBaseClass" embedded
+{
+	title(Singular)
+		DEU "Systemereignis",
+		ELL "Γεγονός Συστήματος",
+		ENU "System Event",
+		ESP "Evento del sistema",
+		FRA "Evénement système",
+		JPN "システムイベント",
+		KOR "시스템 이벤트",
+		PLK "Zdarzenie systemowe",
+		THA "อีเวนต์ของระบบ"
+	gender DEU neuter
+	properties
+	{
+		"NoSync" 0
+		"Forms" "'LG_Event'"
+		"Search" 0
+			properties
+			{
+				"Process" "UCase(Process) @ UCase(value)"
+					title(Singular)
+						DEU "Prozess",
+						ELL "Επεξεργασία",
+						ENU "Process",
+						ESP "Proceso",
+						FRA "Processus",
+						JPN "プロセス",
+						KOR "프로세스",
+						PLK "Proces",
+						THA "ประมวลผล"
+				"StartedSince" "Timestamp.Start >= value"
+					title(Singular)
+						DEU "Gestartet vor",
+						ELL "Εκκίνηση από",
+						ENU "Started Since",
+						ESP "Iniciado desde",
+						FRA "Commencé depuis",
+						JPN "開始日",
+						KOR "다음 이후 시작됨",
+						PLK "Uruchomione od",
+						THA "เริ่มตั้งแต่"
+					properties
+					{
+						"DataType" 12
+					}
+			}
+		"CanUIModify" "False"
+	}
+	virtual "Class"
+	cancreatenew "False"
+	members
+	{
+		"Process" data VarChar(60)
+		{
+			title(Singular)
+				DEU "Prozess",
+				ELL "Επεξεργασία",
+				ENU "Process",
+				ESP "Proceso",
+				FRA "Processus",
+				JPN "プロセス",
+				KOR "프로세스",
+				PLK "Proces",
+				THA "ประมวลผล"
+			properties
+			{
+				"Hotkey" 0
+					title(Singular)
+						DEU "P",
+						ENU "P",
+						ESP "P",
+						FRA "P"
+			}
+		}
+		"TimeStamp" class "stdTimeStamp" embedded
+		{
+			title(Singular)
+				DEU "Zeitstempel",
+				ELL "Χρονική Σήμανση",
+				ENU "Time stamp",
+				ESP "Marca de tiempo",
+				FRA "Horodatage",
+				JPN "タイムスタンプ",
+				KOR "시간 스탬프",
+				PLK "Znacznik czasu",
+				THA "ประทับเวลา"
+			properties
+			{
+				"Hotkey" 0
+					title(Singular)
+						DEU "T",
+						ENU "T",
+						ESP "T",
+						FRA "H"
+			}
+		}
+		"Notes" data LongVarChar
+		{
+			title(Singular)
+				DEU "Anmerkungen",
+				ELL "Σημιεώσεις",
+				ENU "Notes",
+				ESP "Notas",
+				FRA "Notes",
+				JPN "メモ",
+				KOR "메모",
+				PLK "Uwagi",
+				THA "หมายเหตุ"
+			gender DEU feminine,FRA feminine
+		}
+	}
+	sort [ENU] "RecordStamp.WhenAdd" desc
+	prompt ""
+		ENU "TimeStamp.Start & \" \" & Process"
+	icon ""
+		ENU "'LG_Event'"
+	defaulticon ""
+		ENU "lg_event"
+	script VBScript
+<%
+Sub LogErrorDetail(strClassName, strMemberName, strDetail)
+
+	' Log an Error Detail Entry
+	
+	Set objNewErrorDetail = This.Folders("LG_ErrorDetails").CreateNewInstance
+	With objNewErrorDetail
+		.ClassName = strClassName
+		.MemberName = strMemberName
+		.ErrorDetailNotes = strDetail
+		.Save
+	End With
+End Sub
+
+Sub LogNormalDetail(strDetail)
+
+	' Log a Normal Detail Entry
+	
+	Set objNewDetail = This.Folders("LG_Details").CreateNewInstance
+	With objNewDetail
+		.DetailNotes = strDetail
+		.Save	
+	End With
+End Sub
+
+Sub LogWarningDetail(strDetail)
+
+	' Log a Normal Detail Entry
+	
+	Set objNewDetail = This.Folders("LG_WarningDetails").CreateNewInstance
+	With objNewDetail
+		.WarningDetailNotes = strDetail
+		.Save	
+	End With
+End Sub
+
+Function LogJobFailed(tstrMessage)
+
+	' Set status to Failed and Ending Date
+
+	If Len(tstrMessage) > 0 Then
+		This.LogErrorDetail "","",tstrMessage
+	End If
+	
+	With This
+		.StatusCode = 4
+		.TimeStamp.Finish = Now
+		.Notes = tstrMessage
+		.Save
+	End With
+
+End Function
+
+Function LogJobComplete(tstrMessage)
+
+	' Set status to Complete and Ending Date
+	
+	If Len(tstrMessage) > 0 Then
+		This.LogNormalDetail tstrMessage
+	End If
+
+	' Determine the status code based on the existance of
+	' errors or warnings in the log.  Errors rank higher than
+	' warnings
+
+	intStatus = 1	
+	If This.Folders("LG_ErrorDetails").Count > 0 Then
+		intStatus = 3
+	Else
+		If This.Folders("LG_WarningDetails").Count > 0 Then
+			intStatus = 2		
+		End If
+	End If
+	
+	' Set the job status as complete
+	
+	With This
+		.StatusCode = intStatus
+		.TimeStamp.Finish = Now
+		.Notes = tstrMessage
+		.Save
+	End With
+	
+End Function
+%>
+}
+
+class "LG_Info" from "LG_Event"
+{
+	title(Singular)
+		DEU "Informationen",
+		ELL "Πληροφορίες",
+		ENU "Information",
+		ESP "Información",
+		FRA "Information",
+		JPN "情報",
+		KOR "정보",
+		PLK "Informacje",
+		THA "ข้อมูล"
+	gender DEU feminine,FRA feminine
+	properties
+	{
+		"NoSync" 0
+		"Forms" "'LG_Info'"
+		"Search" 0
+			properties
+			{
+				"StatusCode" "StatusCode = value"
+					title(Singular)
+						DEU "Ereignisstatus",
+						ELL "Κατάσταση Γεγονότος",
+						ENU "Event Status",
+						ESP "Estado de evento",
+						FRA "Etat de l'événement",
+						JPN "イベントステータス",
+						KOR "이벤트 상태",
+						PLK "Status zdarzeń",
+						THA "สถานะอีเวนต์"
+			}
+	}
+	cancreatenew "True"
+	members
+	{
+		"StatusCode" enum "LG_Event_StatusCode" forced
+		{
+			title(Singular)
+				DEU "Statuscode",
+				ELL "Κώδικας Κατάστασης",
+				ENU "Status code",
+				ESP "Código de estado",
+				FRA "Code d'état",
+				JPN "ステータスコード",
+				KOR "상태 코드",
+				PLK "Kod statusu",
+				THA "รหัสสถานะ"
+			properties
+			{
+				"Hotkey" 0
+					title(Singular)
+						DEU "S",
+						ENU "S",
+						ESP "S",
+						FRA "C"
+			}
+			default "0"
+		}
+	}
+	icon ""
+		ENU "IIF(StatusCode=0,'lg_running',iif(StatusCode=1,'lg_info',IIF(StatusCode=2,'lg_warning','lg_error')))"
+}
+
+class "LG_Warning" from "LG_Event"
+{
+	title(Singular)
+		DEU "Warnung",
+		ELL "Προειδοποίηση",
+		ENU "Warning",
+		ESP "Aviso",
+		FRA "Avertissement",
+		JPN "警告",
+		KOR "경고",
+		PLK "Ostrzeżenie",
+		THA "คำเตือน"
+	gender DEU feminine
+	properties
+	{
+		"NoSync" 0
+		"Forms" "'LG_Event'"
+	}
+	cancreatenew "True"
+	icon ""
+		ENU "'lg_warning'"
+}
+
+class "LG_Error" from "LG_Event"
+{
+	title(Singular)
+		DEU "Fehler",
+		ELL "Σφάλμα",
+		ENU "Error",
+		ESP "Error",
+		FRA "Erreur",
+		JPN "エラー",
+		KOR "오류",
+		PLK "Błąd",
+		THA "ข้อผิดพลาด"
+	gender FRA feminine
+	properties
+	{
+		"NoSync" 0
+		"Forms" "'LG_Event'"
+	}
+	cancreatenew "True"
+	icon ""
+		ENU "'lg_error'"
+}
+
+class "LG_Detail"
+{
+	title(Singular)
+		DEU "Detail",
+		ELL "Λεπτομέρεια",
+		ENU "Detail",
+		ESP "Detalle",
+		FRA "Détail",
+		JPN "詳細",
+		KOR "상세 정보",
+		PLK "Szczegół",
+		THA "รายละเอียด"
+	gender DEU neuter
+	properties
+	{
+		"NoSync" 0
+		"Forms" "'LG_Detail'"
+		"CanUIModify" "False"
+	}
+	members
+	{
+		"LG_Event" join "LG_Event"
+		{
+			title(Singular)
+				DEU "Systemereignis",
+				ELL "Γεγονός Συστήματος",
+				ENU "System Event",
+				ESP "Evento del sistema",
+				FRA "Evénement système",
+				JPN "ログイベント",
+				KOR "시스템 이벤트",
+				PLK "Zdarzenie systemowe",
+				THA "อีเวนต์ของระบบ"
+			gender DEU neuter
+			ontargetdelete delete
+			
+			folder "LG_Details"
+			{
+				title(Singular)
+					DEU "Details",
+					ELL "Λεπτομέρειες",
+					ENU "Details",
+					ESP "Detalles",
+					FRA "Détails",
+					JPN "詳細",
+					KOR "상세정보",
+					PLK "Szczegóły",
+					THA "รายละเอียด"
+				gender DEU neuter
+				properties
+				{
+					"Hidden" "True"
+				}
+				sort [ENU] "stdTimeStamp.Start" asc
+			}
+			choose folder 
+			{
+				title(Singular)
+					DEU "LG_Ereignis",
+					ENU "LG_Event",
+					ESP "LG_Event",
+					JPN "ログイベント"
+				gender DEU neuter
+			}
+		}
+		"DetailNotes" data LongVarChar
+		{
+			title(Singular)
+				DEU "Anmerkungen",
+				ELL "Σημειώσεις",
+				ENU "Notes",
+				ESP "Notas",
+				FRA "Notes",
+				JPN "メモ",
+				KOR "메모",
+				PLK "Uwagi",
+				THA "หมายเหตุ"
+			gender DEU feminine,FRA feminine
+		}
+		"stdTimeStamp" class "stdTimeStamp" embedded
+		{
+			title(Singular)
+				DEU "Zeitstempel",
+				ELL "Χρονική σήμανση",
+				ENU "Timestamp",
+				ESP "Timestamp",
+				FRA "Horodatage",
+				JPN "タイムスタンプ"
+		}
+	}
+	prompt ""
+		ENU "stdTimeStamp.Start & \" - \" & DetailNotes"
+	icon ""
+		ENU "'LG_Event'"
+	defaulticon ""
+		ENU "lg_event"
+}
+
+class "LG_ErrorDetail"
+{
+	title(Singular)
+		DEU "Fehlerdetail",
+		ELL "Λεπτομέρειες Σφάλματος",
+		ENU "Error Detail",
+		ESP "Detalle del error",
+		JPN "エラー詳細",
+		KOR "오류 상세 정보",
+		PLK "Szczegół błędu",
+		THA "รายละเอียดข้อผิดพลาด"
+	gender DEU neuter
+	properties
+	{
+		"Forms" ""
+		"CanUIModify" "False"
+		"NoSync" 0
+			title(Singular)
+				ENU "NoSync",
+				ESP "NoSync"
+	}
+	members
+	{
+		"LG_Event" join "LG_Event"
+		{
+			title(Singular)
+				DEU "Systemereignis",
+				ELL "Γεγονός Συστήματος",
+				ENU "System Event",
+				ESP "Evento del sistema",
+				FRA "Evénement système",
+				JPN "システムイベント",
+				KOR "시스템 이벤트",
+				PLK "Zdarzenie systemowe",
+				THA "อีเวนต์ของระบบ"
+			gender DEU neuter
+			ontargetdelete delete
+			
+			folder "LG_ErrorDetails"
+			{
+				title(Singular)
+					DEU "Fehler",
+					ELL "Σφάλματα",
+					ENU "Errors",
+					ESP "Errores",
+					FRA "Erreurs",
+					JPN "エラー",
+					KOR "오류",
+					PLK "Błędy",
+					THA "ข้อผิดพลาด"
+				gender FRA feminine
+				properties
+				{
+					"Hidden" "True"
+				}
+				sort [ENU] "stdTimeStamp.Start" asc
+			}
+			choose folder 
+			{
+				title(Singular)
+					DEU "LG_Ereignis",
+					ENU "LG_Event",
+					ESP "LG_Event"
+				gender DEU neuter
+			}
+		}
+		"stdTimeStamp" class "stdTimeStamp" embedded
+		{
+			title(Singular)
+				DEU "Zeitstempel",
+				ELL "Χρονική Σήμανση",
+				ENU "Timestamp",
+				ESP "Timestamp",
+				FRA "Horodatage",
+				JPN "タイムスタンプ"
+		}
+		"ClassName" data VarChar(255)
+		{
+			title(Singular)
+				DEU "Klassenname",
+				ELL "Όνομα Κλάσης",
+				ENU "Class Name",
+				ESP "Nombre de clase",
+				FRA "Nom de la classe",
+				JPN "クラス名",
+				KOR "클래스명",
+				PLK "Nazwa klasy",
+				THA "ชื่อคลาส"
+			default "\"\""
+		}
+		"MemberName" data VarChar(255)
+		{
+			title(Singular)
+				DEU "Mitgliedsname",
+				ELL "Όνομα Μέλους",
+				ENU "Member Name",
+				ESP "Nombre de miembro",
+				FRA "Nom du membre",
+				JPN "メンバ名",
+				KOR "회원 이름",
+				PLK "Nazwa członka",
+				THA "ชื่อเมมเบอร์"
+			default "\"\""
+		}
+		"ErrorDetailNotes" data LongVarChar
+		{
+			title(Singular)
+				DEU "Anmerkungen",
+				ELL "Σημειώσεις",
+				ENU "Notes",
+				ESP "Notas",
+				FRA "Notes",
+				JPN "メモ",
+				KOR "메모",
+				PLK "Uwagi",
+				THA "หมายเหตุ"
+			gender DEU feminine,FRA feminine
+			default "\"\""
+		}
+	}
+	prompt ""
+		ENU "stdTimeStamp.Start & \" - \" & ErrorDetailNotes"
+	icon ""
+		ENU "'lg_error'"
+	defaulticon ""
+		ENU "lg_error"
+}
+
+class "LG_WarningDetail"
+{
+	title(Singular)
+		DEU "Warnungsdetails",
+		ELL "Λεπτομέρεια Προειδοποίησης",
+		ENU "Warning Detail",
+		ESP "Detalle de aviso",
+		FRA "Détail de l'avertissement",
+		JPN "警告詳細",
+		KOR "경고 상세 정보",
+		PLK "Szczegół ostrzeżenia",
+		THA "รายละเอียดคำเตือน"
+	gender DEU neuter
+	properties
+	{
+		"CanUIModify" "False"
+		"NoSync" 0
+			title(Singular)
+				ENU "NoSync",
+				ESP "NoSync"
+	}
+	members
+	{
+		"LG_Event" join "LG_Event"
+		{
+			title(Singular)
+				DEU "Systemereignis",
+				ELL "Γεγονός Συστήματος",
+				ENU "System Event",
+				ESP "Evento del sistema",
+				FRA "Evénement système",
+				JPN "システムイベント",
+				KOR "시스템 이벤트",
+				PLK "Zdarzenie systemowe",
+				THA "อีเวนต์ของระบบ"
+			gender DEU neuter
+			ontargetdelete delete
+			
+			folder "LG_WarningDetails"
+			{
+				title(Singular)
+					DEU "Warnungen",
+					ELL "Προειδοποιήσεις",
+					ENU "Warnings",
+					ESP "Avisos",
+					FRA "Avertissements",
+					JPN "警告",
+					KOR "경고",
+					PLK "Ostrzeżenia",
+					THA "คำเตือน"
+				gender DEU feminine
+				properties
+				{
+					"Hidden" "True"
+				}
+				sort [ENU] "stdTimeStamp.Start" asc
+			}
+			choose folder 
+			{
+				title(Singular)
+					DEU "LG_Ereignis",
+					ENU "LG_Event",
+					ESP "LG_Event"
+			}
+		}
+		"stdTimeStamp" class "stdTimeStamp" embedded
+		{
+			title(Singular)
+				DEU "Zeitstempel",
+				ELL "Χρονική Σήμανση",
+				ENU "Timestamp",
+				ESP "Timestamp",
+				FRA "Horodatage",
+				JPN "タイムスタンプ"
+		}
+		"WarningDetailNotes" data LongVarChar
+		{
+			title(Singular)
+				DEU "Anmerkungen",
+				ELL "Σημειώσεις",
+				ENU "Notes",
+				ESP "Notas",
+				FRA "Notes",
+				JPN "メモ",
+				KOR "메모",
+				PLK "Uwagi",
+				THA "หมายเหตุ"
+			gender DEU feminine,FRA feminine
+		}
+	}
+	prompt ""
+		ENU "stdTimeStamp.Start & \" - \" & WarningDetailNotes"
+	icon ""
+		ENU "'lg_warning'"
+	defaulticon ""
+		ENU "lg_warning"
+}
+
+enum "LG_Event_StatusCode" Integer
+{
+	title(Singular)
+		DEU "LG_Ereignis_StatusCode",
+		ENU "LG_Event_StatusCode",
+		ESP "LG_Event_StatusCode"
+	values
+	{
+		value 0
+		{
+			DEU "Läuft",
+			ELL "Εν εξελλίξει",
+			ENU "Running",
+			ESP "Ejecutando",
+			FRA "En cours d'exécution",
+			JPN "実行中",
+			PLK "Działające",
+			THA "กำลังทำงาน"
+		}
+		value 1
+		{
+			DEU "Abgeschlossen",
+			ELL "Ολοκλήρωση",
+			ENU "Complete",
+			ESP "Completar",
+			FRA "Terminé",
+			JPN "完了",
+			KOR "완성",
+			PLK "Zakończone",
+			THA "เสร็จสิ้น"
+		}
+		value 2
+		{
+			DEU "Abgeschlossen - Warnung",
+			ELL "Προειδοποίηση - Ολοκλήρωση",
+			ENU "Complete - Warning",
+			ESP "Completar: aviso",
+			FRA "Terminé - Avertissement",
+			JPN "完了　-　警告",
+			PLK "Zakończone - Ostrzeżenie",
+			THA "เสร็จสิ้น - คำเตือน"
+		}
+		value 3
+		{
+			DEU "Abgeschlossen - Fehler",
+			ELL "Ολοκλήρωση - Σφάλματα",
+			ENU "Complete - Errors",
+			ESP "Completar: errores",
+			FRA "Terminé - Erreurs",
+			JPN "完了　-　エラー",
+			PLK "Zakończone - Błędy",
+			THA "เสร็จสิ้น - ข้อผิดพลาด"
+		}
+		value 4
+		{
+			DEU "Fehlgeschlagen",
+			ELL "Απέτυχε",
+			ENU "Failed",
+			ESP "Fallido",
+			FRA "Echec",
+			JPN "失敗",
+			PLK "Niepowodzenie",
+			THA "ล้มเหลว"
+		}
+	}
+}
+
+icon "lg_error"
+{
+	large16
+$
+	4752454154454C4B000A0010410410010682004010B83801010E88C4A26007FC
+	5A2B168CC6A371C8EC7A3F2090C8A472492C7A070583C26180002448051498CC
+	A67349ACDA6F389CCEA773C9ECFA7F40A0D0A8744A2D1A8F48A4D2A870100000
+$
+	small16
+$
+	4752454154454C4B000A0010408410010682004010B83800810E88C4A26007FC
+	5800FC0FC11E00782380070460435012386C320F2694CA209249648000C08E80
+	1C00F823E07F0481C160F099381222808A50A248342A0E0F47823FE2B17A1D3A
+	9F5000044233D000484422AA4100423198CEB304AED786621080086643AF10C6
+	5661A110676EB65748843BA0CC415DB75BEEF62BB5F2E044BDDE06774BB08005
+	6EC05B2CF69B40CAC363BBD6EC4228700AB1078080000000
+$
+}
+
+icon "lg_info"
+{
+	large16
+$
+	4752454154454C4B000A0010410410010682004010B83801010E88C4A26007FC
+	5A2B168CC6A371C8EC7A3F2090C8A472492C7A070583C26180002448051498CC
+	A67349ACDA6F389CCEA773C9ECFA7F40A0D0A8744A2D1A8F48A4D2A870100000
+$
+	small16
+$
+	4752454154454C4B000A0010408410010682004010B83800810E88C4A26007FC
+	5A2A9F823FC3F047F47000F003C11C003823021A808A4AA0F289449400C09148
+	23F0382C1E130C00012232995CF8008342A0E2B1762B198B159FD2A973F00CE2
+	1D4F820829E300188022308380C442300046095B115729C01110908844110C02
+	613B10508563095BAE02200DC8456FB15D84421225D2F762B1576CB78B854F09
+	7EB5410238110438239084C040000000
+$
+}
+
+icon "lg_warning"
+{
+	large16
+$
+	4752454154454C4B000A0010410410010682004010B83801010E88C4A26007FC
+	5A2B168CC6A371C8EC7A3F2090C8A472492C7A070583C26180002448051498CC
+	A67349ACDA6F389CCEA773C9ECFA7F40A0D0A8744A2D1A8F48A4D2A870100000
+$
+	small16
+$
+	4752454154454C4B000A0010408410010682004010B83800810E88C4A26007FC
+	5800C086A02290E8D4680704604823007823824A007003E08F095801E01F823E
+	262007C0FE08FC3FC12070583C26180002446371CA2C1D068541C1293048BD1A
+	9F50A8046A7540800A2411118CEB75C00D68661009D6EBD5BB0D6C0002AE56C6
+	156B5DAE095A1056A1B5A0000C6707B4DDAD904BD00C610E118C0670DB859E1D
+	69BE5E46780888884107808000000000
+$
+}
+
+icon "lg_running"
+{
+	large16
+$
+	4752454154454C4B000A0010410410010682004010B83801010E88C4A26007FC
+	5A2B168CC6A371C8EC7A3F208FBF07F1691C59E6FF924A254FC07BFDE72D7F80
+	06003994D1FEC094CE2752B97CE9FEF08CD063F0382C1E130C0002224048A53A
+	2618838E60E41838A60F4B8212A0EAC83AF60E7B838C60E7383AD20EC5A555A0
+	E108894A0E83005C6088BB1445DD074A4220E6283B360ED5839AAD107BC43AEB
+	047B41D491588DFE09328237B0400AFC12A70E7351C01558259F2507CD6260F5
+	B875F6A304B7C3ADB6582586085AA7ECB67B4DAEDB6FB8DCEEB77BCDEEFB7FC0
+	E0F0B87C4E2F1B8FC8E4F2B97CCE6F3B9FD0E8F4BA7D4EAF5BAFD8ECF6A26010
+	100C060402F040C0704020130DDE804140B060341BE8870381E0FB6ED8220709
+	0440C06F0C380F04C14055B702C1605DE941C0E060190681B07018039B581607
+	4481504C1D0781E076026C8048781F0802100A1E42E0A830228A02283A105382
+	18B8230902501E2E098018582707A2908A1A0514544C250582490A420802907C
+	2A0AC2C0B42D0B82F0BC2E92C270C14E0C40790E420340B008050C8300641905
+	01B0B41497C336A11409825080249141F821040AC27076536D00A954207C0037
+	89119C6736DE6907C344440E040100C02C09C2B6DC0A09A7A7FC350501404C36
+	0DE676F0300764E0B23E6FA0B0DA940C9D640400000000000000000000000000
+$
+	small16
+$
+	4752454154454C4B000A0010408410010682004010B83800810E88C4A26007FC
+	5A2AFF8245E311A8CC723F1B8DB9E3CDF3FC11BC3F820103F0447C980125823F
+	23D1B81C160F09860000911404527F148CC7A8144A2D1A8F48A4D2A80019CCE2
+	08208741804228384422101108AA30C08D42A55F88D568901000000000000000
+$
+}
+
+icon "lg_event"
+{
+	large16
+$
+	4752454154454C4B000A0010410410010682004010B83801010E88C4A26007FC
+	5800F08200E320001BCE2CF38FBFE43239248580C0000CE512A8FBC2492F964A
+	E523393C85E6C09C33254C09DCD5E0FC90D027134993CDE12FA3CC68B348FD06
+	9D3892B024B229248E380FAC40E0B0784C32111D87042296483BFE09678AD96D
+	76CB6DBADF70B8DCAE774BADDAEF78BCDEAF77CBEDFAFF6C0500304260061460
+	00C4050018BC063B1F6D0B003245000654C800CC0A8019BC85B449A00012F460
+	0176980007D4D9039AC0010F5F962865765B3D96C76BB8DBEE8BC502F0010450
+	410011C5047000D450356EB6800247380021E8E389BD400287AF993266021DCB
+	20F7BE0048F8800ACF2F93CDE55679FD5E9F5FBBDAAE562B800B4562D000B656
+	2D800B0562C1EF7989C809CD73D800D2070006D828001120D0000B841640A613
+	00062858001D6198621A8647586E1E8761F88A211F8751F80025875258002987
+	C29A2C2522F28233000888D9C71A9CA0C63B63A1002C0005E410000E9100000A
+	47590089298C0518B0624F0024F06251942529525395A599402D0602D0006306
+	063000870A88798C60998799A9AE6C0169B983029826001E9D0000FE77000279
+	E80001A7D592560E6819B043A0C0077C3D00032A2A89A2C3EA3A856BE8414C43
+	14C001EC431EC002484624A63136661D04D1D0001303B131020A10304AAB639C
+	E1222825A2B176B30000FAD964A043998C8799A3328000AF9E178C77B1000B10
+	77A6892A76C1B04A4280A4000AE281F32B08A7AA9BA747C07C7C000721247200
+	060B88000B2E56383ABA0009A879689A4032EF591A60BA0982C812049B002F63
+	0E1B2BEE1182E0B886000076C1000228812280027881278002A8892AB0E27711
+	28C8F28DC30F1C61E40ABB0650D065001D41340008F25639DC58C22CA8000572
+	D4740300D64037330001FCD8000942519F38094CA740212CC0006C1B12742D0F
+	3F084000EC250EE090946D0008B0E08BD446AD50891D489000830C483B7403B8
+	04003C4064E6F9C6725FE560CF6B4202041805DC16404F73695A7CE45F9C09C9
+	C3546B045002130A68C0C9A20DC4BB1837B208D0F48D0008413884BE45420706
+	10F0921837218001683716B829024260042E8B0622B09157A7003330356481C3
+	40007CEC1D9B21AC12800DF6A4130590006EEF2BB9989A24C9A000A824CA88B2
+	2E70C42718860BF9927869C34AC24DEA27893C3485F6286781809DC3FE3484E4
+	052F8BA9CD114A2B83B1EFE87B4365739A546318C716FC8270BA5C248DFE000F
+	E38C21072E403682D6A01A80D9CA1221C048B0E154C444D40C21E2008803B822
+	639371925E4ED8D680483259008C1C6FE850E89BE01202450B3C15697C31B8C4
+	7272822C2C0008EC18C2E4780B413A5E04A03C12A8902CE0C3405C0D0D6C41B5
+	E74E155722E649A634BFB73026AA08181989A0020C8042C8AD80780034009000
+	01D03A1BC0024A1AACF06D4276F41A6318000831980002B8D31A23502D6560D1
+	9A04449A000333E30E91D976B864F409C002AB024639438000FD2080004E90A0
+	017780C2C80C245ADD0E4B802E05C3E60680D0E78BF186071107B0215DF49C12
+	082C52C6A1571C848BE381E441F03900F52A80003895A63A1637E1212C800059
+	96A90D2291406D2E97CAF60001A0340BA8B0074754967E0DEA4D000127328004
+	0C785334000AD7623751E0E98E42B1F1BF438423E6DB51116D50204E031CD0C0
+	D800572C919337000A59196815254DB109A99420362628636F4829A848509CF6
+	9444800C48F05FB749AA62E6B852606C142B5080000DE8580089A064C73AA82E
+	0700041C022919241146CF4362724D0CC001B80D24F209C6E23862F3DC002E80
+	740013A01EA569D424A5016B088000EA65C2C82C05852C1ED4C847A7AD1A7248
+	831D42C1B8000E75180053D08E83D089148D20AC00067AA20002985314AE7C72
+	189060395F98BB000809BD086AC34E94CD3B532251F80001A69EC77C93000318
+	3606C00028AB98001195D80006FAF33B81998E0955F80009BB02BF9814532C90
+	45A6D7611800038871170DB69082F05E336070B245829917D97B3165ECB22F16
+	15886583506A0006B1AD1888685A5A83DCAC515CB031C745A4DADA9C9F13F114
+	9260680028E07CA3282A440BACB00A85B9CA0E427800AFCED6E35C5AFF720274
+	120B49083524210818430BFA7F32FE1F291A5D4B4C024A0114520ED1A003788C
+	F16D8A2410B190404CAB02957F3B46617282CBC843A17D50AA5381B251ABE459
+	6899044C441041A4B0ACCAE0B446BF4410E60A7C137D59DB28C0C5912F10457E
+	410639070A9838B2826C326E9F3C5C49785C89192208C8C8230220856F0F912B
+	C442D983318A113E0D62EC638C319C51C658D71A62FC6F8EB1CE3CC6D8F71C62
+	EC58432F19788B20767DC658CF19820E49C9992F26E50C9F94B25654C9D95728
+	E57CA795B2DE58C992032317995A0E28307690320E41227CD199B34E67CDB9B3
+	37E6BCE39AB39E6ECE59D73A670CD4C1332E622DA40400000000000000000000
+$
+	small16
+$
+	4752454154454C4B000A0010408410010682004010B83800810E88C4A26007FC
+	5800C086B7DFB046FB76088802C759B2091001BA8D8222A4CDC76C9608DC9200
+	2431D970011F1F0046E08C001C12070583C261800024450114A4C4A914860538
+	0080A8C1DFF15A555AAF58ACC3A86200108ABE208904E0F5D118884230871000
+	231B20080622095860E43004FA095D21888A773825D4A76E21088A57D83DDC01
+	7D28558678CC68020200000000000000
+$
+}
+
+
+sysclass "LG_Event" from "LG_Event"
+{
+	
+	folder "LG_Event"
+	{
+		title(Singular)
+			DEU "Systemereignisprotokoll",
+			ELL "Γεγονός Καταγραφής Σύνδεσης",
+			ENU "System Event Log",
+			ESP "Registro de eventos del sistema",
+			FRA "Journal d'événements système",
+			JPN "システムイベントログ",
+			KOR "시스템 이벤트 로그",
+			PLK "Dziennik zdarzeń systemowych",
+			THA "บันทึกอีเวนต์ของระบบ"
+		gender DEU neuter
+		properties
+		{
+			"FolderSets" 0
+				properties
+				{
+					"Admin" 0
+				}
+		}
+		cancreatenew "False"
+	}
+	
+	folder "LG_SystemEvent"
+	{
+		title(Singular)
+			DEU "Systemereignisse",
+			ELL "Γεγονότα Συστήματος",
+			ENU "System Events",
+			ESP "Eventos del sistema",
+			FRA "Evénements système",
+			JPN "システムイベント",
+			KOR "시스템 이벤트",
+			PLK "Zdarzenia w systemie",
+			THA "อีเวนต์ของระบบ"
+		gender DEU neuter
+		properties
+		{
+			"FolderSets" 0
+				properties
+				{
+					"Admin" 0
+				}
+			"Hidden" "TRUE"
+		}
+		cancreatenew "True"
+	}
+}
+
+sysclass "LG_Info" from "LG_Info"
+{
+	
+	folder "LG_Info"
+	{
+		title(Singular)
+			DEU "Ereignisprotokoll Systeminformationen",
+			ELL "Σφάλμα Γεγονότος Καταγραφής Σύνδεσης",
+			ENU "System Information Event Log",
+			ESP "Registro de eventos de información del sistema",
+			FRA "Journal d'événements d'information système",
+			JPN "システム情報イベントログ",
+			KOR "시스템 정보 이벤트 로그",
+			PLK "Dziennik zdarzeń informacji systemowych",
+			THA "บันทึกอีเวนต์ข้อมูลของระบบ"
+		gender DEU neuter
+		properties
+		{
+			"FolderSets" 0
+				properties
+				{
+					"Admin" 0
+				}
+		}
+	}
+}
+
+sysclass "LG_Warning" from "LG_Warning"
+{
+	
+	folder "LG_Warning"
+	{
+		title(Singular)
+			DEU "Ereignisprotokoll Systemwarnung",
+			ELL "Προειδοποίηση Καταγραφής Γεγονότος Συστήματος",
+			ENU "System Warning Event Log",
+			ESP "Registro de eventos de aviso del sistema",
+			FRA "Journal d'événements d'avertissement système",
+			JPN "システム警告イベントログ",
+			KOR "시스템 경고 이벤트 로그",
+			PLK "Dziennik zdarzeń ostrzeżeń systemowych",
+			THA "บันทึกอีเวนต์คำเตือนของระบบ"
+		gender DEU neuter
+		properties
+		{
+			"FolderSets" 0
+				properties
+				{
+					"Admin" 0
+				}
+		}
+	}
+}
+
+sysclass "LG_Error" from "LG_Error"
+{
+	
+	folder "LG_Error"
+	{
+		title(Singular)
+			DEU "Ereignisprotokoll Systemfehler",
+			ELL "Σφάλμα Γεγονότος Καταγραφής Σύνδεσης",
+			ENU "System Error Event Log",
+			ESP "Registro de eventos de error del sistema",
+			FRA "Journal d'événements d'erreur système",
+			JPN "システムエラー イベントログ",
+			KOR "시스템 오류 이벤트 로그",
+			PLK "Dziennik zdarzeń błędów systemowych ",
+			THA "บันทึกอีเวนต์ข้อผิดพลาดของระบบ"
+		gender DEU neuter
+		properties
+		{
+			"FolderSets" 0
+				properties
+				{
+					"Admin" 0
+				}
+		}
+	}
+}
+
+sysclass "LG_Detail" from "LG_Detail"
+{
+}
+
+sysclass "LG_ErrorDetail" from "LG_ErrorDetail"
+{
+}
+
+sysclass "LG_WarningDetail" from "LG_WarningDetail"
+{
+}
+
+
+}
+layout
+<%
+<?xml version="1.0" encoding="utf-8"?>
+<AeDesigner_doc version="3">
+    <class_diagram name="lbrSystemEventLog" width="1000" height="1000">
+        <class name="LG_Event" left="259" top="254" right="393" bottom="344">
+            <member name="RecordStamp" type="class" />
+            <member name="Process" type="data" />
+            <member name="TimeStamp" type="class" />
+            <member name="Notes" type="data" />
+            <hide show_base_members="1">
+                <link_in_list name="RecordStamp" forced="0" />
+                <link_in_list name="stdTimeStamp" forced="0" />
+                <link_in_list name="TimeStamp" forced="0" />
+            </hide>
+        </class>
+        <class name="LG_Info" left="98" top="429" right="232" bottom="519">
+            <member name="StatusCode" type="enum" />
+            <hide show_base_members="1" />
+        </class>
+        <class name="LG_Warning" left="257" top="430" right="391" bottom="520">
+            <hide show_base_members="1" />
+        </class>
+        <class name="LG_Error" left="415" top="429" right="549" bottom="519">
+            <hide show_base_members="1" />
+        </class>
+        <class name="LG_Detail" left="259" top="90" right="393" bottom="180">
+            <member name="DetailNotes" type="data" />
+            <member name="stdTimeStamp" type="class" />
+            <hide show_base_members="1">
+                <link_in_list name="stdTimeStamp" forced="0" />
+            </hide>
+        </class>
+        <class name="LG_ErrorDetail" left="453" top="123" right="587" bottom="213">
+            <member name="stdTimeStamp" type="class" />
+            <member name="ErrorDetailNotes" type="data" />
+            <member name="ClassName" type="data" />
+            <member name="MemberName" type="data" />
+            <hide show_base_members="1">
+                <link_in_list name="stdTimeStamp" forced="0" />
+            </hide>
+        </class>
+        <class name="LG_WarningDetail" left="504" top="259" right="638" bottom="349">
+            <member name="stdTimeStamp" type="class" />
+            <member name="WarningDetailNotes" type="data" />
+            <hide show_base_members="1">
+                <link_in_list name="stdTimeStamp" forced="0" />
+            </hide>
+        </class>
+        <generalization base="LG_Event" derived="LG_Info" />
+        <generalization base="LG_Event" derived="LG_Warning" />
+        <generalization base="LG_Event" derived="LG_Error" />
+        <link_join name="LG_Event" class="LG_Detail" target="LG_Event" />
+        <link_join name="LG_Event" class="LG_ErrorDetail" target="LG_Event" />
+        <link_join name="LG_Event" class="LG_WarningDetail" target="LG_Event" />
+    </class_diagram>
+    <TargetPlatforms>1</TargetPlatforms>
+    <DefaultScriptLang>VBScript</DefaultScriptLang>
+</AeDesigner_doc>
+%>

@@ -1,0 +1,2576 @@
+﻿
+
+form "WF_Process" for "WF_Process" 306,269
+{
+	"Title" edit member "Title" 0,0,242(100),14 autohscroll sidetag tagset(1)
+	"Active" checkbox member "Active" 245(100),3,61(100),10
+	"MaxRunningProcesses" edit member "MaxRunningProcesses" tag ENU "" 0,13,306,14 autohscroll sidetag tagset(1)
+	"WF_ServerGroup" combobox member "WF_ServerGroup" tag ENU "" 0,26,306(100),14 sidetag tagset(1)
+	"cboWF_AppPool" combobox member "WF_AppPool" tag ENU "" 0,40,306(100),14 sidetag tagset(1)
+	"txtWF_ProcID" edit member "WF_ProcID" tag ENU "" 0,54,306(100),14 autohscroll sidetag tagset(1)
+	"WorkflowEditor" control "ActivElk.WorkflowEditor.1" 0,69,306(100),199(100) bind "XML" to "Defn"
+$
+	000300000b00ffff0b00ffffd8130000d81300000b00ffff0900000000000000
+	000000000000000000001300006767021300ffffff00
+$
+}
+
+form "WF_Process_Admin" for "WF_Process" 513,276
+{
+	"Title" edit member "Title" 0,0,265(100),14 autohscroll sidetag tagset(1)
+	"Active" checkbox member "Active" 273(100),1,77(100),9
+	"chkSuspended" checkbox member "Suspended" tag ENU "" 351(100),1,62(100),9
+	"chkEnableLogging" checkbox member "EnableLogging" tag ENU "" 429(100),1,84(100),9
+	"WF_ServerGroup" combobox member "WF_ServerGroup" tag ENU "" 0,13,265(50),14 sidetag tagset(1)
+	"cboWF_AppPool" combobox member "WF_AppPool" tag ENU "" 268(50),13,245(100),14 sidetag tagset(2)
+	"MaxRunningProcesses" edit member "MaxRunningProcesses" 0,26,162(33),14 autohscroll sidetag tagset(1)
+	"txtPriority" edit member "Priority" tag ENU "" 164(33),26,163(66),14 autohscroll sidetag
+	"txtWF_ProcID" edit member "WF_ProcID" tag ENU "" 331(66),26,182(100),14 autohscroll sidetag
+	"Tabset" tabset  0,42,513(100),234(100)
+	{
+		"Diagram" tab
+			ZHS "?", 
+			DEU "Diagramm", 
+			ELL "?????aµµa", 
+			ENU "Diagram", 
+			FRA "Diagramme", 
+			ITA "Diagramma", 
+			JPN "ダイアグラム", 
+			KOR "다이어그램"
+		
+		{
+			"WorkflowEditor" control "ActivElk.WorkflowEditor.1" 0,0,495(100),206(100) bind "XML" to "Defn"
+$
+	000300000b00ffff0b00ffffd8130000d81300000b00ffff0900000000000000
+	000000000000000000001300006767021300ffffff00
+$
+			OnActivate "Diagram_Activate"
+		}
+		"XML" tab ENU "XML"
+		{
+			"XMLEdit" edit tag ENU "XML" 0,0,495(100),206(100) multiline autohscroll autovscroll hscroll vscroll
+				OnChange "XMLEdit_Change"
+			OnActivate "XML_Activate"
+		}
+		"WF_PendingWork" tab
+			ENU "Pending Work", 
+			ITA "Attività in sospeso ", 
+			JPN "Workflow 未処理ジョブ", 
+			KOR "보류 워크 플루우"
+		
+		{
+			"WF_PendingWork" control "Elk9.grid" 0,0,495(100),206(100) ENU ""
+			Events
+			{
+				"OnToolbarCommand" "WF_PendingWork_OnToolbarCommand"
+			}
+			{
+				"_cx" = "5080"
+				"_cy" = "5080"
+				"Enabled" = "-1"
+				"FolderName" = "WF_PendingWork"
+				"ConfirmDelete" = "0"
+				"AllowDelete" = "0"
+				"AllowSort" = "-1"
+				"AllowOpen" = "-1"
+				"AllowAdds" = "0"
+				"Toolbar" = "-1"
+				"ManualFill" = "0"
+				"Configurable" = "-1"
+				"MaxRows" = "100"
+				"PrintButton" = "0"
+				"Collapsable" = "0"
+				"ShowGroupBox" = "0"
+				"OpenOnAdd" = "0"
+				"Filter" = ""
+				"GridID" = "{F9BC3252-DCE5-4645-A670-BB8FB6BF1EAE}"
+				"BackColor" = "2147483653"
+				"ForeColor" = "4294967295"
+				"BandOnMember" = ""
+				"BandFolder" = ""
+				"ExpandMember" = ""
+				"ExpandExistence" = ""
+				"RowColor" = ""
+				"ShowTooltips" = "-1"
+				"FixedColumnCount" = "0"
+				"SortCol" = "-1"
+				"SortCol2" = "-1"
+				"SortCol3" = "-1"
+				"SortDirection" = "0"
+				"SortDirection2" = "0"
+				"SortDirection3" = "0"
+				"ColumnCount" = "8"
+				"Column1_Expr" = "Prompt"
+				"Column1_Flags" = "9"
+				"Column1_Align" = "0"
+				"Column1_Format" = ""
+				"Column1_ColorExpression" = ""
+				"Column2_Expr" = "Status"
+				"Column2_Flags" = "1"
+				"Column2_Align" = "0"
+				"Column2_Format" = ""
+				"Column2_ColorExpression" = ""
+				"Column3_Expr" = "AssignedUser"
+				"Column3_Caption_StringCount" = "0"
+				"Column3_Flags" = "1"
+				"Column3_Align" = "0"
+				"Column3_Format" = ""
+				"Column3_ColorExpression" = ""
+				"Column4_Expr" = "AssignedQueue"
+				"Column4_Caption_StringCount" = "0"
+				"Column4_Flags" = "1"
+				"Column4_Align" = "0"
+				"Column4_Format" = ""
+				"Column4_ColorExpression" = ""
+				"Column5_Expr" = "Priority"
+				"Column5_Caption_StringCount" = "0"
+				"Column5_Flags" = "1"
+				"Column5_Align" = "0"
+				"Column5_Format" = ""
+				"Column5_ColorExpression" = ""
+				"Column6_Expr" = "ErrorProcessing"
+				"Column6_Caption_StringCount" = "0"
+				"Column6_Flags" = "1"
+				"Column6_Align" = "0"
+				"Column6_Format" = ""
+				"Column6_ColorExpression" = ""
+				"Column7_Expr" = "WhoCreated"
+				"Column7_Caption_StringCount" = "0"
+				"Column7_Flags" = "1"
+				"Column7_Align" = "0"
+				"Column7_Format" = ""
+				"Column7_ColorExpression" = ""
+				"Column8_Expr" = "ImpersonationID"
+				"Column8_Caption_StringCount" = "0"
+				"Column8_Flags" = "1"
+				"Column8_Align" = "0"
+				"Column8_Format" = ""
+				"Column8_ColorExpression" = ""
+				"TotalCount" = "1"
+				"Total1_Expr" = "TOTAL"
+				"Caption_StringCount" = "0"
+				"OpenInDialog" = "0"
+				"OpenInDouble" = "0"
+				"Reload" = "0"
+				"RowHeight" = "0"
+				"ExtraMembers" = ""
+				"DialogsSave" = "0"
+				"ExpandFilter" = ""
+				"Column1_Caption_String1Lang" = "1033"
+				"Column1_Caption_String1Val" = "Description"
+				"Column1_Caption_String2Lang" = "1041"
+				"Column1_Caption_String2Val" = "説明"
+				"Column1_Caption_StringCount" = "2"
+				"Column2_Caption_String1Lang" = "1033"
+				"Column2_Caption_String1Val" = "Status"
+				"Column2_Caption_String2Lang" = "1036"
+				"Column2_Caption_String2Val" = "Status"
+				"Column2_Caption_String3Lang" = "1031"
+				"Column2_Caption_String3Val" = "Status"
+				"Column2_Caption_String4Lang" = "1041"
+				"Column2_Caption_String4Val" = "ステータス"
+				"Column2_Caption_StringCount" = "4"
+				"Total1_Caption_String1Lang" = "1033"
+				"Total1_Caption_String1Val" = "Total"
+				"Total1_Caption_String2Lang" = "1036"
+				"Total1_Caption_String2Val" = "Total"
+				"Total1_Caption_String3Lang" = "1031"
+				"Total1_Caption_String3Val" = "Total"
+				"Total1_Caption_String4Lang" = "1041"
+				"Total1_Caption_String4Val" = "合計"
+				"Total1_Caption_StringCount" = "4"
+			}
+			OnInit "WF_PendingWork_Init"
+		}
+		"tabLogEvents" tab
+			ENU "Log Events", 
+			JPN "ログ イベント"
+		
+		{
+			"grdLogEvents" control "Elk9.grid" 0,0,495(100),206(100) ENU "grdLogEvents"
+			{
+				"_cx" = "5080"
+				"_cy" = "5080"
+				"Enabled" = "-1"
+				"FolderName" = "WF_LogEvents"
+				"ConfirmDelete" = "0"
+				"AllowDelete" = "-1"
+				"AllowSort" = "-1"
+				"AllowOpen" = "-1"
+				"AllowAdds" = "0"
+				"Toolbar" = "-1"
+				"ManualFill" = "0"
+				"Configurable" = "0"
+				"MaxRows" = "100"
+				"PrintButton" = "-1"
+				"Collapsable" = "0"
+				"ShowGroupBox" = "0"
+				"OpenOnAdd" = "0"
+				"Filter" = ""
+				"GridID" = "{337031CD-76B0-4FA6-A366-969766AA6589}"
+				"BackColor" = "2147483653"
+				"ForeColor" = "4294967295"
+				"BandOnMember" = ""
+				"BandFolder" = ""
+				"ExpandMember" = ""
+				"ExpandExistence" = ""
+				"RowColor" = ""
+				"ShowTooltips" = "-1"
+				"FixedColumnCount" = "0"
+				"SortCol" = "-1"
+				"SortCol2" = "-1"
+				"SortCol3" = "-1"
+				"SortDirection" = "0"
+				"SortDirection2" = "0"
+				"SortDirection3" = "0"
+				"ColumnCount" = "4"
+				"Column1_Expr" = "TimeStamp.Start "
+				"Column1_Caption_StringCount" = "0"
+				"Column1_Flags" = "0"
+				"Column1_Align" = "0"
+				"Column1_Format" = ""
+				"Column1_ColorExpression" = ""
+				"Column2_Expr" = "Notes"
+				"Column2_Caption_StringCount" = "0"
+				"Column2_Flags" = "8"
+				"Column2_Align" = "0"
+				"Column2_Format" = ""
+				"Column2_ColorExpression" = ""
+				"Column3_Expr" = "WF_LogEventType"
+				"Column3_Caption_StringCount" = "0"
+				"Column3_Flags" = "0"
+				"Column3_Align" = "0"
+				"Column3_Format" = ""
+				"Column3_ColorExpression" = ""
+				"Column4_Expr" = "WorkflowServer"
+				"Column4_Caption_StringCount" = "0"
+				"Column4_Flags" = "0"
+				"Column4_Align" = "0"
+				"Column4_Format" = ""
+				"Column4_ColorExpression" = ""
+				"TotalCount" = "1"
+				"Total1_Expr" = "TOTAL"
+				"Caption_StringCount" = "0"
+				"OpenInDialog" = "0"
+				"OpenInDouble" = "0"
+				"Reload" = "0"
+				"RowHeight" = "0"
+				"ExtraMembers" = ""
+				"DialogsSave" = "0"
+				"ExpandFilter" = ""
+				"Total1_Caption_String1Lang" = "1033"
+				"Total1_Caption_String1Val" = "Total"
+				"Total1_Caption_String2Lang" = "1041"
+				"Total1_Caption_String2Val" = "合計"
+				"Total1_Caption_StringCount" = "2"
+			}
+		}
+	}
+	OnPreSave "Form_PreSave"
+	Script VBScript
+<%
+Sub SynchXML()
+	XMLChanged = Form.Object.Properties("XMLChanged").Value
+	If XMLChanged Then
+		Form.Tabset.Diagram.WorkFlowEditor.Value = Form.Tabset.XML.XMLEdit.Value
+		Form.Tabset.Diagram.WorkflowEditor.IsDirty = true
+	End If
+	Form.Object.Properties("XMLChanged").Value = false
+End Sub
+
+Sub Diagram_Activate()
+	SynchXML()
+End Sub
+
+Sub XML_Activate()
+	If Form.Object.Defn.IsDirty Then
+		str = Form.Tabset.Diagram.WorkflowEditor.Value
+	Else
+		str = Form.Object.Defn
+	End If
+	This.XMLEdit.Value = str
+End Sub
+
+Sub XMLEdit_Change()
+	Form.Object.Properties("XMLChanged").Value = true
+	Form.Object.Defn = This.Value
+End Sub
+
+Sub Form_PreSave()
+	SynchXML()
+End Sub
+
+Sub WF_PendingWork_Init()
+	UpdateToolbarButtons
+	UpdateGridFilter
+End Sub
+
+Dim grid ' *-- Dim grid as IElkGrid
+Dim toolbar ' *-- Dim toolbar as IElk9Toolbar
+Dim menu ' *-- Dim menu as IElk9ToolbarMenu
+
+Sub UpdateToolbarButtons
+	Set grid=Form.Tabset.WF_PendingWork.Controls.WF_PendingWork.Control
+	Set toolbar=grid.ToolbarControl
+	
+	Dim btn ' *-- 	Dim btn as IElk9ToolbarButton
+	Set btn=toolbar.Item("Status")
+	If Not btn Is Nothing Then Exit Sub
+
+	Dim filterIcon
+	filterIcon=toolbar.AddSystemImage("wf_filter")
+	Set btn=toolbar.AddButton("Status", "Status", filterIcon)
+	btn.Type=2
+	
+	Set menu=btn.Menu
+	
+	menu.AddItem "Pending", -400
+	menu.AddItem "Processing", -401
+	menu.AddItem "Errored", -402
+	menu.AddItem "Completed", -403
+	menu.AddItem "Cancelled", -404
+	menu.AddItem "Initialized", -405
+	menu.AddItem "Abandoned", -406
+	menu.AddSeperator
+	menu.AddItem "All", -408
+	menu.Checked(-408)=True
+End Sub
+
+Sub WF_PendingWork_OnToolbarCommand(btn, id, handled)
+	handled=True
+			
+	Select Case id
+		Case -400
+			menu.Checked(-400)=Not menu.Checked(-400)
+			menu.Checked(-408)=False
+		Case -401
+			menu.Checked(-401)=Not menu.Checked(-401)
+			menu.Checked(-408)=False
+		Case -402
+			menu.Checked(-402)=Not menu.Checked(-402)
+			menu.Checked(-408)=False
+		Case -403
+			menu.Checked(-403)=Not menu.Checked(-403)
+			menu.Checked(-408)=False
+		Case -404
+			menu.Checked(-404)=Not menu.Checked(-404)
+			menu.Checked(-408)=False
+		Case -405
+			menu.Checked(-405)=Not menu.Checked(-405)
+			menu.Checked(-408)=False
+		Case -406
+			menu.Checked(-406)=Not menu.Checked(-406)
+			menu.Checked(-408)=False
+		Case -408
+			menu.Checked(-400)=False
+			menu.Checked(-401)=False
+			menu.Checked(-402)=False
+			menu.Checked(-403)=False
+			menu.Checked(-404)=False
+			menu.Checked(-405)=False
+			menu.Checked(-406)=False
+			menu.Checked(-408)=Not menu.Checked(-408)
+		Case Else
+			handled=False		
+	End Select
+	
+	If Handled Then UpdateGridFilter
+End Sub
+
+Sub UpdateGridFilter	
+	Dim newFilter
+	If Not menu.Checked(-408) Then
+		If menu.Checked(-400) Then AddStatusFilter "P", newFilter
+		If menu.Checked(-401) Then AddStatusFilter "I", newFilter
+		If menu.Checked(-402) Then AddStatusFilter "E", newFilter
+		If menu.Checked(-403) Then AddStatusFilter "C", newFilter
+		If menu.Checked(-404) Then AddStatusFilter "X", newFilter
+		If menu.Checked(-405) Then AddStatusFilter "N", newFilter
+		If menu.Checked(-406) Then AddStatusFilter "A", newFilter
+	End If
+		
+	grid.Filter=newFilter
+	grid.Fill	
+End Sub
+	
+Sub AddStatusFilter(newStatus, newFilter)
+	If Len(newFilter)>0 Then newFilter = newFilter & " Or "
+	
+	newFilter = newFilter & "(Status = '" & newStatus & "')"
+End Sub
+%>
+}
+
+form "wf_selectaddbucket" 305,229
+{
+	"oleListView" control "MSComctlLib.ListViewCtrl.2" license "9368265E-85FE-11d1-8BE3-0000F8754DA1" 0,0,305(100),178(100)
+	Events
+	{
+		"ItemClick" "oleListView_ItemClick"
+	}
+	{
+		"_ExtentX" = "2646"
+		"_ExtentY" = "1334"
+		"SortKey" = "0"
+		"View" = "3"
+		"Arrange" = "0"
+		"LabelEdit" = "0"
+		"SortOrder" = "0"
+		"Sorted" = "0"
+		"MultiSelect" = "0"
+		"LabelWrap" = "-1"
+		"HideSelection" = "-1"
+		"HideColumnHeaders" = "0"
+		"AllowReorder" = "0"
+		"Checkboxes" = "0"
+		"FlatScrollBar" = "0"
+		"FullRowSelect" = "0"
+		"GridLines" = "0"
+		"HotTracking" = "0"
+		"HoverSelection" = "0"
+		"PictureAlignment" = "0"
+		"TextBackground" = "0"
+		"_Version" = "393217"
+		"ForeColor" = "-2147483640"
+		"BackColor" = "-2147483643"
+		"BorderStyle" = "1"
+		"Appearance" = "1"
+		"MousePointer" = "0"
+		"Enabled" = "1"
+		"Font" object "{0BE35203-8F91-11CE-9DE3-00AA004BB851}"
+		{
+			"Name" = "MS Sans Serif"
+			"Size" = "7.8"
+			"Charset" = "0"
+			"Weight" = "400"
+			"Underline" = "0"
+			"Italic" = "0"
+			"Strikethrough" = "0"
+		}
+		"OLEDragMode" = "0"
+		"OLEDropMode" = "0"
+		"NumItems" = "0"
+	}
+	"chkSelected" checkbox
+		tag 
+			ZHS "仅从存储桶中加载选择的条目", 
+			DEU "Nur ausgewählte Elemente vom Bucket laden", 
+			ELL "Επιλεγμένη φόρτωση στοιχείων από τον κάδο", 
+			ENU "Only load selected items from the bucket", 
+			FRA "Charger uniquement les éléments sélectionnés à partir du compartiment", 
+			ITA "Carica solo elementi selezionati dal secchio", 
+			JPN "バケットから選択したアイテムのみをロードする"
+	 0,183(100),305(100),9(100)
+		OnChange "chkSelected_Change"
+	"chkAlreadyPending" checkbox
+		tag 
+			ZHS "仅加载这一工作流程工作中还没有等待的条目", 
+			DEU "Nur Elemente laden, die nicht schon in diesem Workflow Auftrag ausstehen", 
+			ELL "Ενεργοποίηση μόνο των στοιχείων που δεν εκκρεμούν ήδη  σε αυτήν την εργασία Ροής-Εργασίας", 
+			ENU "Only load items that are not already pending in this Workflow job", 
+			FRA "Charger uniquement les éléments qui ne sont pas déjà en attente dans cette tâche Workflow", 
+			ITA "Carica solo elementi che non siano già in sospeso per questo compito di Workflow", 
+			JPN "キューにペンディングしているアイテムはロードしない"
+	 0,193(100),305(100),9(100)
+		OnChange "chkAlreadyPending_Change"
+	"chkNewToJob" checkbox
+		tag 
+			ZHS "仅加载这一工作流程工作的新条目", 
+			DEU "Nur Elemente laden, die für diesen Workflow Auftrag neu sind", 
+			ELL "Ενεργοποίηση μόνο των στοιχείων που είναι καινούρια σε αυτήν την εργασία Ροής-Εργασίας", 
+			ENU "Only load items that are new to this Workflow job", 
+			FRA "Charger uniquement les nouveaux éléments de cette tâche Workflow", 
+			ITA "Carica solo elementi nuovi per questo compito di Workflow", 
+			JPN "このキューに新しいアイテムのみをロードする"
+	 0,204(100),305(100),9(100)
+		OnChange "chkNewToJob_Change"
+	OnInit "Form_Init"
+	Script VBScript
+<%
+Sub Form_Init()
+
+	' Configure the ListView Control
+	
+	Form.oleListView.Control.Font.Name = Form.Font.Name
+	Form.oleListView.Control.Font.Charset = Form.Font.Charset
+	Form.oleListView.Control.Font.Size = Form.font.Size
+	Form.oleListView.Control.Arrange = 1
+	Form.oleListView.Control.LabelEdit = 1
+	Form.oleListView.Control.Listitems.Clear
+	
+	Form.oleListView.Control.View = 3
+	Form.oleListView.Control.HideColumnHeaders = False
+	
+	Dim col
+	Set col = Form.oleListView.Control.ColumnHeaders.Add(1, "a", "Buckets", Form.oleListView.Width * 10)
+
+	' Load all buckets
+    
+	Set objListItems = Form.oleListView.Control.Listitems
+	Set objBuckets = System.Folders.buckets.scan
+
+	Dim strTargetClass: strTargetClass = Form.Object.GetTargetClass()	
+	If Len(strTargetClass) > 0 Then
+		While Not objBuckets.EndofScan
+			Set objBucket = objBuckets.Fetch
+	
+			' Check if the bucket contains the correct class type
+			
+			If System.Classes(objBucket.Classname).IsKindOf(System.Classes(strTargetClass)) Then
+				objListItems.Add , objBucket.Key, objBucket.prompt
+			Else
+				Set objSpooky = System.Classes(objBucket.ClassName).CreateGhostInstance
+				If objSpooky.IsKindOf(strTargetClass) Then
+					objListItems.Add , objBucket.Key, objBucket.prompt
+				End If
+			End If
+		Wend
+	End If
+	
+	' Set the return values to default
+
+	Form.Object.Properties("SourceBucket").Value = ""
+	Form.Object.Properties("SelectedOnly").Value = 0
+	Form.Object.Properties("AlreadyPending").Value = 1
+	Form.Object.Properties("NewToJob").Value = 1
+
+	chkAlreadyPending.Value = Form.Object.Properties("AlreadyPending").Value
+	chkAlreadyPending.IsDirty = false
+	chkNewToJob.Value = Form.Object.Properties("NewToJob").Value
+	chkNewToJob.IsDirty = false
+
+    Set selItem = Form.oleListView.Control.SelectedItem
+    If Not (selItem Is Nothing) Then
+		ItemSelected selItem
+	end if
+End Sub
+
+Sub oleListView_ItemClick(Item)
+	ItemSelected Item
+End Sub
+
+Sub ItemSelected(Item)
+	' Get the class of the bucket contents
+	
+	Set objThisBucket = Nothing
+	On Error Resume Next
+	Set objThisBucket = System.Classes("Bucket").GetInstance(Item.Key)
+	On Error goto 0
+
+	If objThisBucket Is Nothing Then
+		Form.Object.Properties("SourceBucket").Value = ""
+		Form.Object.Properties("SourceBucketClass").Value = ""
+	Else	
+		Form.Object.Properties("SourceBucket").Value = Item.Key
+		Form.Object.Properties("SourceBucketClass").Value = objThisBucket.ClassName
+	End If
+End Sub
+
+Sub chkSelected_Change()
+	Form.Object.Properties("SelectedOnly").Value = Form.chkSelected.Value
+End Sub
+
+Sub chkAlreadyPending_Change()
+	Form.Object.Properties("AlreadyPending").Value = Form.chkAlreadyPending.Value
+End Sub
+
+Sub chkNewToJob_Change()
+	Form.Object.Properties("NewToJob").Value = Form.chkNewToJob.Value
+End Sub
+%>
+}
+
+form "wf_selectdelbucket" 305,192
+{
+	"oleListView" control "MSComctlLib.ListViewCtrl.2" license "9368265E-85FE-11d1-8BE3-0000F8754DA1" 0,0,305(100),178(100)
+	Events
+	{
+		"ItemClick" "oleListView_ItemClick"
+	}
+	{
+		"_ExtentX" = "2646"
+		"_ExtentY" = "1334"
+		"SortKey" = "0"
+		"View" = "3"
+		"Arrange" = "0"
+		"LabelEdit" = "0"
+		"SortOrder" = "0"
+		"Sorted" = "0"
+		"MultiSelect" = "0"
+		"LabelWrap" = "-1"
+		"HideSelection" = "-1"
+		"HideColumnHeaders" = "-1"
+		"AllowReorder" = "0"
+		"Checkboxes" = "0"
+		"FlatScrollBar" = "0"
+		"FullRowSelect" = "0"
+		"GridLines" = "0"
+		"HotTracking" = "0"
+		"HoverSelection" = "0"
+		"PictureAlignment" = "0"
+		"TextBackground" = "0"
+		"_Version" = "393217"
+		"ForeColor" = "-2147483640"
+		"BackColor" = "-2147483643"
+		"BorderStyle" = "1"
+		"Appearance" = "1"
+		"MousePointer" = "0"
+		"Enabled" = "1"
+		"Font" object "{0BE35203-8F91-11CE-9DE3-00AA004BB851}"
+		{
+			"Name" = "MS Sans Serif"
+			"Size" = "7.8"
+			"Charset" = "0"
+			"Weight" = "400"
+			"Underline" = "0"
+			"Italic" = "0"
+			"Strikethrough" = "0"
+		}
+		"OLEDragMode" = "0"
+		"OLEDropMode" = "0"
+		"NumItems" = "0"
+	}
+	"chkSelected" checkbox
+		tag 
+			ZHS "仅删除在存储桶中选择的条目", 
+			DEU "Nur Elemente löschen, die im Bucket ausgewählt sind", 
+			ELL "Διαγραφή μόνο των στοιχείων που είναι επιλεγμένα στον κάδο", 
+			ENU "Only delete items that are selected in the bucket", 
+			FRA "Supprimer uniquement les éléments sélectionnés du compartiment", 
+			ITA "Cancella solo elementi selezionati nel secchio", 
+			JPN "バケットで選択しているアイテムのみを削除する"
+	 0,183(100),305(100),9(100)
+		OnChange "chkSelected_Change"
+	OnInit "Form_Init"
+	OnSize "Form_Size"
+	Script VBScript
+<%
+Sub Form_Init()
+
+	' Configure the ListView Control
+	
+	Form.oleListView.Control.Font.Name = Form.Font.Name
+	Form.oleListView.Control.Font.Charset = Form.Font.Charset
+	Form.oleListView.Control.Font.Size = Form.font.Size
+	Form.oleListView.Control.Arrange = 1
+	Form.oleListView.Control.LabelEdit = 1
+	Form.oleListView.Control.Listitems.Clear
+	
+	Form.oleListView.Control.View = 3
+	Form.oleListView.Control.HideColumnHeaders = True
+	
+	Dim col
+	Set col = Form.oleListView.Control.ColumnHeaders.Add(1, "a", "Buckets", Form.oleListView.Width * 10)
+
+	' Load all buckets
+    
+	Set objListItems = Form.oleListView.Control.Listitems
+	Set objBuckets = System.Folders.buckets.scan
+
+	While Not objBuckets.EndofScan
+		Set objBucket = objBuckets.Fetch
+		objListItems.Add , objBucket.Key, objBucket.prompt
+	Wend
+
+	' Set the return values to default
+
+	Form.Object.Properties("SourceBucket").Value = ""
+	Form.Object.Properties("SelectedOnly").Value = 0
+
+    Set selItem = Form.oleListView.Control.SelectedItem
+    If Not (selItem Is Nothing) Then
+		ItemSelected selItem
+	end if
+End Sub
+
+Sub oleListView_ItemClick(Item)
+	ItemSelected Item
+End Sub
+
+Sub ItemSelected(Item)
+	Form.Object.Properties("SourceBucket").Value = Item.Key
+End Sub
+
+Sub chkSelected_Change()
+
+	Form.Object.Properties("SelectedOnly").Value = Form.chkSelected.Value
+
+End Sub
+
+Sub Form_Size()
+	Dim col
+	Set col = Form.oleListView.Control.ColumnHeaders.Item(1)
+	col.Width = Form.oleListView.Width * 10
+End Sub
+%>
+}
+
+form "wf_selectitem" 304,88
+{
+	"oleTreeView" control "Elk9.Tree.1" 157(50),0,146(100),88(100)
+	Events
+	{
+		"Click" "oleTreeView_Click"
+	}
+	{
+		"_cx" = "5080"
+		"_cy" = "5080"
+		"MaxItems" = "0"
+		"HasButtons" = "-1"
+		"HasLines" = "-1"
+		"HasLinesAtRoot" = "-1"
+		"HasFolderAtRoot" = "-1"
+		"BackColor" = "2147483653"
+		"BorderStyle" = "1"
+		"Enabled" = "-1"
+		"ForeColor" = "4294967295"
+		"FormControl" = ""
+	}
+	"oleChooser" control "Elk9.Chooser.1" 0,0,152(50),88(100) ENU ""
+	{
+		"_cx" = "6006"
+		"_cy" = "2805"
+		"HasSource" = "-1"
+		"Sources" = "3"
+		"HasSegments" = "-1"
+		"HasSearch" = "-1"
+		"BackColor" = "4294967295"
+		"ForeColor" = "4294967295"
+		"ListControl" = ""
+		"FolderSet" = "User"
+	}
+	OnInit "Form_Init"
+	Script VBScript
+<%
+Sub Form_Init()
+
+	oleChooser.Control.ListControl = Form.oleTreeView.Control
+
+	' Set the default top level folder
+	
+	Dim strTopLevelFolder: strTopLevelFolder = Form.Object.GetTargetClassTopFolder()
+	If Len(strTopLevelFolder) > 0 Then
+		Set objDefaultFolder = Nothing
+		On Error Resume Next
+		Set objDefaultFolder = System.Folders(strTopLevelFolder)
+		On Error goto 0	
+		
+		If not objDefaultFolder Is Nothing Then
+			oleChooser.Control.Folder = objDefaultFolder		
+		End If
+	End If
+
+	Form.Object.Properties("Item") = Nothing
+
+End Sub
+
+Sub oleTreeView_Click(SelectedItem, Context, IsFolder)
+
+	If Not IsFolder Then
+		If Not SelectedItem Is Nothing Then
+			Dim strClass: strClass = Form.Object.GetTargetClass()
+			If Len(strClass) > 0 Then
+				If SelectedItem.IsKindOf(strClass) Then
+					Form.Object.Properties("Item") = SelectedItem
+				Else
+					strMsg = System.LoadString("wf_SelectInstOfClass") & " '" & strClass & "'"
+					MsgBox strMsg, 0, System.Title 
+				End If
+			End If
+		End If
+	End If
+End Sub
+%>
+}
+
+form "wf_selectaddfolder" 305,150
+{
+	"oleChooser" control "Elk9.Chooser.1" 0,0,146(50),108(100)
+	Events
+	{
+		"FillList" "oleChooser_FillList"
+	}
+	{
+		"_cx" = "6006"
+		"_cy" = "2805"
+		"HasSource" = "-1"
+		"Sources" = "3"
+		"HasSegments" = "-1"
+		"HasSearch" = "-1"
+		"BackColor" = "4294967295"
+		"ForeColor" = "4294967295"
+		"ListControl" = ""
+		"FolderSet" = "User"
+	}
+	"oleList" control "Elk9.ListView.1" 152(50),0,153(100),108(100)
+	Events
+	{
+		"SelChanging" "oleList_SelChanging"
+	}
+	{
+		"_cx" = "5080"
+		"_cy" = "5080"
+		"ShowIcons" = "-1"
+		"MaxItems" = "0"
+		"FormControl" = ""
+		"BackColor" = "2147483653"
+		"BorderStyle" = "1"
+		"Enabled" = "-1"
+		"ForeColor" = "4294967295"
+		"ContextMenuEnabled" = "-1"
+		"ShowCount" = "-1"
+	}
+	"chkAlreadyPending" checkbox
+		tag 
+			ZHS "仅加载这一工作流程工作中还没有等待的条目", 
+			DEU "Nur Elemente laden, die nicht schon in diesem Workflow Auftrag ausstehen", 
+			ELL "Ενεργοποίηση μόνο των στοιχείων που δεν εκκρεμούν ήδη  σε αυτήν την εργασία Ροής-Εργασίας", 
+			ENU "Only load items that are not already pending in this Workflow job", 
+			FRA "Charger uniquement les éléments qui ne sont pas déjà en attente dans cette tâche Workflow", 
+			ITA "Carica solo elementi che non siano già in sospeso per questo compito di Workflow", 
+			JPN "このキューにペンディンしているアイテムはロードしない"
+	 0,115(100),305(100),9(100)
+		OnChange "chkAlreadyPending_Change"
+	"chkNewToJob" checkbox
+		tag 
+			ZHS "仅加载这一工作流程工作的新条目", 
+			DEU "Nur Elemente laden, die für diesen Workflow Auftrag neu sind", 
+			ELL "Ενεργοποίηση μόνο των στοιχείων που είναι καινούρια σε αυτήν την εργασία Ροής-Εργασίας", 
+			ENU "Only load items that are new to this Workflow job", 
+			FRA "Charger uniquement les nouveaux éléments de cette tâche Workflow", 
+			ITA "Carica solo elementi nuovi per questo compito di Workflow", 
+			JPN "このキューに新しいアイテムのみをロードする"
+	 0,126(100),305(100),9(100)
+		OnChange "chkNewToJob_Change"
+	OnInit "Form_Init"
+	Script VBScript
+<%
+Sub Form_Init()
+
+	' Configure the ListView Control
+
+	oleChooser.Control.Folderset = "user"
+	oleChooser.Control.ListControl = Form.oleList.Control
+
+	Dim strTargetClass: strTargetClass = Form.Object.GetTargetClass
+	If Len(strTargetClass) > 0 Then
+		oleChooser.Control.SourceClass = System.Classes(strTargetClass)
+	End If
+	
+	' Set the default top level folder	
+
+	Dim strTopLevelFolder: strTopLevelFolder = Form.Object.GetTargetClassTopFolder()
+	If Len(strTopLevelFolder) > 0 Then
+		Set objDefaultFolder = Nothing
+		On Error Resume Next
+		Set objDefaultFolder = System.Folders(strTopLevelFolder)
+		On Error goto 0	
+		
+		If not objDefaultFolder Is Nothing Then
+			oleChooser.Control.Folder = objDefaultFolder		
+		End If
+	End If
+		
+	' Set the return values to default
+
+	Form.Object.Properties("AlreadyPending") = 1
+	Form.Object.Properties("NewToJob").Value = 1
+
+	chkAlreadyPending.Value = Form.Object.Properties("AlreadyPending").Value
+	chkAlreadyPending.IsDirty = false
+	chkNewToJob.Value = Form.Object.Properties("NewToJob").Value
+	chkNewToJob.IsDirty = false
+End Sub
+
+Sub oleChooser_FillList
+	Form.Object.Properties("SourceFolder").Value = oleChooser.Control.ElkFolder
+End Sub
+
+Sub chkAlreadyPending_Change()
+	Form.Object.Properties("AlreadyPending").Value = Form.chkAlreadyPending.Value
+End Sub
+
+Sub chkNewToJob_Change()
+	Form.Object.Properties("NewToJob").Value = Form.chkNewToJob.Value
+End Sub
+
+Sub oleList_SelChanging(CanChange)
+	CanChange = false
+End Sub
+%>
+}
+
+form "wf_selectdelfolder" 305,105
+{
+	"oleChooser" control "Elk9.Chooser.1" 0,0,146(50),105(100)
+	Events
+	{
+		"FillList" "oleChooser_FillList"
+	}
+	{
+		"_cx" = "6006"
+		"_cy" = "2805"
+		"HasSource" = "-1"
+		"Sources" = "3"
+		"HasSegments" = "-1"
+		"HasSearch" = "-1"
+		"BackColor" = "4294967295"
+		"ForeColor" = "4294967295"
+		"ListControl" = ""
+		"FolderSet" = "User"
+	}
+	"oleList" control "Elk9.ListView.1" 152(50),0,153(100),105(100)
+	Events
+	{
+		"SelChanging" "oleList_SelChanging"
+	}
+	{
+		"_cx" = "5080"
+		"_cy" = "5080"
+		"ShowIcons" = "-1"
+		"MaxItems" = "0"
+		"FormControl" = ""
+		"BackColor" = "2147483653"
+		"BorderStyle" = "1"
+		"Enabled" = "-1"
+		"ForeColor" = "4294967295"
+		"ContextMenuEnabled" = "-1"
+		"ShowCount" = "-1"
+	}
+	OnInit "Form_Init"
+	OnPreSave "Form_PreSave"
+	Script VBScript
+<%
+Sub Form_Init()
+
+	' Configure the ListView Control
+
+	oleChooser.Control.Folderset = "User"
+	oleChooser.Control.ListControl = Form.oleList.Control
+
+	Dim strTargetClass: strTargetClass = Form.Object.GetTargetClass
+	If Len(strTargetClass) > 0 Then
+		oleChooser.Control.SourceClass = System.Classes(strTargetClass)
+	End If
+
+	' Set the default top level folder	
+
+	Dim strTopLevelFolder: strTopLevelFolder = Form.Object.GetTargetClassTopFolder()
+	If Len(strTopLevelFolder) > 0 Then
+		Set objDefaultFolder = Nothing
+		On Error Resume Next
+		Set objDefaultFolder = System.Folders(strTopLevelFolder)
+		On Error goto 0	
+		
+		If not objDefaultFolder Is Nothing Then
+			oleChooser.Control.Folder = objDefaultFolder		
+		End If
+	End If
+End Sub
+
+Sub oleChooser_FillList
+	Form.Object.Properties("SourceFolder").Value = oleChooser.Control.ElkFolder
+End Sub
+
+Sub oleList_SelChanging(CanChange)
+	CanChange = false
+End Sub
+%>
+}
+
+form "WF_PendingWorkBase" for "WF_PendingWork" 362,220
+{
+	"Descr" edit member "Descr" 0,0,304(100),14 autohscroll sidetag
+	"Tabset" tabset  0,16,362(100),204(100)
+	{
+		"ErrorInfo" tab
+			ZHS "错误信息", 
+			DEU "Fehlerinformation", 
+			ELL "Πληροφορία σφάλματος", 
+			ENU "Error Information", 
+			FRA "Information sur l'erreur", 
+			ITA "Info errore", 
+			JPN "エラー情報"
+		
+		{
+			"ErrorInfo" edit member "ErrorInfo" 0,0,343(100),177(100) multiline autohscroll autovscroll hscroll vscroll
+		}
+	}
+}
+
+modify form "WF_PendingWorkBase" for "WF_PendingWork" as "WF_PendingWork"
+{
+	modify tabset "Tabset"
+	{
+		Insert "Details" before "ErrorInfo"
+			ZHS "细节", 
+			DEU "Details", 
+			ELL "Λεπτομέρειες", 
+			ENU "Details", 
+			FRA "Détails", 
+			ITA "Dettagli", 
+			JPN "詳細", 
+			KOR "상세정보"
+		
+		{
+			"WhenAdded" datetime member "WhenAdded" 0,0,179(50),14 sidetag tagset(1)
+			"WhenTimeout" datetime member "WhenTimeout" 184(50),0,159(100),14 sidetag tagset(2)
+			"Status" combobox member "Status" 0,12,179(50),14 sidetag tagset(1)
+			"AssignedUser" combobox member "AssignedUser" 0,25,179(50),14 sidetag tagset(1)
+			"AssignedQueue" combobox member "AssignedQueue" 184(50),25,159(100),14 sidetag tagset(2)
+			"Step" edit member "Step" 0,39,343(100),14 autohscroll sidetag tagset(1)
+			"StepDesc" edit member "StepDesc" 0,66,343(100),95(100) multiline autovscroll hscroll vscroll sidetag tagset(1)
+			"WF_Process" hyperlink member "WF_Process" 0,167(100),340(100),9(100) sidetag tagset(1)
+			"txtPriority" edit member "Priority" tag ENU "" 184(50),12,159(100),14 autohscroll sidetag tagset(2)
+			"cboWF_AppPool" combobox member "WF_AppPool" tag ENU "" 0,52,343(100),14 sidetag tagset(1)
+		}
+		Insert "Definition"
+			ZHS "定义", 
+			DEU "Definition", 
+			ELL "Διευκρίνηση", 
+			ENU "Definition", 
+			FRA "Définition", 
+			ITA "Definizione", 
+			JPN "定義"
+		
+		{
+			"Defn" control "ActivElk.WorkflowEditor.1" 0,0,339(100),177(100) ENU "" bind "XML" to "Defn"
+$
+	000300000b00ffff0b00ffffd8130000d81300000b00ffff0900000000000000
+	000000000000000000001300006767021300ffffff00
+$
+		}
+		Insert "Progress" before "ErrorInfo"
+			ZHS "进程", 
+			DEU "Fortschritt", 
+			ELL "Πρόοδος", 
+			ENU "Progress", 
+			FRA "Progression", 
+			ITA "Stato procedura", 
+			JPN "進行状況", 
+			KOR "진행"
+		
+		{
+			"PercentComplete" text
+				tag 
+					ZHS "百分率完成：", 
+					DEU "Prozent abgeschlossen:", 
+					ELL "Ποσοστό Ολοκλήρωσης:", 
+					ENU "Percent Complete:", 
+					FRA "Pourcentage terminé:", 
+					ITA "Percentuale completamento:", 
+					JPN "完了パーセント:"
+			 0,3,81,9
+			"ProgressPercentComplete" edit member "ProgressPercentComplete" 92,0,43,14 autohscroll spin tagset(1)
+			"StepDesc" edit member "StepDesc" 1,16,342(100),71(50) multiline autovscroll hscroll vscroll sidetag tagset(1)
+			"ProgressDescr" edit member "ProgressDescr" 2,87(50),341(100),90(100) multiline autovscroll hscroll vscroll sidetag tagset(1)
+		}
+	}
+}
+
+form "WF_LogEvent" for "WF_LogEvent" 308,222
+{
+	"TimeStamp" form member "TimeStamp" 0,0,308(100),14 sidetag tagset(1)
+	"WF_Process" edit member "WF_Process" 0,16,308(100),14 autohscroll sidetag tagset(1)
+	"WF_LogEventType" combobox member "WF_LogEventType" 0,32,158(50),14 sidetag tagset(1)
+	"Tabset" tabset  0,48,308(100),174(100)
+	{
+		"Notes" tab
+			ZHS "注释", 
+			DEU "Anmerkungen", 
+			ELL "Σημειώσεις", 
+			ENU "Notes", 
+			ITA "Note", 
+			JPN "メモ", 
+			KOR "메모"
+		
+		{
+			"Notes" edit member "Notes" 0,0,285(100),144(100) multiline autovscroll vscroll
+		}
+		"Details" tab
+			ZHS "细节", 
+			ELL "Λεπτομέρειες", 
+			ENU "Details", 
+			FRA "Détails", 
+			ITA "Dettagli", 
+			JPN "詳細", 
+			KOR "상세정보"
+		
+		{
+			"PendingWork" hyperlink member "PendingWork" 0,0,285(100),9 sidetag tagset(1)
+			"urlworkflowProcess" hyperlink member "WorkflowProcess" tag ENU "" 0,12,289(100),9 sidetag tagset(1)
+		}
+	}
+	"txtWorkflowServer" edit member "WorkflowServer" tag ENU "" 160(50),32,148(100),14 autohscroll sidetag
+}
+
+form "WF_Queue" for "WF_Queue" 305,215
+{
+	"Title" edit member "Title" 0,0,304(100),14 autohscroll sidetag tagset(1)
+	"ClassName" edit member "ClassName" 0,15,304(100),14 autohscroll sidetag tagset(1)
+	"Descrip" edit member "Descrip" 0,30,305(100),185 multiline autohscroll autovscroll vscroll toptag
+}
+
+form "WF_Job_Base" for "WF_Job" 306,213
+{
+	"Title" edit member "Title" 0,0,105(100),14 autohscroll sidetag tagset(1)
+	"ViewProcess" button
+		tag 
+			ENU "...", 
+			ITA "...", 
+			JPN "..."
+	 289(100),14,16(100),11
+		OnClick "ViewProcess_Click"
+	"WF_Process" combobox member "WF_Process" 0,13,287(100),14 sidetag tagset(1)
+		OnChange "WF_Process_Change"
+	"Tabset" tabset  0,27,306(100),186(100)
+	{
+		"Content" tab
+			ZHS "内容", 
+			DEU "Inhalt", 
+			ELL "Περιεχόμενο", 
+			ENU "Content", 
+			FRA "Contenu", 
+			ITA "Contenuto", 
+			JPN "内容", 
+			KOR "내용"
+		
+		{
+			"oleToolbar" control "Elk9.Toolbar.1" 0,0,287(100),15
+			Events
+			{
+				"Clicked" "oleToolbar_Clicked"
+				"GetMenuItemDetails" "oleToolbar_GetMenuItemDetails"
+				"OnMenuItem" "oleToolbar_OnMenuItem"
+			}
+			{
+				"MaskColor" = "12632256"
+				"_cx" = "5080"
+				"_cy" = "5080"
+				"Buttons" object "{068C33E4-1E68-4CDD-B8FD-911E1E9E65BD}"
+				{
+					"NumButtons" = "4"
+					"Button0" object "{44FDBD5A-2EC9-4F70-8D5D-E5E999241C4B}"
+					{
+						"ID" = "0"
+						"Image" = "3"
+						"Style" = "0"
+						"MenuItems" = "0"
+						"Enabled" = "1"
+						"Checked" = "0"
+						"Caption_String1Lang" = "1033"
+						"Caption_String1Val" = "Open"
+						"Caption_String2Lang" = "1036"
+						"Caption_String2Val" = "Open"
+						"Caption_String3Lang" = "1031"
+						"Caption_String3Val" = "Open"
+						"Caption_String4Lang" = "1041"
+						"Caption_String4Val" = "開く"
+						"Caption_StringCount" = "4"
+						"ToolTip_String1Lang" = "1033"
+						"ToolTip_String1Val" = "Open"
+						"ToolTip_String2Lang" = "1036"
+						"ToolTip_String2Val" = "Open"
+						"ToolTip_String3Lang" = "1031"
+						"ToolTip_String3Val" = "Open"
+						"ToolTip_String4Lang" = "1041"
+						"ToolTip_String4Val" = "開く"
+						"ToolTip_StringCount" = "4"
+					}
+					"Button1" object "{44FDBD5A-2EC9-4F70-8D5D-E5E999241C4B}"
+					{
+						"ID" = "1"
+						"Image" = "0"
+						"Style" = "2"
+						"MenuItems" = "3"
+						"Enabled" = "1"
+						"Checked" = "0"
+						"Caption_String1Lang" = "1033"
+						"Caption_String1Val" = "Add"
+						"Caption_String2Lang" = "1041"
+						"Caption_String2Val" = "追加"
+						"Caption_StringCount" = "2"
+						"ToolTip_String1Lang" = "1033"
+						"ToolTip_String1Val" = "Add"
+						"ToolTip_String2Lang" = "1036"
+						"ToolTip_String2Val" = "Add"
+						"ToolTip_String3Lang" = "1031"
+						"ToolTip_String3Val" = "Add"
+						"ToolTip_String4Lang" = "1041"
+						"ToolTip_String4Val" = "追加"
+						"ToolTip_StringCount" = "4"
+					}
+					"Button2" object "{44FDBD5A-2EC9-4F70-8D5D-E5E999241C4B}"
+					{
+						"ID" = "2"
+						"Image" = "1"
+						"Style" = "2"
+						"MenuItems" = "3"
+						"Enabled" = "1"
+						"Checked" = "0"
+						"Caption_String1Lang" = "1033"
+						"Caption_String1Val" = "Delete"
+						"Caption_String2Lang" = "1036"
+						"Caption_String2Val" = "Delete"
+						"Caption_String3Lang" = "1031"
+						"Caption_String3Val" = "Delete"
+						"Caption_String4Lang" = "1041"
+						"Caption_String4Val" = "削除"
+						"Caption_StringCount" = "4"
+						"ToolTip_String1Lang" = "1033"
+						"ToolTip_String1Val" = "Delete"
+						"ToolTip_String2Lang" = "1036"
+						"ToolTip_String2Val" = "Delete"
+						"ToolTip_String3Lang" = "1031"
+						"ToolTip_String3Val" = "Delete"
+						"ToolTip_String4Lang" = "1041"
+						"ToolTip_String4Val" = "削除"
+						"ToolTip_StringCount" = "4"
+					}
+					"Button3" object "{44FDBD5A-2EC9-4F70-8D5D-E5E999241C4B}"
+					{
+						"ID" = "3"
+						"Image" = "2"
+						"Style" = "0"
+						"MenuItems" = "0"
+						"Enabled" = "1"
+						"Checked" = "0"
+						"Caption_String1Lang" = "1033"
+						"Caption_String1Val" = "Print"
+						"Caption_String2Lang" = "1036"
+						"Caption_String2Val" = "Print"
+						"Caption_String3Lang" = "1031"
+						"Caption_String3Val" = "Print"
+						"Caption_String4Lang" = "1041"
+						"Caption_String4Val" = "印刷"
+						"Caption_StringCount" = "4"
+						"ToolTip_String1Lang" = "1033"
+						"ToolTip_String1Val" = "Print"
+						"ToolTip_String2Lang" = "1036"
+						"ToolTip_String2Val" = "Print"
+						"ToolTip_String3Lang" = "1031"
+						"ToolTip_String3Val" = "Print"
+						"ToolTip_String4Lang" = "1041"
+						"ToolTip_String4Val" = "印刷"
+						"ToolTip_StringCount" = "4"
+					}
+				}
+				"ImageList" object "{134475AE-ED31-4867-9E10-BD9ACF5CE238}"
+$
+	00030000880100004752454154454c4b249300201020000c0083040010b7fc39
+	fe050843e26ff21134ec008cc6801188c8a234408d082340184c6e330693caa5
+	727404665d2f974c001329a4c1013800302771a7fc667d3f9f5000142a25021f
+	2ca4d2a974ca6d3a9f50a8d4aa754aad5aaf58acd6ab75caed7abf60b0d6de15
+	107c4ec919b446c1088b6822976687da81f1aba4aa600319de86775b3dd63568
+	b6a2d7733005ec66308cdc61d6a005a30288439de7200585e6f78abf5feed2a4
+	44641786bde2716ffc6da6356db75bf2ab0956934d9ca0bfc11ab05edb417db9
+	4ab1bb18cac37fbfdce323774de70f3f2bb8e9b1da793f2e4fcaa180339b1a45
+	2b9573e75978f62abc587d2bf047a4122920024b27f4553adddf6fbaa71487b0
+	006ff7cb82e3f373bfd80074003df330cf37cc8001e0039df3280037cce131df
+	3240017ccf023df32a13a00cf807df3252163f03f380032a8af7ce183c003254
+	4f8449f3c00f2a1ff00cc131cf803e317f08338cf801cff3f0c003c8f3c4fc8e
+	4ba3001f4520d0fdf155901000000000d80200004752454154454c4b24930020
+	1020000c0083080010b7fc39fe050843e26ff21134ec008cc6801188c8a23480
+	8d102340184c6e321093caa572a908025d2f90cc265318ca026e00604ea34ff8
+	ccf67d3d9f80283439fc3e5948a4d2a974ca6d3a9f50a8d4aa754aad5aaf58ac
+	d6ab75caed7abf60b0d8ac764b2d9acf68b4daad76cb6dbadf70b8dcae774bad
+	daef78bcdeaf77cbedfaff80c0d5e857bc257e291495e1a9088c6e3910804455
+	b1113c55371f8ec8e4f290e9662e8797950cf47a4d262b399fd04ab532ac949f
+	4bb0d3e733dab938231ebb5dae35d2bd869757a8da49f0db7c71dcee78c96f23
+	7bed370f83c29e6db1fc7e480396005dc679ba3e7ecfa33ea764237da0077067
+	deca52685ac95f8fc9dbee46f51edf64ab8b98cd4c233e5f3fcdd05299f7e18f
+	7e9f07954b7d14c7b5b675d2776a07806005220b831d87661783e13849e07011
+	33c1927ee188899e86e1c7fe1e8820688a1089dea821493c11a03e314aa198da
+	2477dc27b634002334b22c7ae257cde1869954ae40915478be436ca4a5558882
+	9c34b23e4640f60d89676266a92703e5093e586b19f67e5d6265f655a97d5639
+	42687ae6a99577979829c96d4583e4ae7647920489240012549d065524e9ce83
+	a1285a1a87a221d7d28b67234990ff30cfc5010fa390fa469343a8e3f03f438f
+	84643f3013ea6a9c3fe9e002a0a8a553c25d03ce04641fa86a7a3aab3feadabe
+	b10feb303e9bab80007cccaaaaaaec3faf6bfb063d3f0033c2c4abcc3466ca95
+	6c9b2ebd01ece002d08f53d300ffb50ccac6954e6dc46407b7919a54c000ee20
+	02d50c2e6954ffba2a5b8cc3bb400a56b4a9ae4330cc3fef797692baefbbf2e7
+	ba700b54330c2fdbbef14fc1f30f08c2ad9000c3966bfa871197713964ffb971
+	83c2caa72a2a70c0acf20bc143b2ef08d2a0aee5da86a4bf72b3032dc9f303c2
+	34bc10eba6aea90cf33338b6cffceea743b3e8c6e97d2cbd1e8bd2ad9a3231a3
+	e09551010000000000000000c0c0c000
+$
+				"RoundedCorner" = "-1"
+				"Caption_String1Lang" = "1033"
+				"Caption_String1Val" = "Job Content"
+				"Caption_String2Lang" = "1036"
+				"Caption_String2Val" = "Job Content"
+				"Caption_String3Lang" = "1031"
+				"Caption_String3Val" = "Job Content"
+				"Caption_String4Lang" = "1041"
+				"Caption_String4Val" = "ジョブのコンテンツ"
+				"Caption_StringCount" = "4"
+			}
+			"PendingWork" control "Elk9.grid" 0,15,287(100),144(100) ENU ""
+			Events
+			{
+				"OnToolbarStateChange" "PendingWork_OnToolbarStateChange"
+			}
+			{
+				"_cx" = "5080"
+				"_cy" = "5080"
+				"Enabled" = "-1"
+				"FolderName" = "WF_PendingWork"
+				"ConfirmDelete" = "0"
+				"AllowDelete" = "-1"
+				"AllowSort" = "-1"
+				"AllowOpen" = "-1"
+				"AllowAdds" = "-1"
+				"Toolbar" = "0"
+				"ManualFill" = "0"
+				"Configurable" = "-1"
+				"MaxRows" = "0"
+				"PrintButton" = "0"
+				"Collapsable" = "-1"
+				"ShowGroupBox" = "0"
+				"OpenOnAdd" = "0"
+				"Filter" = ""
+				"GridID" = "{9B6DC79C-23FC-4502-A45E-88DAC095EFFD}"
+				"BackColor" = "2147483653"
+				"ForeColor" = "4294967295"
+				"BandOnMember" = ""
+				"BandFolder" = ""
+				"ExpandMember" = ""
+				"ExpandExistence" = ""
+				"RowColor" = ""
+				"ShowTooltips" = "-1"
+				"FixedColumnCount" = "0"
+				"SortCol" = "-1"
+				"SortCol2" = "-1"
+				"SortCol3" = "-1"
+				"SortDirection" = "0"
+				"SortDirection2" = "0"
+				"SortDirection3" = "0"
+				"ColumnCount" = "2"
+				"Column1_Expr" = "Descr"
+				"Column1_Flags" = "9"
+				"Column1_Align" = "0"
+				"Column1_Format" = ""
+				"Column1_ColorExpression" = ""
+				"Column2_Expr" = "Status"
+				"Column2_Flags" = "1"
+				"Column2_Align" = "0"
+				"Column2_Format" = ""
+				"Column2_ColorExpression" = ""
+				"TotalCount" = "0"
+				"Caption_StringCount" = "0"
+				"Column1_Caption_String1Lang" = "1033"
+				"Column1_Caption_String1Val" = "Item"
+				"Column1_Caption_String2Lang" = "1031"
+				"Column1_Caption_String2Val" = "Item"
+				"Column1_Caption_String3Lang" = "1036"
+				"Column1_Caption_String3Val" = "Item"
+				"Column1_Caption_String4Lang" = "1041"
+				"Column1_Caption_String4Val" = "アイテム"
+				"Column1_Caption_StringCount" = "4"
+				"Column2_Caption_String1Lang" = "1033"
+				"Column2_Caption_String1Val" = "Status"
+				"Column2_Caption_String2Lang" = "1031"
+				"Column2_Caption_String2Val" = "Status"
+				"Column2_Caption_String3Lang" = "1036"
+				"Column2_Caption_String3Val" = "Status"
+				"Column2_Caption_String4Lang" = "1041"
+				"Column2_Caption_String4Val" = "ステータス"
+				"Column2_Caption_StringCount" = "4"
+			}
+		}
+		"Description" tab
+			ZHS "描述", 
+			DEU "Beschreibung", 
+			ELL "Περιγραφή", 
+			ENU "Description", 
+			ITA "Descrizione", 
+			JPN "詳細", 
+			KOR "설명"
+		
+		{
+			"Descr" edit member "Descr" 0,0,287(100),159(100) multiline autohscroll autovscroll vscroll
+		}
+		"Summary" tab
+			ZHS "总结", 
+			DEU "Zusammenfassung", 
+			ELL "Περίληψη", 
+			ENU "Summary", 
+			FRA "Récapitulatif", 
+			ITA "Sommario", 
+			JPN "サマリ", 
+			KOR "요약정보"
+		
+		{
+			"WebBrowser" control "Shell.Explorer.2" 0,0,287(100),159(100)
+				ZHS "控制", 
+				DEU "Kontrolle", 
+				ELL "Έλεγχος", 
+				ENU "Control", 
+				FRA "Contrôle", 
+				ITA "Controllo", 
+				JPN "コントロール", 
+				KOR "제어"
+			
+			Events
+			{
+				"BeforeNavigate2" "WebBrowser_BeforeNavigate2"
+			}
+			{
+			}
+			OnInit "Summary_Init"
+		}
+	}
+	"chkSuspended" checkbox member "Suspended" tag ENU "" 211(100),2,95(100),9
+	"txtPriority" edit member "Priority" tag ENU "" 109(100),0,100(100),14 autohscroll sidetag
+	OnInit "Form_Init"
+	Script VBScript
+<%
+Sub Form_Init()
+	' Disable WF_Process if PendingWork items already added
+	' or the job has already been started
+	bEnableProcess = true
+	nItems = 0
+	If Form.Object.Started Then
+		bEnableProcess = false
+	Else	
+		nItems = Form.Object.Folders("WF_PendingWork").Count
+		If nItems > 0 Then
+			bEnableProcess = false
+		End If                       
+	End If
+	WF_Process.Enabled = bEnableProcess
+
+	Form.Object.AddInitItems nothing
+End Sub
+
+Sub ViewProcess_Click()
+	' If no WF_Process selected, create new one
+	Set oWF_Process = Form.Object.WF_Process.Value
+	If oWF_Process.IsNull Then
+		Set oWF_Process = System.Folders("WF_Processes").CreateNewInstance
+		oWF_Process.Save
+		Form.Object.Members("WF_Process").Value = oWF_Process
+	End If
+	
+	' Save the job
+	Form.Object.Save
+	
+	' Open the WF_Process
+	If Not oWF_Process.IsNull Then
+		Form.FireOpenFormEvent Form.Object, "WF_Process" 'Use WF_Process context of WF_Job
+	End If
+
+End Sub
+
+Sub oleToolbar_GetMenuItemDetails(btnID, item, Caption, Enabled, Checked)
+	Select Case btnID
+		Case 1
+			Select Case item
+				Case 1
+					Caption = System.LoadString("wf_from_segment")
+					Enabled = True
+					Checked = False
+				Case 2
+					Caption = System.LoadString("wf_from_bucket")
+					Enabled = True
+					Checked = False
+				Case 3
+					Caption = System.LoadString("wf_item")
+					Enabled = True
+					Checked = False
+			End Select
+		Case 2
+			Select Case item
+				Case 1
+					Caption = System.LoadString("wf_from_segment")
+					Enabled = True
+					Checked = False
+				Case 2
+					Caption = System.LoadString("wf_from_bucket")
+					Enabled = True
+					Checked = False
+				Case 3
+					Caption = System.LoadString("wf_item")
+					Enabled = True
+					Checked = False
+			End Select
+	End Select
+End Sub
+
+Sub oleToolbar_OnMenuItem(btnID, item)
+	Dim Refresh ' *-- 	Dim Refresh as Boolean
+	Refresh = False
+	
+	Select Case btnID
+		Case 1
+			Select Case item
+				Case 1
+					Refresh = AddFolder
+				Case 2
+					Refresh = AddBucket
+				Case 3
+					Refresh = AddItem
+			End Select
+		Case 2
+			Select Case item
+				Case 1
+					Refresh = DelFolder
+				Case 2
+					Refresh = DelBucket
+				Case 3
+					Refresh = DelItem
+			End Select
+	End Select
+
+	' Force refresh of the form to ensure the WF_Process combo is correctly
+	' enabled or disabled
+	If Refresh Then
+		Form.FireOpenFormEvent Form.Object
+	End If
+End Sub
+
+Sub oleToolbar_Clicked(btnID)
+	Dim Refresh ' *-- 	Dim Refresh As Boolean
+	Refresh = False
+	
+	Select Case btnID
+	Case 0
+		nRow = Form.PendingWork.Control.SelectedRow
+		If (nRow >= 0) and (Me.Control.Buttons.Item(1).Enabled) Then
+			Form.PendingWork.Control.OpenRow(nRow)
+		End If
+	Case 1
+		Refresh = AddItem
+	Case 2
+		If Msgbox(System.LoadString("wf_delitem_prompt"),vbYesNo+vbQuestion,System.Name) = 6 Then
+			Refresh = DelItem
+		End If
+	Case 3
+		This.Parent.PendingWork.Control.Print
+	End Select
+
+	If Refresh Then
+		' Force refresh of the form to ensure the WF_Process combo is correctly
+		' enabled or disabled
+		Form.FireOpenFormEvent Form.Object		
+	End If
+End Sub
+
+Function AddItem
+	
+	AddItem = False
+
+	Form.Object.Properties("Item") = ""
+	If DoScript("wf_scripts.wf_additm","wf_job.AddItem") Then
+		
+		strSelectedItem = ""
+		On Error Resume Next
+		strSelectedItem = Form.Object.Properties("Item").Value.Class.Name
+		objSelectedItem = Form.Object.Properties("Item")
+		On Error Goto 0
+
+		If Len(Trim(strSelectedItem)) > 0 Then
+			If Form.Object.Started Then
+				bInitializeOnly = false
+			Else
+				bInitializeOnly = true
+			End If
+
+			Set oAETrans = System.BeginTransaction
+			oAETrans.AutoRevert = True
+			Set objParams = nothing
+			System.WF_StartWithInstance Form.Object.WF_Process.Value, Form.Object, objSelectedItem, oAETrans, objParams, bInitializeOnly
+			oAETrans.Commit
+		
+			AddItem = True
+		End If
+	End If
+
+End Function
+
+Function DelItem
+	
+	DelItem = False
+
+	Set objSelectedItem = Nothing
+	On Error Resume Next
+	Set objSelectedItem = This.Parent.PendingWork.Control.RowObject(This.Parent.PendingWork.Control.SelectedRow)
+	On Error Goto 0
+
+	If Not objSelectedItem Is Nothing Then
+		Set objItemToDelete = System.Classes(objSelectedItem.Members("objClass")).GetInstance(objSelectedItem.Members("objKey"))
+
+		Set oAETrans = System.BeginTransaction
+		oAETrans.AutoRevert = True
+		Form.Object.WF_DeleteJobMember objItemToDelete, oAETrans
+		oAETrans.Commit
+		
+		DelItem = True
+	End If
+
+End Function
+
+Function AddFolder
+	
+	AddFolder = False
+	
+	Form.Object.Properties.Delete("SourceFolder")
+	If DoScript("wf_scripts.wf_addfld","wf_job.AddFolder") Then
+
+		Dim SourceFolder: Set SourceFolder = Nothing
+		On Error Resume Next
+		Set SourceFolder = Form.Object.Properties("SourceFolder").Value
+		On Error Goto 0
+
+		If Not SourceFolder Is Nothing Then
+
+			If Form.Object.Started Then
+				bInitializeOnly = false
+			Else
+				bInitializeOnly = true
+			End If
+
+			' Get the Load Parameters
+
+			If Form.Object.Properties("AlreadyPending").Value = 1 Then
+				blnAlreadyPending = True
+ 			Else
+				blnAlreadyPending = False
+			End If
+
+			If Form.Object.Properties("NewToJob").Value = 1 Then
+				blnNewToJob = True
+			Else
+				blnNewToJob = False
+			End If
+
+			Set objElkUtils = CreateObject("Elk9.Utils")
+			objElkUtils.SetCursorIcon("IDC_WAIT")
+			Form.Object.WF_AddFromFolder SourceFolder, blnAlreadyPending, blnNewToJob, bInitializeOnly
+			objElkUtils.SetCursorIcon("IDC_ARROW")
+			
+			AddFolder = True
+		End If
+	End If
+
+End Function
+
+Function DelFolder
+	
+	DelFolder = False
+	
+	Form.Object.Properties.Delete("SourceFolder")
+	If DoScript("wf_scripts.wf_delfld","wf_job.DelFolder") Then
+
+		Dim SourceFolder: Set SourceFolder = Nothing
+		On Error Resume Next
+		Set SourceFolder = Form.Object.Properties("SourceFolder").Value
+		On Error Goto 0
+
+		If Not SourceFolder Is Nothing Then
+			Set objElkUtils = CreateObject("Elk9.Utils")
+			objElkUtils.SetCursorIcon("IDC_WAIT")
+			Form.Object.WF_DeleteFromFolder SourceFolder
+			objElkUtils.SetCursorIcon("IDC_ARROW")
+		End If
+	End If
+	
+End Function
+
+Function AddBucket
+
+	AddBucket = False
+	
+	Form.Object.Properties("SourceBucket").Value = ""
+	If DoScript("wf_scripts.wf_addbkt","wf_job.AddBucket") Then
+
+		strSourceBucket = ""
+		On Error Resume Next
+		strSourceBucket = Form.Object.Properties("SourceBucket").Value
+		On Error Goto 0
+
+		If Len(Trim(strSourceBucket))>0 Then
+			' Get the Load Parameters
+
+			If Form.Object.Started Then
+				bInitializeOnly = false
+			Else
+				bInitializeOnly = true
+			End If
+
+			If Form.Object.Properties("SelectedOnly").Value = 1 Then
+				blnSelectedOnly = True
+			Else
+				blnSelectedOnly = False
+			End If
+
+			If Form.Object.Properties("AlreadyPending").Value = 1 Then
+				blnAlreadyPending = True
+ 			Else
+				blnAlreadyPending = False
+			End If
+
+			If Form.Object.Properties("NewToJob").Value = 1 Then
+				blnNewToJob = True
+			Else
+				blnNewToJob = False
+			End If
+
+			Set objElkUtils = CreateObject("Elk9.Utils")
+			objElkUtils.SetCursorIcon("IDC_WAIT")
+			Form.Object.WF_AddFromBucket Form.Object.Properties("SourceBucket").Value, blnSelectedOnly, blnAlreadyPending, blnNewToJob, bInitializeOnly
+			objElkUtils.SetCursorIcon("IDC_ARROW")
+			
+			AddBucket = True
+		End If
+	End If
+
+End Function
+
+Function DelBucket
+
+	DelBucket = False
+
+	Form.Object.Properties("SourceBucket").Value = ""
+	If DoScript("wf_scripts.wf_delbkt","wf_job.DelBucket") Then
+
+		strSourceBucket = ""
+		On Error Resume Next
+		strSourceBucket = Form.Object.Properties("SourceBucket").Value
+		On Error Goto 0
+
+		If Len(Trim(strSourceBucket))>0 Then
+
+			' Get the Delete Parameters
+
+			If Form.Object.Properties("SelectedOnly").Value = 1 Then
+				blnSelectedOnly = True
+			Else
+				blnSelectedOnly = False
+			End If
+
+			' Build the History Message
+
+			Set objElkUtils = CreateObject("Elk9.Utils")
+			objElkUtils.SetCursorIcon("IDC_WAIT")
+			Form.Object.WF_DeleteFromBucket Form.Object.Properties("SourceBucket").Value, blnSelectedOnly
+			objElkUtils.SetCursorIcon("IDC_ARROW")
+			
+			DelBucket = True
+		End If
+	End If
+
+End Function
+
+Function DoScript(tstrScriptID,tstrProcedure)
+
+	Dim objWizard
+	Dim objScriptAspect
+	Dim strScript
+	Dim lngReturn
+
+	Set objWizard = CreateObject("Elk9.Wizard")
+	objWizard.AeSystem = System
+	objWizard.AeObject = Form.Object
+
+	lngReturn = 0
+
+	Set objScriptAspect = System.Aspect("Ve9.ScriptAspect")
+	If Not IsNullObject(objScriptAspect) Then
+		On Error Resume Next
+		strScript = ""
+		strScript = objScriptAspect.GetScript(tstrScriptID).xml.xml
+		On Error Goto 0
+
+		If Len(RTrim(strScript))=0 Then
+			On Error Resume Next
+			System.Trace "[wf_job] " & RTrim(tstrProcedure) & " : Unable to load Script " & tstrScriptID & " from Ve9.ScriptAspect"
+			On Error Goto 0
+		Else
+			objWizard.script = strScript
+			lngReturn = objWizard.DoModal
+		End If
+	Else
+		System.Trace "[lbrCallCenter] " & RTrim(tstrProcedure) & " : Unable to load aspect Ve9.ScriptAspect from System"
+	End If
+
+	' Pass Script Return value back to caller
+
+	DoScript = lngReturn
+
+End Function
+
+Sub UpdateToolBarButtons(objGrid, objToolbar)
+	' Check that the toolbar exists before updating
+	IntButtons = 0
+	On Error Resume Next
+	IntButtons = objToolbar.Control.Buttons.Count
+	On Error goto 0
+
+	' Buttons are enabled if the job has a selected process with a defined class
+	If IntButtons > 0 Then
+		bCanUpdate = False
+		If Not Form.Object.WF_Process.Value.IsNull Then
+			bCanUpdate = True		
+		End If
+	
+		With objToolbar.Control.Buttons
+			' Update the Toolbar button status 
+			.Item(0).Enabled = objGrid.Control.OpenEnabled
+			.Item(1).Enabled = bCanUpdate
+			If objGrid.Control.DeleteEnabled and objGrid.Control.AllowDeletes Then
+				.Item(2).Enabled = True
+			Else
+				.Item(2).Enabled = False
+			End If
+		End With
+	End If
+End Sub
+
+Sub WF_Process_Change()
+	UpdateToolBarButtons Form.Tabset.Content.PendingWork, Form.Tabset.Content.oleToolbar
+End Sub
+
+Sub PendingWork_OnToolbarStateChange()
+	UpdateToolBarButtons Form.PendingWork, Form.oleToolbar
+End Sub
+
+Sub WebBrowser_BeforeNavigate2(pDisp, URL, Flags, TargetFrameName, PostData, Headers, Cancel)
+	Dim intURLTypeEnds
+	Dim intClassEnds
+    Dim strAEClass
+    Dim strAEKey 
+    Dim objAEInstance
+	
+    intURLTypeEnds = InStr(URL, ":")
+    intClassEnds = InStr(URL, "!")
+    
+    Select Case UCase(Mid(URL, 1, intURLTypeEnds))
+        Case "AEINST:"
+            Cancel = True
+            
+            ' Split the URL into class and key components
+            
+            strAEClass = Mid(URL, intURLTypeEnds + 1, intClassEnds - intURLTypeEnds - 1)
+            strAEKey = Mid(URL, intClassEnds + 1)
+            
+            Set objAEInstance = System.Classes(strAEClass).GetInstance(strAEKey)
+            If Not objAEInstance.IsNull Then
+				' Save the job
+				Form.Object.Save
+				
+				' Open the instance form
+				Form.FireOpenFormEvent objAeInstance
+			End If
+    End Select
+End Sub
+
+Sub EnumGroups(objGroups)
+	Dim objScan
+	Set objScan = Form.Object.Folders("WF_PendingWork").Scan
+	
+	Dim objInst
+	For Each objInst in objScan 
+		Dim strStepDesc
+		strStepDesc = objInst.StepDesc.Value
+		If strStepDesc <> "" Then
+			Dim strValue
+			bFound = objGroups.Exists(strStepDesc)
+			If bExists Then
+				objGroups.Add strStepDesc, "1"
+			Else
+				strValue = objGroups.Item(strStepDesc)
+				strValue = CStr(CInt(strValue) + 1)
+				objGroups.Item(strStepDesc) = strValue
+			End If
+		End If
+	Next
+End Sub
+
+Private Sub WriteTempHtmlFile(strHTML)
+    Dim objFileSystem
+    Dim objTextFile
+    Dim strFileName
+    
+    Form.Tabset.Summary.WebBrowser.Control.Navigate "about:blank"
+    
+    ' The Webbrowser object requires the content to be in a file
+    ' so extract the notes into a temporary file
+    Set objFileSystem = CreateObject("Scripting.FileSystemObject")
+    
+    ' Generate a temporary filename in the windows temporary folder
+    strFileName = objFileSystem.GetSpecialFolder(2) & "\" & objFileSystem.GetTempName
+
+    ' Replace the .tmp file extension with .html so the browser handles it ok
+    strFileName = Replace(strFileName, ".tmp", ".html")   
+
+    ' Create the file and output the Notes content
+    Set objTextFile = objFileSystem.CreateTextFile(strFileName)
+    objTextFile.Write strHTML
+    objTextFile.Close
+    Set objTextFile = Nothing
+        
+    Form.Tabset.Summary.WebBrowser.Control.Navigate strFileName
+End Sub
+
+Function GetStyleHTML()
+	Dim strLink, strDefault
+	strLink = _
+"<LINK REL=""stylesheet"" TYPE=""text/css"" HREF=""%STYLESHEET%""/>" & vbCrLf
+
+	strDefault = _
+"<STYLE>" & vbCrLf & _
+"	.ContentItem" & vbCrLf & _
+"	{" & vbCrLf & _
+"		TEXT-ALIGN: left" & vbCrLf & _
+"	}" & vbCrLf & _
+"	.ContentItemOffset" & vbCrLf & _
+"	{" & vbCrLf & _
+"		WIDTH: 30px" & vbCrLf & _
+"	}" & vbCrLf & _
+"	.ContentTable" & vbCrLf & _
+"	{" & vbCrLf & _
+"		BORDER: 0px;" & vbCrLf & _
+"		PADDING: 0px;" & vbCrLf & _
+"		TEXT-ALIGN: left;" & vbCrLf & _
+"		WIDTH: 100%" & vbCrLf & _
+"	}" & vbCrLf & _
+"	.GroupExpand" & vbCrLf & _
+"	{" & vbCrLf & _
+"		TEXT-ALIGN: center;" & vbCrLf & _
+"		WIDTH: 15px;" & vbCrLf & _
+"		CURSOR:default" & vbCrLf & _
+"	}" & vbCrLf & _
+"	.GroupCount" & vbCrLf & _
+"	{" & vbCrLf & _
+"		TEXT-ALIGN: left" & vbCrLf & _
+"	}" & vbCrLf & _
+"	.GroupHeading " & vbCrLf & _
+"	{" & vbCrLf & _
+"		TEXT-ALIGN: left" & vbCrLf & _
+"	}" & vbCrLf & _
+"	.GroupHeadingTable" & vbCrLf & _
+"	{" & vbCrLf & _
+"		BORDER: 0px;" & vbCrLf & _
+"		PADDING: 0px;" & vbCrLf & _
+"		TEXT-ALIGN: left;" & vbCrLf & _
+"		WIDTH: 100%" & vbCrLf & _
+"	}" & vbCrLf & _
+"	.JobTable" & vbCrLf & _
+"	{" & vbCrLf & _
+"		BORDER: 0px;" & vbCrLf & _
+"		MARGIN: 0px;" & vbCrLf & _
+"		PADDING: 0px;" & vbCrLf & _
+"		TEXT-ALIGN: left;" & vbCrLf & _
+"		WIDTH: 100%" & vbCrLf & _
+"	}" & vbCrLf & _
+"	.JobTableHeading " & vbCrLf & _
+"	{" & vbCrLf & _
+"		FONT-SIZE: larger;" & vbCrLf & _
+"		FONT-WEIGHT: bolder;" & vbCrLf & _
+"		TEXT-ALIGN: left" & vbCrLf & _
+"	}" & vbCrLf & _
+"</STYLE>" & vbCrLf
+
+	Dim bLink
+	bLink = false
+	Dim objConfigInst 
+	Set objConfigInst = Nothing
+	On Error Resume Next
+	Set objConfigInst = System.Folders("stdConfiguration").Scan.Fetch
+	On Error Goto 0
+
+	If Not objConfigInst Is Nothing Then
+		Dim strStyleSheet
+		strStyleSheet = objConfigInst.wf_StyleSheet
+		strStyleSheet = Trim(strStyleSheet)
+		If Len(strStyleSheet) > 0 Then
+		    Dim objFileSystem
+		    Set objFileSystem = CreateObject("Scripting.FileSystemObject")
+		    If objFileSystem.FileExists(strStyleSheet) Then
+				strLink = Replace(strLink, "%STYLESHEET%", strStyleSheet)			
+				bLink = true
+			End If
+		End If
+	End If
+
+	If bLink Then
+		GetStyleHTML = strLink
+	Else
+		GetStyleHTML = strDefault
+	End If
+End Function
+
+Function GetScriptHTML()
+	GetScriptHTML = _
+"<SCRIPT language=""VBScript"">" & vbCrLf & _
+"Dim strSelGroup" & vbCrLf & _
+"" & vbCrLf & _
+"Sub SwitchGroupItem(strGroup, strNewDisplay, strNewExpand)" & vbCrLf & _
+"	Dim strContent, strExpand" & vbCrLf & _
+"	Dim elemContent, elemExpand" & vbCrLf & _
+"	Dim elemChildText" & vbCrLf & _
+"" & vbCrLf & _
+"	strContent = strGroup & ""_content""" & vbCrLf & _
+"	strExpand = strGroup & ""_expand""" & vbCrLf & _
+"		" & vbCrLf & _
+"	Set elemContent = document.getElementById(strContent)" & vbCrLf & _
+"	if not (elemContent is nothing) then" & vbCrLf & _
+"		elemContent.style.display = strNewDisplay" & vbCrLf & _
+"	End if" & vbCrLf & _
+"	" & vbCrLf & _
+"	Set elemExpand = document.getElementById(strExpand)" & vbCrLf & _
+"	if not (elemExpand is nothing) then" & vbCrLf & _
+"		set elemChildText = elemExpand.childNodes(0)" & vbCrLf & _
+"		elemChildText.Data = strNewExpand" & vbCrLf & _
+"	End if" & vbCrLf & _
+"End Sub" & vbCrLf & _
+"" & vbCrLf & _
+"Sub SwitchGroup(elem)" & vbCrLf & _
+"	' Hide currently-selected group content" & vbCrLf & _
+"	if (strSelGroup <> """") Then" & vbCrLf & _
+"		SwitchGroupItem strSelGroup, ""none"", ""+""" & vbCrLf & _
+"	End if" & vbCrLf & _
+"	" & vbCrLf & _
+"	Dim strGroup" & vbCrLf & _
+"	strGroup = elem.name" & vbCrLf & _
+"	if (strSelGroup <> strGroup) then" & vbCrLf & _
+"		SwitchGroupItem strGroup, """", ""-""" & vbCrLf & _
+"		strSelGroup = strGroup" & vbCrLf & _
+"	Else" & vbCrLf & _
+"		strSelGroup = """" " & vbCrLf & _
+"	End if" & vbCrLf & _
+"End Sub" & vbCrLf & _
+"</SCRIPT>" & vbCrLf & _
+"" & vbCrLf & _
+"<SCRIPT language=""VBScript"" For=""GroupHeadingRow"" event=""onclick"">" & vbCrLf & _
+"	SwitchGroup(Me)" & vbCrLf & _
+"</SCRIPT>" & vbCrLf
+End Function
+
+Function GenerateGroupContent(objGroups, strGroup)
+	Dim strGroupContent, strRet
+
+	strGroupContent = _
+"			<TR>" & vbCrLf & _
+"				<TD class=""ContentItemOffset"">&nbsp;</TD>" & vbCrLf & _
+"				<TD class=""ContentItem""><A href=""%CONTENT_HREF%"">%CONTENT_TEXT%</A></TD>" & vbCrLf & _
+"			</TR>" & vbCrLf
+    
+	For Each objPendingWork in Form.Object.Folders("WF_PendingWork").Scan
+		If (objPendingWork.StepDesc.Value = strGroup) Then
+			Dim strHref, strText
+			strText = objPendingWork.Prompt
+			strHref = "aeinst:wf_pendingwork!" + objPendingWork.Key
+	
+			Dim strItem		
+			strItem = strGroupContent
+			strItem = Replace(strItem, "%CONTENT_HREF%", strHref)
+			strItem = Replace(strItem, "%CONTENT_TEXT%", strText)
+			
+			strRet = strRet + strItem
+		End If
+	Next
+		
+	GenerateGroupContent = strRet
+End Function
+
+Function GenerateTableContent(objGroups)
+	Dim strRet, strGroupHTML
+	
+	strGroupHTML = _
+"	<TR id=""GroupHeadingRow"" name=""%ROWNUM%"">" & vbCrLf & _
+"		<TD>" & vbCrLf & _
+"			<TABLE class=""GroupHeadingTable"" cellSpacing=0>" & vbCrLf & _
+"				<TR>" & vbCrLf & _
+"					<TD class=""GroupExpand"" id=""%ROWNUM%_expand"" cursor=""hand"">+</TD>" & vbCrLf & _
+"					<TD class=""GroupHeading""><A name = ""%ROWNUM%_text"" href=""#%ROWNUM%_text"">%GROUP_NAME%</A></TD>" & vbCrLf & _
+"				</TR>" & vbCrLf & _
+"			</TABLE>" & vbCrLf & _
+"		</TD>" & vbCrLf & _
+"		<TD class=""GroupCount"">%GROUP_COUNT%</TD>" & vbCrLf & _
+"	</TR>" & vbCrLf & _
+"	<TR id=""%ROWNUM%_content"" style=""DISPLAY: none"">" & vbCrLf & _
+"	<TD align=left colSpan=3>" & vbCrLf & _
+"		<TABLE class=""ContentTable"" cellspacing=1 cellpadding=0>" & vbCrLf & _
+"%GROUP_CONTENT%"  & _
+"		</TABLE>" & vbCrLf & _
+"	</TD>" & vbCrLf
+             
+    Dim strGroup
+    nRow = 0
+	For Each strGroup in objGroups.Keys
+		Dim strCount
+		strCount = objGroups.Item(strGroup)
+
+		strTemp = strGroupHTML		
+		strTemp = Replace(strTemp, "%ROWNUM%", "row" & CStr(nRow))
+		strTemp = Replace(strTemp, "%GROUP_NAME%", strGroup)
+		strTemp = Replace(strTemp, "%GROUP_COUNT%", strCount)
+		
+		' Generate group content
+		strGroupContent = GenerateGroupContent(objGroups, strGroup)
+		strTemp = Replace(strTemp, "%GROUP_CONTENT%", strGroupContent)
+		
+		strRet = strRet & strTemp		                  	
+		
+		nRow = nRow + 1
+	Next
+	
+	GenerateTableContent = strRet
+End Function
+
+Sub GenerateSummary()
+	Dim strHTML
+	strHTML =  _
+"<HTML>" & vbCrLf & _
+"<HEAD>" & vbCrLf & _
+"<META NAME=""GENERATOR"" Content=""Microsoft Visual Studio 6.0"">" & vbCrLf & _
+"" & vbCrLf & _
+"%STYLE_HTML%" & _
+"" & vbCrLf & _
+"%SCRIPT_HTML%" & _
+"</HEAD>" & vbCrLf & _
+"<BODY>" & vbCrLf & _
+"" & vbCrLf & _
+"<H2>Job Summary </H2>" & vbCrLf & _
+"<P>" & vbCrLf & _
+"<TABLE class=""JobTable"" cellSpacing=0>" & vbCrLf & _
+"	<TR>" & vbCrLf & _
+"		<TH class=""JobTableHeading"">Step Description</TD>" & vbCrLf & _
+"		<TH class=""JobTableHeading"">Count</TD>" & vbCrLf & _
+"	</TR>" & vbCrLf & _
+"	<TR>" & vbCrLf & _
+"		<TD>&nbsp;</TD>" & vbCrLf & _
+"		<TD>&nbsp;</TD>" & vbCrLf & _
+"	</TR>" & vbCrLf & _
+"%GROUPS%" & _
+"</TABLE>" & vbCrLf & _
+"</BODY>" & vbCrLf & _
+"</HTML>" & vbCrLf
+	
+	strStyleHTML = GetStyleHtml()	
+	strScriptHtml = GetScriptHtml()	
+
+	On Error Resume Next
+	Set objElkUtils = CreateObject("Elk9.Utils")
+	objElkUtils.SetCursorIcon("IDC_WAIT")
+	
+	' Enumerate the list of groups	
+	Set objGroups = CreateObject("Scripting.Dictionary")	
+	EnumGroups objGroups
+
+	' Generate the table content for the groups
+	Dim strBroups
+	strGroups = GenerateTableContent(objGroups)
+
+	' Put it all together
+	strHTML = Replace(strHTML, "%STYLE_HTML%", strStyleHtml)
+	strHTML = Replace(strHTML, "%SCRIPT_HTML%", strScriptHtml)
+	strHTML = Replace(strHTML, "%GROUPS%", strGroups)
+
+	objElkUtils.SetCursorIcon("IDC_ARROW")
+	On Error goto 0
+
+    WriteTempHtmlFile strHTML
+End Sub
+
+Sub Summary_Init()
+	GenerateSummary
+End Sub
+%>
+}
+
+modify form "WF_Job_Base" for "WF_Job" as "WF_Job_Started"
+{
+}
+
+form "WF_Job_Process" for "WF_Job" 304,226
+{
+	"BackToDefn" hyperlink tag ENU "" 0,0,189,9
+	"WF_Process" form member "WF_Process" 0,13,304(100),213(100)
+	OnInit "Form_Init"
+	Script VBScript
+<%
+Sub Form_Init()     
+	strText = Form.Object.Prompt
+	If strText = "" Then
+		strText = System.LoadString("wf_BackToJobDefn")
+	End If
+	Form.BackToDefn.Address = Form.Object	
+	Form.BackToDefn.Text = strText
+End Sub
+%>
+}
+
+modify form "WF_Job_Base" for "WF_Job" as "WF_Job"
+{
+	before "Tabset" Height 15
+	{
+		"StartJob" button
+			tag 
+				ZHS "开始工作", 
+				DEU "Auftrag starten", 
+				ELL "Εκκίνηση Εργασίας", 
+				ENU "Start Job", 
+				FRA "Démarrer la tâche", 
+				ITA "Avvia compito ", 
+				JPN "ジョブの開始"
+		 227(100),0,60(100),15
+			OnClick "StartJob_Click"
+	}
+	OnInit "Form_Init"
+	Script VBScript
+<%
+Sub Form_Init()
+	DoDefault()
+	EnableStartJob
+End Sub
+
+Sub StartJob_Click()
+	' Set all pending work instances that still have status "Initialized" to "Pending"
+	For Each oPendingWork in Form.Object.Folders("WF_PendingWork").Scan
+		If oPendingWork.Status.Value = "N" Then
+			oPendingWork.Status.Value = "P"
+			oPendingWork.Save
+		End If
+	Next
+	
+	Form.Object.Started = true
+	Form.StartJob.Enabled = false
+End Sub
+
+Sub WF_Process_Change()
+	EnableStartJob
+End Sub
+
+Sub EnableStartJob
+	bEnable = Not Form.Object.WF_Process.IsNull
+	Form.StartJob.Enabled = bEnable
+End Sub
+%>
+}
+
+form "WF_History" for "WF_History" 240,165
+{
+	"Action" edit member "Action" tag ENU "" 0,16,240(100),149(100) multiline autovscroll vscroll toptag
+	"WhenAdded" datetime member "WhenAdded" tag ENU "" 0,0,240(100),14 sidetag
+}
+
+form "WF_ServerGroupWF_ServerWF_Server" for "WF_ServerGroupWF_Server" 250,150
+{
+	"WF_Server" form member "WF_Server" 0,0,250(100),150(100)
+}
+
+form "WF_ServerGroupWF_ServerWF_ServerGroup" for "WF_ServerGroupWF_Server" 250,150
+{
+	"WF_ServerGroup" form member "WF_ServerGroup" 0,0,250(100),150(100)
+}
+
+form "WF_Server" for "WF_Server" 300,233
+{
+	"Name" edit member "Name" tag ENU "" 0,0,149(50),14 autohscroll sidetag tagset(1)
+	"WF_ServerGroups" control "Elk9.grid" 0,16,300(100),217(100) ENU ""
+	{
+		"_cx" = "5080"
+		"_cy" = "5080"
+		"Enabled" = "-1"
+		"FolderName" = "WF_ServerGroups"
+		"ConfirmDelete" = "0"
+		"AllowDelete" = "-1"
+		"AllowSort" = "-1"
+		"AllowOpen" = "-1"
+		"AllowAdds" = "-1"
+		"Toolbar" = "-1"
+		"ManualFill" = "0"
+		"Configurable" = "0"
+		"MaxRows" = "0"
+		"PrintButton" = "0"
+		"Collapsable" = "0"
+		"ShowGroupBox" = "0"
+		"OpenOnAdd" = "0"
+		"Filter" = ""
+		"GridID" = "{B980879C-D623-415D-A2FB-B548AADBC44C}"
+		"BackColor" = "2147483653"
+		"ForeColor" = "4294967295"
+		"BandOnMember" = ""
+		"BandFolder" = ""
+		"ExpandMember" = ""
+		"ExpandExistence" = ""
+		"RowColor" = ""
+		"ShowTooltips" = "-1"
+		"FixedColumnCount" = "0"
+		"SortCol" = "-1"
+		"SortCol2" = "-1"
+		"SortCol3" = "-1"
+		"SortDirection" = "0"
+		"SortDirection2" = "0"
+		"SortDirection3" = "0"
+		"ColumnCount" = "0"
+		"TotalCount" = "0"
+		"Caption_StringCount" = "0"
+		"OpenInDialog" = "0"
+		"OpenInDouble" = "0"
+		"Reload" = "0"
+		"RowHeight" = "0"
+		"ExtraMembers" = ""
+		"DialogsSave" = "0"
+	}
+	"txtAppServerName" edit member "AppServerName" tag ENU "" 150(50),0,150(100),14 autohscroll sidetag
+}
+
+form "WF_ServerGroup" for "WF_ServerGroup" 180,132
+{
+	"Name" edit member "Name" tag ENU "" 0,0,180(100),14 autohscroll sidetag
+	"WF_Servers" control "Elk9.grid" 0,16,180(100),64(50) ENU ""
+	{
+		"_cx" = "5080"
+		"_cy" = "5080"
+		"Enabled" = "-1"
+		"FolderName" = "WF_Servers"
+		"ConfirmDelete" = "0"
+		"AllowDelete" = "-1"
+		"AllowSort" = "-1"
+		"AllowOpen" = "-1"
+		"AllowAdds" = "-1"
+		"Toolbar" = "-1"
+		"ManualFill" = "0"
+		"Configurable" = "0"
+		"MaxRows" = "0"
+		"PrintButton" = "0"
+		"Collapsable" = "0"
+		"ShowGroupBox" = "0"
+		"OpenOnAdd" = "0"
+		"Filter" = ""
+		"GridID" = "{9DF6C17C-402C-487B-B1D7-FF8E0C69DF32}"
+		"BackColor" = "2147483653"
+		"ForeColor" = "4294967295"
+		"BandOnMember" = ""
+		"BandFolder" = ""
+		"ExpandMember" = ""
+		"ExpandExistence" = ""
+		"RowColor" = ""
+		"ShowTooltips" = "-1"
+		"FixedColumnCount" = "0"
+		"SortCol" = "-1"
+		"SortCol2" = "-1"
+		"SortCol3" = "-1"
+		"SortDirection" = "0"
+		"SortDirection2" = "0"
+		"SortDirection3" = "0"
+		"ColumnCount" = "0"
+		"TotalCount" = "1"
+		"Total1_Expr" = "TOTAL"
+		"Caption_StringCount" = "0"
+		"OpenInDialog" = "0"
+		"OpenInDouble" = "0"
+		"Reload" = "0"
+		"RowHeight" = "0"
+		"ExtraMembers" = ""
+		"DialogsSave" = "0"
+		"ExpandFilter" = ""
+		"Total1_Caption_String1Lang" = "1033"
+		"Total1_Caption_String1Val" = "Total"
+		"Total1_Caption_String2Lang" = "1041"
+		"Total1_Caption_String2Val" = "合計"
+		"Total1_Caption_StringCount" = "2"
+	}
+	"grdWF_AppPools" control "Elk9.grid" 0,80(50),180(100),52(100) ENU ""
+	{
+		"_cx" = "5080"
+		"_cy" = "5080"
+		"Enabled" = "-1"
+		"FolderName" = "WF_AppPools"
+		"ConfirmDelete" = "0"
+		"AllowDelete" = "-1"
+		"AllowSort" = "-1"
+		"AllowOpen" = "-1"
+		"AllowAdds" = "-1"
+		"Toolbar" = "-1"
+		"ManualFill" = "0"
+		"Configurable" = "0"
+		"MaxRows" = "0"
+		"PrintButton" = "0"
+		"Collapsable" = "0"
+		"ShowGroupBox" = "0"
+		"OpenOnAdd" = "0"
+		"Filter" = ""
+		"GridID" = "{A881E67D-F53F-479C-AE86-429F422E7310}"
+		"BackColor" = "2147483653"
+		"ForeColor" = "4294967295"
+		"BandOnMember" = ""
+		"BandFolder" = ""
+		"ExpandMember" = ""
+		"ExpandExistence" = ""
+		"RowColor" = ""
+		"ShowTooltips" = "-1"
+		"FixedColumnCount" = "0"
+		"SortCol" = "-1"
+		"SortCol2" = "-1"
+		"SortCol3" = "-1"
+		"SortDirection" = "0"
+		"SortDirection2" = "0"
+		"SortDirection3" = "0"
+		"ColumnCount" = "0"
+		"TotalCount" = "0"
+		"Caption_StringCount" = "0"
+		"OpenInDialog" = "0"
+		"OpenInDouble" = "0"
+		"Reload" = "0"
+		"RowHeight" = "0"
+		"ExtraMembers" = ""
+		"DialogsSave" = "0"
+		"ExpandFilter" = ""
+	}
+}
+
+form "PendingWorkLock" for "PendingWorkLock" 180,132
+{
+	"ServerID" edit member "ServerID" tag ENU "" 0,0,100,14 autohscroll sidetag
+	"ID" edit member "ID" tag ENU "" 0,18,100,14 autohscroll sidetag
+	"Timestamp" datetime member "TimeStamp" tag ENU "" 0,36,150,12 sidetag
+}
+
+form "WF_ServerGroupWF_AppPoolWF_AppPool" for "WF_ServerGroupWF_AppPool" 250,150
+{
+	"WF_AppPool" form member "WF_AppPool" 0,0,250(100),150(100)
+}
+
+form "WF_ServerGroupWF_AppPoolWF_ServerGroup" for "WF_ServerGroupWF_AppPool" 250,150
+{
+	"WF_ServerGroup" form member "WF_ServerGroup" 0,0,250(100),150(100)
+}
+
+form "WF_ServerWF_AppPoolWF_AppPool" for "WF_ServerWF_AppPool" 250,150
+{
+	"WF_AppPool" form member "WF_AppPool" 0,0,250(100),150(100)
+}
+
+form "WF_ServerWF_AppPoolWF_Server" for "WF_ServerWF_AppPool" 250,150
+{
+	"WF_Server" form member "WF_Server" 0,0,250(100),150(100)
+}
+
+form "WF_AppPool" for "WF_AppPool" 240,176
+{
+	"txtName" edit member "Name" tag ENU "" 0,0,240(100),14 autohscroll sidetag
+	"grdWF_Servers" control "Elk9.grid" 0,14,240(100),74(50) ENU ""
+	{
+		"_cx" = "5080"
+		"_cy" = "5080"
+		"Enabled" = "-1"
+		"FolderName" = "WF_Servers"
+		"ConfirmDelete" = "0"
+		"AllowDelete" = "-1"
+		"AllowSort" = "-1"
+		"AllowOpen" = "-1"
+		"AllowAdds" = "-1"
+		"Toolbar" = "-1"
+		"ManualFill" = "0"
+		"Configurable" = "0"
+		"MaxRows" = "0"
+		"PrintButton" = "0"
+		"Collapsable" = "0"
+		"ShowGroupBox" = "0"
+		"OpenOnAdd" = "0"
+		"Filter" = ""
+		"GridID" = "{B53A9CC5-1761-44E0-B3F6-0224DA3D2029}"
+		"BackColor" = "2147483653"
+		"ForeColor" = "4294967295"
+		"BandOnMember" = ""
+		"BandFolder" = ""
+		"ExpandMember" = ""
+		"ExpandExistence" = ""
+		"RowColor" = ""
+		"ShowTooltips" = "-1"
+		"FixedColumnCount" = "0"
+		"SortCol" = "-1"
+		"SortCol2" = "-1"
+		"SortCol3" = "-1"
+		"SortDirection" = "0"
+		"SortDirection2" = "0"
+		"SortDirection3" = "0"
+		"ColumnCount" = "0"
+		"TotalCount" = "0"
+		"Caption_StringCount" = "0"
+		"OpenInDialog" = "0"
+		"OpenInDouble" = "0"
+		"Reload" = "0"
+		"RowHeight" = "0"
+		"ExtraMembers" = ""
+		"DialogsSave" = "0"
+		"ExpandFilter" = ""
+	}
+	"grdWF_ServerGroups" control "Elk9.grid" 0,90(50),240(100),86(100) ENU ""
+	{
+		"_cx" = "5080"
+		"_cy" = "5080"
+		"Enabled" = "-1"
+		"FolderName" = "WF_ServerGroups"
+		"ConfirmDelete" = "0"
+		"AllowDelete" = "-1"
+		"AllowSort" = "-1"
+		"AllowOpen" = "-1"
+		"AllowAdds" = "-1"
+		"Toolbar" = "-1"
+		"ManualFill" = "0"
+		"Configurable" = "0"
+		"MaxRows" = "0"
+		"PrintButton" = "0"
+		"Collapsable" = "0"
+		"ShowGroupBox" = "0"
+		"OpenOnAdd" = "0"
+		"Filter" = ""
+		"GridID" = "{F0749E75-C99D-45FE-ADC8-84F54CDFFED2}"
+		"BackColor" = "2147483653"
+		"ForeColor" = "4294967295"
+		"BandOnMember" = ""
+		"BandFolder" = ""
+		"ExpandMember" = ""
+		"ExpandExistence" = ""
+		"RowColor" = ""
+		"ShowTooltips" = "-1"
+		"FixedColumnCount" = "0"
+		"SortCol" = "-1"
+		"SortCol2" = "-1"
+		"SortCol3" = "-1"
+		"SortDirection" = "0"
+		"SortDirection2" = "0"
+		"SortDirection3" = "0"
+		"ColumnCount" = "0"
+		"TotalCount" = "0"
+		"Caption_StringCount" = "0"
+		"OpenInDialog" = "0"
+		"OpenInDouble" = "0"
+		"Reload" = "0"
+		"RowHeight" = "0"
+		"ExtraMembers" = ""
+		"DialogsSave" = "0"
+		"ExpandFilter" = ""
+	}
+}
+
+modify form "stdConfiguration" for "stdConfiguration" as "stdConfiguration"
+{
+	modify tabset "Tabset"
+	{
+		Insert "Workflow" before "Notes"
+			ZHS "工作流程", 
+			ELL "Ροή-Εργασία", 
+			ENU "Workflow", 
+			JPN "Workflow", 
+			KOR "워크 플로우"
+		
+		{
+			"frmWorkflow" form self tag 
+				ENU "frmWorkflow", 
+				JPN "frmWorkflow"
+			 0,0,287(100),192(100) context "WF"
+		}
+	}
+}
+
+form "WF_stdConfiguration" for "stdConfiguration" 306,204
+{
+	"txtwf_StyleSheet" edit member "wf_StyleSheet" tag ENU "" 0,0,306(100),14 autohscroll sidetag
+}

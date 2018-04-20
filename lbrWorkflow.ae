@@ -1,0 +1,4145 @@
+﻿// Active Elk definition file generated from binary format
+// Date:	2010-11-09 16:49:39
+// User:	build
+
+library "lbrWorkflow"
+{
+/* Workflow - 11.0.302 11.302.1.patch */
+title(Singular)
+	ELL "Ροή-Εργασίας",
+	ENU "Workflow",
+	JPN "Workflow",
+	ZHS "工作流程"
+properties
+{
+	"Class Groups" 0
+		properties
+		{
+			"Workflow" 1
+				title(Singular) ENU "Workflow"
+		}
+}
+version "11.1.65\r\nCopyright (C) StayinFront, Inc 2001-2010"
+uses "lbrSystemEventLog"
+aspect "Elk9.Aspect" "lbrWorkflow"
+aspect "VE9.ScriptAspect" "wf_scripts.xml"
+aspect "ActivElk.StandardData" "wf_maintenance_processes.xml"
+aspect "StayinFront.Workflow.WorkflowAspect" "lbrWorkflow"
+script VBScript
+<%
+Function WF_LogEntry(tstrProcess, tintType)
+
+	' Write a WF Log Entry and return the instance to the caller so they
+	' can write any details required
+
+	Set WF_LogEntry = Nothing
+	
+	Set WF_LogEntry = System.Folders("LG_SystemEvent").CreateNewInstance(System.Classes("WF_LogEvent"))
+	If Not WF_LogEntry Is Nothing Then
+		With WF_LogEntry
+			.Process = tstrProcess
+			.WF_LogEventType = tintType
+		End With	
+	End If	
+
+End Function
+
+Function WF_StartWithInstance(tobjProcess, tobjJob, tobjObj, tobjAETrans, tobjParams, bInitializeOnly)
+
+	' Create a new WF_PendingWork instance to run against a WF_Process whose entry event
+	' is a StartWithInstance event
+	'
+	' tobjProcess 	  - the WF_Process to run against. Must have a StartWithInstance entry event
+	' tobjJob		  - a WF_Job instance to which the newly-created WF_PendingWork
+	'				    is to be joined. May be Nothing
+	' tobjObj		  - the class instance to be used in the StartWithInstance event
+	' tobjAETrans     - the transaction to be used to save the new instance. May be Nothing
+	' tobjParams	 - additional parameters to be added as properties to the WF_PendingWork
+	'				   instance. This must be an object of type "Scripting.Dictionary" or Nothing
+	' bInitializeOnly - if true, then the status newly-created WF_PendingWork is set
+	'				    to Initialized, otherwise it is set to Pending
+	'
+	' The return value is the new WF_PendingWork instance.
+	
+	Set WF_StartWithInstance = Nothing                             
+	
+	If tobjProcess is Nothing Then
+		Exit Function
+	End If
+	If tobjObj is Nothing Then
+		Exit Function
+	End If
+
+	' Check that the object is of the right class
+	strClass = tobjProcess.StartWithInst_class.value
+	If (IsNull(strClass) or (Len(strClass) = 0)) Then
+		Exit Function
+	End If
+	If (Not tobjObj.IsKindOf(strClass)) Then
+		Exit Function
+	End If
+
+	' Determine class of new PendingWork
+	' Check if the Process Definition has an StartWithInstance event
+	strPendingWorkClass = ""
+	
+	' Get the class type for the job from the "AEWorkflow.StartWithInstance.Event"
+	Set objXMLDom = CreateObject("MSXML.DomDocument")
+	objXMLDom.Async = True
+	If objXMLDom.LoadXML(tobjProcess.defn.value) Then
+		' Process definition loaded OK so get the Document Element
+		Set objXMLDomElement = objXMLDom.DocumentElement
+			
+		' Then find all entryevents/event nodes
+		Set objXMLEventNodes = objXMLDomElement.selectNodes("entryevents/event[@progid=""AeWorkFlow.StartWithInstance.Event""]")
+
+		' Look for the aeworkflow.startwithinstance.event node
+		For intLoop = 0 To (objXMLEventNodes.Length-1)
+			Set objXMLEventNode = objXMLEventNodes.Item(intLoop)
+			If objXMLEventNode.attributes.getNamedItem("progid").text = "AeWorkFlow.StartWithInstance.Event" Then
+				strPendingWorkClass = ""
+				On Error Resume Next
+				strPendingWorkClass = Lcase(objXMLEventNode.attributes.getNamedItem("PendingWorkClass").text)
+				On Error goto 0
+				Exit For
+			End If							
+		Next
+	End If
+	If Len(strPendingWorkClass) = 0 Then
+		strPendingWorkClass = "WF_PendingWork"
+	End If
+	
+	On Error Resume Next
+	Set objPendingWorkClassDef = Nothing
+	Set objPendingWorkClassDef = System.Classes(strPendingWorkClass)
+	On Error goto 0
+	If Not Lcase(Typename(objPendingWorkClassDef)) = "iaeclassdef" Then
+		Set objPendingWorkClassDef = System.Classes("WF_PendingWork")
+	End If
+	                             	
+	' New PendingWork
+	Dim objNewPendingWork
+	Set objNewPendingWork = Nothing
+                                 
+	If not tobjJob is Nothing Then
+		Set objNewPendingWork = tobjJob.Folders("WF_PendingWork").CreateNewInstance(objPendingWorkClassDef)
+	Else
+		Set objNewPendingWork = System.Folders("WF_PendingWork").CreateNewInstance(objPendingWorkClassDef)
+	End If
+		
+	' Details of the instance being added
+	objNewPendingWork.objClass = tobjObj.Class.Name
+	objNewPendingWork.objKey = tobjObj.Key
+	objNewPendingWork.Descr = tobjObj.Prompt("wf_prompt")
+		
+	Dim objXML
+	Set objXML = CreateObject("MSXML.DOMDocument")
+	
+	If Not objXML.loadXML(tobjProcess.Defn) Then
+		Err.Raise 1, "", "Invalid workflow process definition"
+	End If
+	
+	Dim processNode
+	Set processNode = objXML.CreateElement("Process")
+	processNode.setAttribute "title", tobjProcess.title
+	objXML.documentElement.appendChild(processNode)
+	
+	' Details of the process being followed
+	objNewPendingWork.Defn = objXML.xml
+	
+	' Create the Props value
+	Set objAEWorkFlowProperties = CreateObject("ActivElk.WorkFlowProperties")
+	objAEWorkFlowProperties.Init System
+	objAEWorkFlowProperties.Add "Object", tobjobj
+	' Set to aeProcess lifetime (value 1)
+	objAEWorkFlowProperties.SetLifetime "Object", 1
+	
+	objAEWorkFlowProperties.Add "WF_StartWithInstanceUserID", System.User.ID
+	objAEWorkFlowProperties.SetLifeTime "WF_StartWithInstanceUserID", 1
+
+	' Add any additional properties
+	If not (tobjParams is nothing) then
+		If (Lcase(typeName(tobjParams)) = "dictionary") Then
+			For Each strKey in tobjParams.Keys
+				objAEWorkFlowProperties.Add strKey, tobjParams.Item(strKey)
+				' Set to aeProcess lifetime (value 1)
+				objAEWorkFlowProperties.SetLifetime strKey, 1
+			Next
+		End If
+	End If
+	
+	objNewPendingWork.Props = objAEWorkFlowProperties.BinaryProps
+
+	objNewPendingWork.WF_Process.Value = tobjProcess
+
+	' Perform custom initialization	
+	objNewPendingWork.StartWithInstanceInit tobjProcess, tobjJob, tobjObj, tobjAETrans, tobjParams, bInitializeOnly
+	
+	'jwm - due to an "error" in CClientEngine::SetNextStep where Save is called w/o passing tobjAETrans
+	'	if the following line has been executed prior to that happening then we will error with
+	'	the "Object is already in an uncommited trans." error, which will mask the true error.
+	'	allow the save post that call to handle things.
+	'objNewPendingWork.Save tobjAETrans
+	
+	' Use the WorkflowClientEngine to set the first step
+	Set objWorkFlowEngine = CreateObject("ActivElk.Workflow.ClientEngine")
+	objWorkFlowEngine.SetNextStep objNewPendingWork,tobjProcess.StartWithInst_firstStep,tobjAETrans
+	Set objWorkFlowEngine = Nothing
+                                                      
+	If bInitializeOnly Then
+		objNewPendingWork.Status.Value = "N"                                                      
+	Else
+		objNewPendingWork.Status.Value = "P"                                                      
+	End If
+	objNewPendingWork.Save tobjAETrans
+
+    ' Return the newly Workflow instance to the caller in case they want
+    ' to add any extra stuff
+	Set WF_StartWithInstance = objNewPendingWork
+	
+End Function
+
+' Add specific parameters for tobjItem from tobjItemParams to tobjParams
+Sub WF_AddItemParams(tobjItem, tobjItemParams, tobjParams)
+	Dim strObjKey
+	strObjKey = tobjItem.Key
+	Dim objDict
+	Set objDict = tobjItemParams.Item(strObjKey)
+	If not (objDict is nothing) then
+		If (Lcase(typeName(objDict)) = "dictionary") Then
+			For Each strKey in objDict.Keys
+				tobjParams.Add strKey, objDict.Item(strKey)
+			Next
+		End if
+	End If
+End Sub
+
+' Remove specific parameters for tobjItem from tobjParams
+Sub WF_RemoveItemParams(tobjItem, tobjItemParams, tobjParams)
+	Dim strObjKey
+	strObjKey = tobjItem.Key
+	Dim objDict
+	Set objDict = tobjItemParams.Item(strObjKey)
+	If not (objDict is nothing) then
+		If (Lcase(typeName(objDict)) = "dictionary") Then
+			For Each strKey in objDict.Keys
+				tobjParams.Remove strKey
+			Next
+		End If
+	End If
+End Sub
+
+Function WF_CreateJob(strTitle, strDescr, tobjWF_Process, Items, tobjAETrans, tobjParams, tobjItemParams, bShowForm, tobjParentForm)
+
+	' Create a new WF_Job instance to run against a specified WF_Process, and
+	' populate it with the given items.
+
+	' strTitle		 - the title for the new job.  It may be "".
+	' strDescr		 - the description for the new job.  It may be "".
+	' tobjWF_Process - the Workflow process to be run.  This Workflow process 
+	'				   may only have one entry event, and it must be a 
+	'				   StartWithInstance event.  This parameter may be null, 
+	'				   in which case the WF_Process will need to be specified 
+	'				   in the WF_Job form.
+	' Items			 - an collection of instances to be passed to the StartWithInstance 
+	'				   event of the WF_Process.  It can be either an IAeFolderScan
+	'				   or an array of instances.  The class of the instances must 
+	'				   match the class specified for the StartWithInstance event 
+	'				   of the Workflow process.
+	' tobjAETrans	 - a transaction object
+	' tobjParams	 - additional parameters to be added as properties to each WF_PendingWork
+	'				   instance.  This must be an object of type "Scripting.Dictionary" or Nothing
+	' tobjItemParams - more additional parameters to be added as properties to WF_PendingWork
+	'				   instance.  Unlike tobjParams, however, which are added to each WF_PendingWork,
+	'				   these are added, each to its corresponding instance.   This must be an object 
+	'				   of type "Scripting.Dictionary" or Nothing.  Each key in the scripting dictionary
+	'				   is a key of an IAeClassInst in the Items collection, and the corresponding value 
+	'				   is a nested Scripting dictionary, containing the additional parameters to add as
+	'				   properties for that particular instance.
+	' bShowForm		 - indicates whether the form for newly-created WF_Job is to 
+	'				   be displayed to allow further configuration
+	' tobjParentForm - the form to be used as the parent when bShowForm is true
+
+	' The return value is the new WF_Job instance.
+
+	Set WF_CreateJob = Nothing                             
+
+	' Check that tobjWF_Process has a StartWithInstance	event
+	strClass = ""
+	If not (tobjWF_Process is Nothing) Then
+		strClass = tobjWF_Process.StartWithInst_class.value
+		If IsNull(strClass) or (Len(strClass) = 0) Then
+			Set tobjWF_Process = nothing
+			strClass = ""
+		End If
+	End If
+
+	' New WF_Job
+	Dim objNewJob
+	Set objNewJob = Nothing
+	Set objNewJob = System.Folders("Workflow Jobs").CreateNewInstance(System.Classes("WF_Job"))
+
+	objNewJob.Title = strTitle
+	objNewJob.Descr = strDescr
+
+	objNewJob.WF_Process = tobjWF_Process
+
+	' Add items.  This can only be done if the WF_Process is not null and valid (has StartWithInstance event)
+	Dim bInitItems
+	bInitItems = true
+	If (Len(strClass) > 0) Then
+		strClass = LCase(strClass)
+
+		' Are there any parameters specific to instances?
+		bItemParams = false
+		If not (tobjParams is nothing) Then
+			If (Lcase(typeName(tobjItemParams)) = "dictionary") Then
+				bItemParams = true
+			End If
+		End If
+		
+		Dim Item
+		if (Lcase(typeName(Items)) = "iaefolderscan") Then
+			For Each Item in Items
+				' Only add items that are of the right class
+				If (not (Item is Nothing)) and (Lcase(TypeName(Item)) = "iaeclassinst") and Item.IsKindOf(strClass) Then
+					If bItemParams Then
+						WF_AddItemParams Item, tobjItemParams, tobjParams
+					End If
+					System.WF_StartWithInstance tobjWF_Process, objNewJob, Item, tobjAETrans, tobjParams, bShowForm
+					If bItemParams Then
+						WF_RemoveItemParams Item, tobjItemParams, tobjParams
+					End If
+				End If
+			Next
+		Else
+			For i = LBound(Items) To UBound(Items) 
+				' Only add items that are of the right class
+				set Item = Items(i)
+				If (not (Item is Nothing)) and (Lcase(TypeName(Item)) = "iaeclassinst") and Item.IsKindOf(strClass) Then
+					If bItemParams Then
+						WF_AddItemParams Item, tobjItemParams, tobjParams
+					End If
+					System.WF_StartWithInstance tobjWF_Process, objNewJob, Item, tobjAETrans, tobjParams, bShowForm
+					If bItemParams Then
+						WF_RemoveItemParams Item, tobjItemParams, tobjParams
+					End If
+				End If
+			Next
+		End If
+		bInitItems = false
+	End If
+	if bInitItems then
+		objNewJob.Properties("InitItems") = Items
+	End If
+		
+	objNewJob.Save tobjAETrans
+
+	If bShowForm and (not (tobjParentForm is Nothing)) Then
+		tobjParentForm.FireOpenFormEvent objNewJob
+	End If
+
+	Set WF_CreateJob = objNewJob
+End Function
+%>
+
+class "WF_PendingWork" unlogged
+{
+	title(Singular)
+		DEU "Ausstehende Arbeit",
+		ELL "Εκκρεμούσα Εργασία",
+		ENU "Workflow Pending Work",
+		FRA "Travail en attente",
+		ITA "Attività in sospeso ",
+		JPN "未処理ジョブ",
+		KOR "보류 워크 플루우",
+		ZHS "等待工作"
+	gender DEU feminine
+	properties
+	{
+		"NoSync" 0
+		"Help text" "<HTML>\r\n<HEAD>\r\n<META NAME=\"GENERATOR\" Content=\"Microsoft DHTML Editing Control\">\r\n<TITLE></TITLE>\r\n</HEAD>\r\n<BODY>\r\n<P><STRONG></STRONG>&nbsp;</P>\r\n<P>&nbsp;</P>\r\n</BODY>\r\n</HTML>\r\n"
+		"Forms" "'WF_PendingWork'"
+		"Search" 0
+			properties
+			{
+				"Date" "WhenAdded=Value"
+					title(Singular)
+						DEU "Datum",
+						ELL "Ημερομηνία",
+						ENU "Date",
+						ITA "Data",
+						JPN "日付",
+						KOR "일자",
+						ZHS "日期"
+					gender DEU neuter,FRA feminine
+					properties
+					{
+						"DataType" 10
+						"hotkey" 0
+							title(Singular) ENU "D"
+					}
+				"Status" "Status=value0"
+					title(Singular)
+						ELL "Κατάσταση",
+						ENU "Status",
+						FRA "Etat",
+						ITA "Stato ",
+						JPN "ステータス",
+						KOR "상태",
+						ZHS "状态"
+					properties
+					{
+						"values" 0
+							properties
+							{
+								"value0" 1
+									title(Singular)
+										ENU "Status",
+										JPN "ステータス"
+									properties
+									{
+										"enumeration" "WF_PendingWork_Status"
+									}
+							}
+						"Incremental" True
+					}
+				"StatusPriorityWhenDue" "(isnull(value0) or value0=status) and (isnull(value3) or value3=priority) and (isnull(value2) or value2=whendue)"
+					title(Singular)
+						ENU "Quick Search",
+						JPN "クイック検索"
+					properties
+					{
+						"values" 0
+							properties
+							{
+								"value0" 1
+									properties
+									{
+										"enumeration" "WF_PendingWork_Status"
+									}
+								"value2" 0
+									properties
+									{
+										"datatype" 12
+									}
+								"value3" 0
+									title(Singular)
+										ENU "Priority",
+										JPN "優先度"
+									properties
+									{
+										"datatype" 16
+									}
+							}
+					}
+			}
+		"Default search" "Date"
+		"Class Groups" 1
+			properties
+			{
+				"Workflow" 1
+			}
+	}
+	virtual "Class"
+	candelete "User.Object.IsAdmin"
+	members
+	{
+		"AssignedQueue" join "WF_Queue"
+		{
+			title(Singular)
+				DEU "Zugewiesene Warteschlange",
+				ELL "Ουρά Ανάθεσης",
+				ENU "Assigned queue",
+				FRA "File d'attente affectée",
+				ITA "Coda assegnata",
+				JPN "アサイン済みキュー",
+				ZHS "分配的队列"
+			gender FRA feminine
+			properties
+			{
+				"Hotkey" 0
+					title(Singular)
+						ENU "Q",
+						FRA "F"
+			}
+			ontargetdelete leave
+			
+			folder "PendingWork"
+			{
+				title(Singular)
+					DEU "Ausstehende Arbeit",
+					ELL "Εκκρεμούσα Εργασία",
+					ENU "Pending Work",
+					FRA "Travail en attente",
+					ITA "Attività in sospeso ",
+					JPN "未処理ジョブ",
+					KOR "보류 워크 플루우",
+					ZHS "等待工作"
+				gender DEU feminine
+				properties
+				{
+					"Hidden" "TRUE"
+				}
+				filter "Status=\"P\""
+				sort [ENU] "WhenDue" asc
+			}
+			
+			folder "InProcessWork"
+			{
+				title(Singular)
+					ELL "Εργασία Εν-Εξελλίξει",
+					ENU "In-Process Work",
+					ITA "Attività in corso",
+					JPN "処理中ジョブ",
+					ZHS "正在进行的工作"
+				filter "Status=\"I\""
+				sort [ENU] "WhenAdded" asc
+			}
+			
+			folder "ErroredWork"
+			{
+				title(Singular)
+					DEU "Arbeiten mit Fehlern",
+					ELL "Εσφαλμένη Εργασία",
+					ENU "Errored Work",
+					FRA "Travail avec erreurs",
+					ITA "Attività con errori",
+					JPN "失敗ジョブ",
+					ZHS "出错的工作"
+				properties
+				{
+					"Hidden" "TRUE"
+				}
+				filter "Status=\"E\""
+				sort [ENU] "WhenAdded" asc
+			}
+			
+			folder "AllWork"
+			{
+				title(Singular)
+					DEU "Alle Arbeiten",
+					ELL "Όλες οι εργασίες",
+					ENU "All Work",
+					FRA "Tout le travail",
+					ITA "Tutte le attività",
+					JPN "すべてのジョブ",
+					ZHS "所有工作"
+				properties
+				{
+					"Direct" False
+					"Hidden" "TRUE"
+				}
+				sort [ENU] "WhenAdded" desc
+			}
+			choose folder 
+			{
+				title(Singular)
+					ENU "WF_Queue",
+					JPN "Workflow キュー"
+				gender DEU feminine
+			}
+		}
+		"ObjClass" data VarChar(128)
+		{
+			title(Singular)
+				DEU "Objektklasse",
+				ELL "Κλάση Αντικειμένου",
+				ENU "Object Class",
+				FRA "Classe d'objet",
+				ITA "Classe oggetto",
+				JPN "オブジェクト クラス",
+				ZHS "对象级"
+			gender DEU feminine,FRA feminine
+		}
+		"ObjKey" data VarChar(128)
+		{
+			title(Singular)
+				DEU "Objektschlüssel",
+				ELL "Κλειδί Αντικειμένου",
+				ENU "Object Key",
+				FRA "Code d'objet",
+				ITA "Chiave oggetto",
+				JPN "オブジェクト キー",
+				ZHS "对象键"
+		}
+		"Descr" data LongVarChar
+		{
+			title(Singular)
+				DEU "Beschreibung",
+				ELL "Περιγραφή",
+				ENU "Description",
+				ITA "Descrizione",
+				JPN "詳細",
+				KOR "설명",
+				ZHS "描述"
+			gender DEU feminine,FRA feminine
+			properties
+			{
+				"Hotkey" 0
+					title(Singular) ENU "D"
+			}
+		}
+		"Status" enum "WF_PendingWork_Status" forced
+		{
+			title(Singular)
+				ELL "Κατάσταση",
+				ENU "Status",
+				FRA "Etat",
+				ITA "Stato ",
+				JPN "ステータス",
+				KOR "상태",
+				ZHS "状态"
+			properties
+			{
+				"Hotkey" 0
+					title(Singular)
+						ENU "S",
+						FRA "E"
+			}
+			NotNull
+			default "\"P\""
+			canmodify "User.Object.IsAdmin Or IsNew Or AssignedUser=User.Object.Key Or ImpersonationID=User.Object.Key"
+		}
+		"AssignedUser" join "stdUser"
+		{
+			title(Singular)
+				DEU "Zugewiesener Benutzer",
+				ELL "Χρήστης ανάθεσης",
+				ENU "Assigned user",
+				FRA "Utilisateur affecté",
+				ITA "Utente assegnato",
+				JPN "アサイン担当者",
+				ZHS "分配的用户"
+			properties
+			{
+				"Hotkey" 0
+					title(Singular) ENU "U"
+			}
+			field "AssignedUser"
+			ontargetdelete leave
+			choose folder 
+			{
+				title(Singular) ENU "stdUser"
+			}
+		}
+		"WhenAdded" data TimeStamp
+		{
+			title(Singular)
+				DEU "Wann hinzugefügt",
+				ELL "Πότε προστέθηκε",
+				ENU "When added",
+				FRA "Ajouté",
+				ITA "Aggiunta",
+				JPN "追加日時",
+				KOR "추가 시간",
+				ZHS "何时添加"
+			properties
+			{
+				"Hotkey" 0
+					title(Singular) ENU "W"
+			}
+			default "Now()"
+		}
+		"ErrorInfo" data LongVarChar
+		{
+			title(Singular)
+				DEU "Fehlerinfo",
+				ELL "Πληροφορίες Σφάλματος",
+				ENU "Error Info",
+				FRA "Info sur l'erreur",
+				ITA "Info errore",
+				JPN "エラー情報",
+				ZHS "错误信息"
+			gender DEU neuter,FRA feminine
+		}
+		"Defn" data LongVarChar
+		{
+			title(Singular)
+				ELL "Διευκρίνηση",
+				ENU "Definition",
+				ITA "Definizione",
+				JPN "定義",
+				ZHS "定义"
+			gender DEU feminine,FRA feminine
+			canmodify "IsNew"
+		}
+		"Step" data Guid
+		{
+			title(Singular)
+				DEU "Schritt",
+				ELL "Βήμα",
+				ENU "Step",
+				FRA "Etape",
+				ITA "Passo",
+				JPN "ステップ",
+				ZHS "步骤"
+			gender FRA feminine
+			properties
+			{
+				"Hotkey" 0
+					title(Singular)
+						ENU "T",
+						FRA "E"
+			}
+		}
+		"Props" data LongVarBinary
+		{
+			title(Singular)
+				DEU "Eigenschaften",
+				ELL "Ιδιότητες",
+				ENU "Properties",
+				FRA "Propriétés",
+				ITA "Proprietà",
+				JPN "プロパティ",
+				ZHS "特性"
+			gender DEU feminine,FRA feminine
+		}
+		"StepDesc" data LongVarChar
+		{
+			title(Singular)
+				DEU "Schrittbeschreibung",
+				ELL "Περιγραφή Βήματος",
+				ENU "Step description",
+				FRA "Description de l'étape",
+				ITA "Descrizione passo",
+				JPN "ステップ 詳細",
+				ZHS "步骤描述"
+			gender FRA feminine
+			properties
+			{
+				"Hotkey" 0
+					title(Singular)
+						ENU "C",
+						FRA "D"
+			}
+			default "\"\""
+		}
+		"StepActions" data LongVarChar
+		{
+			title(Singular)
+				DEU "Schritt Aktionen",
+				ELL "Ενέργειες Βήματος",
+				ENU "Step Actions",
+				FRA "Actions de l'étape",
+				ITA "Azioni passo",
+				JPN "ステップ アクション",
+				ZHS "步骤操作"
+			gender FRA feminine
+		}
+		"ActionPrompt" data LongVarChar
+		{
+			title(Singular)
+				DEU "Aktionsaufforderung",
+				ELL "Πράξη Ερώτηση",
+				ENU "Action Prompt",
+				FRA "Invite d'action",
+				ITA "Prompt azione",
+				JPN "アクション プロンプト",
+				ZHS "操作提示"
+			gender DEU feminine,FRA feminine
+			default "\"\""
+		}
+		"WhenDue" data TimeStamp
+		{
+			title(Singular)
+				DEU "Wann fällig",
+				ELL "Πότε λήγει",
+				ENU "When due",
+				FRA "Echéance",
+				ITA "Scadenza",
+				JPN "期限",
+				ZHS "何时到期"
+			gender FRA feminine
+			default "Now"
+		}
+		"WF_Process" join "WF_Process"
+		{
+			title(Singular)
+				DEU "Workflow Prozess",
+				ELL "Επεξεργασία Ροής-Εργασίας",
+				ENU "Workflow Process",
+				FRA "Processus Workflow",
+				ITA "Processo Workflow",
+				JPN "Workflow プロセス",
+				KOR "워크 플로우 프로세스",
+				ZHS "工作流程处理"
+			properties
+			{
+				"Hotkey" 0
+					title(Singular)
+						ENU "F",
+						FRA "P"
+			}
+			NotNull
+			onchange "WF_Process_OnChange"
+			ontargetdelete delete
+			
+			folder "WF_PendingWork"
+			{
+				title(Singular)
+					DEU "Workflow AusstehendeArbeit",
+					ELL "Εκκρεμούσα Εργασία Ροής-Εργασίας",
+					ENU "Workflow Pending Work",
+					ITA "Attività Workflow in sospeso ",
+					JPN "Workflow 未処理ジョブ",
+					ZHS "工作流程PendingWork"
+				gender DEU feminine
+				properties
+				{
+					"DataExport" False
+						title(Singular) ENU "DataExport"
+				}
+			}
+			choose folder 
+			{
+				title(Singular)
+					ENU "WF_Process",
+					JPN "Workflow プロセス"
+			}
+		}
+		"WhenTimeout" data TimeStamp
+		{
+			title(Singular)
+				DEU "Wann Zeitüberschreitung",
+				ELL "Χρόνος διακοπής",
+				ENU "When timeout",
+				FRA "Expiré",
+				ITA "Limite temporale",
+				JPN "タイムアウト時",
+				ZHS "何时超时"
+		}
+		"ProgressPercentComplete" data Numeric(3,0)
+		{
+			title(Singular)
+				DEU "Fortschritt Prozent Abgeschlossen",
+				ELL "Ολοκλήρωση Ποσοστού Προόδου",
+				ENU "Progress Percent Complete",
+				FRA "Pourcentage terminé",
+				ITA "Percentuale di completamento",
+				JPN "進行状況パーセント完了",
+				ZHS "已完成进程百分率"
+			default "0"
+		}
+		"ProgressDescr" data LongVarChar
+		{
+			title(Singular)
+				DEU "Fortschrittsbeschreibung",
+				ELL "Περιγραφή Προόδου",
+				ENU "Progress Description",
+				FRA "Description de la progression",
+				ITA "Descrizione stato procedura",
+				JPN "進行状況詳細",
+				ZHS "进程描述"
+			gender DEU feminine,FRA feminine
+			default "\"\""
+		}
+		"WF_Job" join "WF_Job"
+		{
+			title(Singular)
+				DEU "Workflow Auftrag",
+				ELL "Εργασία Ροής- Εργασίας",
+				ENU "Workflow Job",
+				FRA "Tâche Workflow",
+				ITA "Compito Workflow",
+				JPN "Workflow ジョブ",
+				ZHS "工作流程工作"
+			gender FRA feminine
+			properties
+			{
+				"Hotkey" 0
+					title(Singular) ENU "T"
+			}
+			ontargetdelete leave
+			
+			folder "WF_PendingWork"
+			{
+				title(Singular)
+					DEU "Workflow Ausstehende Arbeit",
+					ELL "ΕκκρεμούσαΕργασία Ροής-Εργασίας",
+					ENU "Workflow Pending Work",
+					FRA "En attente de travail Workflow",
+					ITA "Attività Workflow in sospeso ",
+					JPN "Workflow 未処理ジョブ",
+					ZHS "工作流程PendingWork"
+				gender DEU feminine
+			}
+			choose folder 
+			{
+				title(Singular)
+					DEU "Workflow Auftrag",
+					ELL "Εργασίια Ροής-Εργασίας",
+					ENU "Workflow Job",
+					FRA "Tâche Workflow",
+					ITA "Compito Workflow",
+					JPN "Workflow ジョブ",
+					ZHS "工作流程工作"
+				gender FRA feminine
+			}
+		}
+		"WhenToAwake" data TimeStamp
+		{
+			title(Singular)
+				DEU "Wann Aufwachen",
+				ENU "When to awake",
+				FRA "Heure de déclenchement",
+				ITA "Sveglia",
+				JPN "起動時期",
+				ZHS "何时激活"
+			gender FRA feminine
+		}
+		"WF_ServerGroup" join "WF_ServerGroup"
+		{
+			title(Singular)
+				ENU "Server Group",
+				ITA "Gruppo server ",
+				JPN "サーバー グループ",
+				KOR "서버 그룹"
+			default "WF_Process.WF_ServerGroup"
+			ontargetdelete leave
+			choose folder 
+			{
+				title(Singular) ENU "WF_ServerGroup"
+			}
+		}
+		"WF_AppPool" join "WF_AppPool"
+		{
+			title(Singular)
+				ENU "Application Pool",
+				ITA "Pool applicazione ",
+				JPN "アプリケーション プール"
+			default "WF_Process.WF_AppPool"
+			ontargetdelete leave
+			choose folder 
+			{
+				title(Singular) ENU "WF_AppPool"
+				filter "Name <> \"default\""
+			}
+		}
+		"ImpersonationID" data VarChar(32)
+		{
+			title(Singular)
+				ENU "Impersonation ID",
+				JPN "偽装 ID"
+			canmodify "User.Object.IsAdmin"
+		}
+		"WhoCreated" data VarChar(32)
+		{
+			title(Singular)
+				ENU "Who created",
+				JPN "作成者"
+			readonly
+			default "User.ID"
+		}
+		"ErrorProcessing" data Bit
+		{
+			/* The pending work was started in response to an errored or abandoned workflow event. */
+			title(Singular)
+				ENU "Error processing",
+				JPN "処理エラー"
+			default "False"
+		}
+		"RecordStamp" class "stdRecordStamp" embedded
+		{
+			title(Singular)
+				ENU "RecordStamp",
+				KOR "기록 스탬프"
+		}
+		"Priority" data Integer
+		{
+			title(Singular)
+				ENU "Priority",
+				JPN "優先度"
+		}
+	}
+	sort [ENU] "WhenAdded" desc
+	prompt ""
+		ENU "iif(not IsNull(Descr), Descr, FormatDateTime(WhenAdded)) & iif(len(ActionPrompt) > 0, \" - \" & ActionPrompt, \"\")"
+	icon ""
+		ENU "'wf_stat_'+status"
+	defaulticon ""
+		ENU "wf_stat_p"
+	OnNew "OnNew"
+	PreSave "PreSave"
+	OnValidate "OnValidate"
+	script VBScript
+<%
+Function DoIt(hwnd, actionType)
+
+	' Check that the instance is still pending before doing any work
+
+	' Hang on to the current step and status so we can check after reload
+	
+	strStep = this.Step.Value
+	
+	' Force a reload of the instance
+	
+	this.Reload(0)
+	
+	' Check that the status and Step are the same and set the return value
+
+	strStatus = this.Status.Value	
+	If (strStatus = "P") and (this.Step.Value = strStep) Then
+		' Set status to Processing
+		this.Status.Value = "I"	  
+		this.Save
+		DoIt = 0
+	Else
+		DoIt = -1
+		Exit Function
+	End If
+
+	If DoIt = 0 Then
+		Set obj = CreateObject("ActivElk.Workflow.ClientEngine")
+		DoIt = obj.DoIt(hwnd, this, (actionType))
+	End If
+		
+End Function
+
+Sub PreSave(Transaction)
+
+	If This.Props.IsDirty Then
+	    ' Get the Instance details from the Props member so Call Queue
+	    ' management processes can do filters
+	    
+	    Dim objAEProperties
+	    Set objAEProperties = CreateObject("ActivElk.WorkFlowProperties")
+	    objAEProperties.Init System
+		On Error Resume Next
+	    objAEProperties.BinaryProps = This.Props.Value
+		On Error Goto 0
+		
+		' Default the description to the prompt of the target instance
+	
+		Dim objTargetInstance
+	    Set objTargetInstance = Nothing
+	    If objAEProperties.Exists("Object") Then
+	    	Set objTargetInstance = objAEProperties.Item("Object")
+	    End If
+		
+		If Not objTargetInstance Is Nothing Then
+			this.Descr = objTargetInstance.Prompt("WF_Prompt")
+		End If   
+		
+		Set objTargetInstance = Nothing
+		Set objAEProperties = Nothing
+	End If
+End Sub
+
+Sub StartWithInstanceInit(tobjProcess, tobjJob, tobjObj, tobjAETrans, tobjParams, bInitializeOnly)
+	' By overriding this function, derived classes can perform custom initialization 
+	' while WF_StartWithInstance is being executed
+End Sub
+
+' attempt to lock the record. if successful, returns True
+' do not forget to call Unlock when you are done with the record
+Function Lock()
+	If Status.Value <> "P" Then
+		Lock = False
+		Exit Function
+	End If
+	
+	On Error Resume Next
+	Dim objLock ' *-- 	Dim objLock as WF_PendingWorkLock
+	Set objLock = Nothing
+	
+	'' this can fail at the app server level if an instance already exists with that key
+	Set objLock = System.Folders.WF_PendingWorkLock.CreateNewInstance(System.Classes.WF_PendingWorkLock, 0, This.Key)
+	On Error Goto 0
+	
+	If objLock Is Nothing Then
+		Lock = False
+		Exit Function
+	End If
+	
+	Err.Clear
+	On Error Goto 0
+	' this can fail at the DB level if we get a primary key constraint
+	' in which case the Locked check below will catch it
+	objLock.Save
+	On Error Resume Next
+	
+	If Err.Number <> 0 Then
+		Lock = False
+		Exit Function
+	End If
+	
+	' reload and check if someone already completed processing the
+	' pending work before we managed to get the lock
+	This.Reload(0)
+	If Status.Value <> "P" Then
+		Lock = False
+		Unlock
+	End If	
+
+	' hey we locked it	
+	Lock = True
+End Function
+
+' unlock the instance. If you forget to unlock the instance it will remain locked until the
+' end of time (or at least until the Workflow Server unlocks it)
+Sub Unlock()
+	Dim objLock ' *-- 	Dim objLock as WF_PendingWorkLock
+	Set objLock = System.Classes.WF_PendingWorkLock.GetInstance(This.Key)
+	
+	If objLock.IsNull Then
+		Exit Sub
+	End If
+	
+	objLock.Delete		
+End Sub
+		
+' check if this instance is locked
+Function Locked()
+	Dim objLock ' *-- 	Dim objLock as WF_PendingWorkLock
+	Set objLock = System.Classes.WF_PendingWorkLock.GetInstance(This.Key)
+	
+	If objLock.IsNull Then
+		Locked = False
+	Else
+		Locked = True
+	End If	
+End Function
+
+Sub WF_Process_OnChange()
+	This.CheckServerGroup
+End Sub
+
+Sub OnNew(hWnd)
+	DoDefault hWnd
+	
+	This.CheckServerGroup
+End Sub
+
+Sub CheckServerGroup
+	If Not WF_Process.IsNull Then
+		WF_ServerGroup.Value = WF_Process.WF_ServerGroup.Value
+	End If
+End Sub
+
+Sub OnValidate(Validation) ' *-- Sub OnValidate(Validation As IAeValidate)
+	If (Not System.User.Object.IsAdmin) And Defn.IsDirty Then
+		If InvalidProcessDefinition() Then
+			Validation.Add System.LoadString("wf_InvalidProcessDefinition"), 3, This, Defn
+		End If
+	End If
+End Sub
+
+' security check for valid process definition - the definition must be copied from the workflow process
+Function InvalidProcessDefinition()
+	If Defn <> WF_Process.Defn Then
+		InvalidProcessDefinition = True
+		
+		Dim objXML
+		Set objXML = CreateObject("MSXML.DOMDocument")
+		
+		If Not objXML.loadXML(Defn) Then
+			Exit Function
+		End If
+		
+		Dim processNode
+		Set processNode = objXML.DocumentElement.selectSingleNode("Process")
+		If processNode Is Nothing Then
+			Exit Function
+		End If
+		
+		objXML.DocumentElement.removeChild(processNode)
+		If objXML.XML = WF_Process.Defn Then
+			InvalidProcessDefinition = False
+		End If
+	End If
+End Function
+%>
+}
+
+class "WF_Queue" from "SystemObj" unlogged
+{
+	title(Singular)
+		DEU "Workflow Warteschlange",
+		ELL "Ουρά Ροής-Εργασίας",
+		ENU "Workflow Queue",
+		FRA "File d'attente de Workflow",
+		ITA "Coda Workflow",
+		JPN "Workflow キュー",
+		ZHS "工作流程队列"
+	properties
+	{
+		"NoSync" 0
+		"Forms" "'WF_Queue'"
+		"Class Groups" 1
+			properties
+			{
+				"Workflow" 1
+			}
+	}
+	members
+	{
+		"ClassName" data VarChar(40)
+		{
+			title(Singular)
+				DEU "Klassenname",
+				ELL "Όνομα Κλάσης",
+				ENU "Class Name",
+				FRA "Nom de la classe",
+				ITA "Nome classe",
+				JPN "クラス名",
+				KOR "클래스명",
+				ZHS "类名称"
+		}
+	}
+	prompt ""
+		ENU "Title"
+	icon ""
+		ENU "'wf_'"
+	defaulticon ""
+		ENU "wf_"
+	validate
+	{
+		"{6429EE5E-A8A0-426A-95D2-0D862499CB98}" validError "Not IsEmpty(Title)" 
+		DEU "Warteschlangentitel darf nicht leer sein.",
+		ELL "Ο τίτλος ουράς δεν μπορεί να μείνει κενός.",
+		ENU "Queue title cannot be left blank.",
+		FRA "Le titre de la file d'attente ne peut pas être vide.",
+		ITA "La coda non può essere lasciata in bianco.",
+		JPN "キューのタイトルを入力してください",
+		ZHS "队列标题不能为空置。",
+		KOR "대기열 타이틀은 비워둘 수 없습니다."
+	}
+}
+
+class "WF_Process" unlogged
+{
+	title(Singular)
+		DEU "Workflow Prozess",
+		ELL "Επεξεργασία Ροής-Εργασίας",
+		ENU "Workflow Process",
+		FRA "Processus Workflow",
+		ITA "Processo Workflow",
+		JPN "Workflow プロセス",
+		KOR "워크 플로우 프로세스",
+		ZHS "工作流程处理",
+		ENZ "Workflow Process"
+	properties
+	{
+		"NoSync" 0
+		"Forms" "'WF_Process'"
+			properties
+			{
+				"Admin" "'WF_Process_Admin'"
+			}
+		"ContextTitles" 0
+			properties
+			{
+				"Admin" 0
+					title(Singular)
+						DEU "Workflow Prozess",
+						ELL "Επεξεργασία Ροής-Εργασίας",
+						ENU "Workflow Process",
+						FRA "Processus Workflow",
+						ITA "Processo Workflow",
+						JPN "Workflow プロセス",
+						KOR "워크 플로우 프로세스",
+						ZHS "WF_Process"
+			}
+		"GridColumnCount" 12
+			properties
+			{
+				"Column1" "Title"
+					title(Singular)
+						DEU "Workflow Prozess",
+						ELL "Επεξεργασία Ροής-Εργασίας",
+						ENU "Workflow Process",
+						FRA "Processus Workflow",
+						ITA "Processo Workflow",
+						JPN "Workflow プロセス",
+						KOR "워크 플로우 프로세스",
+						ZHS "工作流程处理"
+					properties
+					{
+						"ReadOnly" True
+						"Resize" True
+					}
+				"Column2" "Active"
+					title(Singular)
+						DEU "Aktiv",
+						ELL "Ενεργό",
+						ENU "Active",
+						FRA "Actif",
+						ITA "Attivo",
+						JPN "アクティブ",
+						KOR "활동",
+						ZHS "正在进行的"
+					properties
+					{
+						"Alignment" 1
+						"Resize" False
+					}
+				"Column3" "Suspended"
+					properties
+					{
+						"Alignment" 1
+						"Resize" False
+					}
+				"Column4" "Priority"
+					title(Singular) ENU "Priority"
+					properties
+					{
+						"Alignment" 0
+						"Resize" False
+					}
+				"Column5" "Folders.WF_PendingWork.Count(Status = \"P\")"
+					title(Singular)
+						ENU "Pending",
+						ITA "In sospeso",
+						JPN "保留中"
+					properties
+					{
+						"Resize" False
+					}
+				"Column6" "Folders.WF_PendingWork.Count(Status = \"E\")"
+					title(Singular)
+						ENU "Errored",
+						ITA "Con errori",
+						JPN "エラー発生"
+					properties
+					{
+						"Resize" False
+					}
+				"Column7" "Folders.WF_PendingWork.Count(Status = \"I\")"
+					title(Singular)
+						ENU "Processing",
+						ITA "In elaborazione",
+						JPN "処理中"
+					properties
+					{
+						"Resize" False
+					}
+				"Column8" "Folders.WF_PendingWork.Count(Status = \"C\")"
+					title(Singular)
+						ENU "Completed",
+						ITA "Completato",
+						JPN "完了"
+					properties
+					{
+						"Resize" False
+					}
+				"Column9" "Folders.WF_PendingWork.Count(Status = \"X\")"
+					title(Singular)
+						ENU "Cancelled",
+						ITA "Annullato",
+						JPN "キャンセル"
+					properties
+					{
+						"Resize" False
+					}
+				"Column10" "Folders.WF_PendingWork.Count(Status = \"N\")"
+					title(Singular)
+						ENU "Initialized",
+						ITA "Inizializzato",
+						JPN "初期化済み"
+					properties
+					{
+						"Resize" False
+					}
+				"Column11" "Folders.WF_PendingWork.Count(Status = \"A\")"
+					title(Singular)
+						ENU "Abandoned",
+						ITA "Stato procedura",
+						JPN "破棄済み"
+					properties
+					{
+						"Resize" False
+					}
+				"Column12" "FormatNumber(Folders.WF_PendingWork.Average(ProgressPercentComplete, Status = \"I\"), 2) & \"%\""
+					title(Singular)
+						ENU "Progress",
+						JPN "進行中"
+					properties
+					{
+						"Resize" False
+					}
+			}
+		"Class Groups" 1
+			properties
+			{
+				"Workflow" 1
+			}
+	}
+	cancreatenew "User.Object.IsAdmin"
+	candelete "User.Object.IsAdmin"
+	canmodify "User.Object.IsAdmin"
+	members
+	{
+		"Active" data Bit
+		{
+			title(Singular)
+				DEU "Aktiv",
+				ELL "Ενεργό",
+				ENU "Active",
+				FRA "Actif",
+				ITA "Attivo",
+				JPN "アクティブ",
+				KOR "활동",
+				ZHS "正在进行的"
+			properties
+			{
+				"Hotkey" 0
+					title(Singular) ENU "A"
+			}
+		}
+		"Defn" data LongVarChar
+		{
+			title(Singular)
+				DEU "Definition",
+				ELL "Διευκρίνηση",
+				ENU "Definition",
+				FRA "Définition",
+				ITA "Definizione",
+				JPN "定義",
+				ZHS "定义"
+			gender FRA feminine
+			properties
+			{
+				"DataExport" True
+					title(Singular) ENU "DataExport"
+					properties
+					{
+						"XML" True
+							title(Singular) ENU "XML"
+					}
+			}
+			default "\"<xml></xml>\""
+		}
+		"Title" data VarChar(50)
+		{
+			title(Singular)
+				DEU "Titel",
+				ELL "Τίτλος",
+				ENU "Title",
+				FRA "Titre",
+				ITA "Titolo",
+				JPN "タイトル",
+				KOR "타이틀",
+				ZHS "标题"
+			properties
+			{
+				"Hotkey" 0
+					title(Singular) ENU "T"
+			}
+		}
+		"MaxRunningProcesses" data Integer
+		{
+			title(Singular)
+				DEU "Maximale ausgeführte Prozesse",
+				ELL "Μέγιστες τρέχουσες επεξεργασίες",
+				ENU "Maximum running processes",
+				FRA "Nb. max. de processus exécutés",
+				ITA "Max processi in esecuzione ",
+				JPN "最大実行プロセス数",
+				KOR "최대 실행 프로세스",
+				ZHS "最大运行处理"
+			properties
+			{
+				"Hotkey" 0
+					title(Singular) ENU "M"
+			}
+			default "1"
+			validate
+			{
+				"{D06F9454-589B-4FE2-9C7F-398AA4B3025F}" validError "MaxRunningProcesses>=0" 
+				DEU "Maximale ausgeführte Prozesse müssen nicht-negativ sein.",
+				ELL "Μέγιστες τρέχουσες επεξεργασίες θα πρέπει να είναι θετικές",
+				ENU "Maximum running processes must be non-negative.",
+				FRA "Le nb. max. de processus exécutés ne peut pas être négatif.",
+				ITA "Il numero massimo di processi in esecuzione non può essere negativo.",
+				JPN "最大実行プロセス数は0以上の値を入力してください",
+				ZHS "最大运行流程必须为非负。",
+				KOR "최대 실행 프로세스는 0 보다 크거나 같아야 합니다."
+			}
+		}
+		"StartWithInst_Class" data VarChar(40)
+		{
+			title(Singular)
+				DEU "Mit Instanzklasse beginnen",
+				ELL "Εκκίνηση με παρουσία κλάσης",
+				ENU "Start with instance class",
+				FRA "Démarrer par la classe de l'instance",
+				ITA "Avvia con classe d’istanza",
+				JPN "インスタンスクラスで開始する",
+				ZHS "自实例级开始"
+			default "\"\""
+		}
+		"StartWithInst_FirstStep" data Guid
+		{
+			title(Singular)
+				DEU "Mit erstem Schritt der Instanzklasse beginnen",
+				ELL "Εκκίνηση με παρουσία πρώτου βήματος",
+				ENU "Start with instance first step",
+				FRA "Démarrer par la première étape de l'instance",
+				ITA "Avvia con primo passo istanza",
+				JPN "インスタンスの最初のステップで開始する",
+				ZHS "自实例第一步开始"
+		}
+		"WF_ServerGroup" join "WF_ServerGroup"
+		{
+			title(Singular)
+				ENU "Server Group",
+				ITA "Gruppo server ",
+				JPN "サーバー グループ",
+				KOR "서버 그룹"
+			ontargetdelete leave
+			choose folder 
+			{
+				title(Singular) ENU "WF_ServerGroup"
+			}
+		}
+		"IsMaintenance" data Bit
+		{
+			/* Set only for internal maintenance type processes (such as cleanup) */
+			title(Singular)
+				ENU "Is maintenance",
+				ITA "Di mantenimento",
+				JPN "メンテナンス"
+			default "0"
+		}
+		"WF_ProcID" data VarChar(20)
+		{
+			title(Singular)
+				ENU "Process ID",
+				ITA "ID processo",
+				JPN "プロセス ID"
+			default "\"\""
+		}
+		"WF_AppPool" join "WF_AppPool"
+		{
+			title(Singular)
+				ENU "Application Pool",
+				ITA "Pool applicazione ",
+				JPN "アプリケーション プール"
+			ontargetdelete leave
+			choose folder 
+			{
+				title(Singular) ENU "WF_AppPool"
+				filter "Name <> \"default\""
+			}
+		}
+		"EnableLogging" data Bit
+		{
+			title(Singular)
+				ENU "Enable Logging",
+				JPN "ログを有効にする"
+			default "0"
+		}
+		"Priority" data Integer
+		{
+			title(Singular)
+				ENU "Priority",
+				JPN "優先度"
+			NotNull
+			default "3"
+		}
+		"RecordStamp" class "stdRecordStamp" embedded
+		{
+			title(Singular) ENU "RecordStamp"
+		}
+		"Suspended" data Bit
+		{
+			title(Singular) ENU "Suspended"
+			default "0"
+	}
+	}
+	sort [ENU] "Title" asc
+	prompt ""
+		ENU "Title"
+	prompt "Admin"
+		ENU "Title"
+	icon ""
+		ENU "'wf_'"
+	icon "Admin"
+		ENU "'wf_'"
+	defaulticon ""
+		ENU "wf_"
+	defaulticon "Admin"
+		ENU "wf_"
+	PreSave "PreSave"
+	OnValidate "OnValidate"
+	script VBScript
+<%
+Sub PreSave(Transaction)
+	' lbrWorkflow
+	' Check if the Process Definition has an StartWithInstance event
+	bHasStartWithInstEvent = false
+	
+	' Get the class type for the job from the "AEWorkflow.StartWithInstance.Event"
+	Set objXMLDom = CreateObject("MSXML.DomDocument")
+	objXMLDom.Async = True
+	If objXMLDom.LoadXML(this.defn.value) Then
+		' Process definition loaded OK so get the Document Element
+		Set objXMLDomElement = objXMLDom.DocumentElement
+			
+		' Then find all entryevents/event nodes
+		Set objXMLEventNodes = objXMLDomElement.selectNodes("entryevents/event[@progid=""AeWorkFlow.StartWithInstance.Event""]")
+
+		' Look for the aeworkflow.startwithinstance.event node
+		For intLoop = 0 To (objXMLEventNodes.Length-1)
+			Set objXMLEventNode = objXMLEventNodes.Item(intLoop)
+			If objXMLEventNode.attributes.getNamedItem("progid").text = "AeWorkFlow.StartWithInstance.Event" Then
+				' Check that the class is valid for this system
+				strClass = ""
+				strFirstStep = ""
+				On Error Resume Next
+				strClass = Lcase(objXMLEventNode.attributes.getNamedItem("class").text)
+				strFirstStep = objXMLEventNode.attributes.getNamedItem("nextid").text
+				Set objClassDef = Nothing
+				Set objClassDef = System.Classes(strClass)
+				On Error goto 0
+				
+				If Lcase(Typename(objClassDef)) = "iaeclassdef" Then
+					this.StartWithInst_class = strClass
+					this.StartWithInst_firststep = strFirstStep
+					bHasStartWithInstEvent = true
+					Exit For
+				End If
+			End If							
+		Next
+	End If
+
+	If not bHasStartWithInstEvent Then
+		this.StartWithInst_class = null
+		this.StartWithInst_firststep = null
+	End If
+End Sub
+
+Sub OnValidate(Validation)	 ' *-- Sub OnValidate(Validation As IAeValidate)	
+	' Confirm that the WF_ProcID is entered is unique 	
+	If Not IsNull(This.WF_ProcID.Value) Then
+		If System.Folders("WF_Processes").Count("UCase(WF_ProcID)='" & UCase(This.WF_ProcID.Value) & "' And Key <> '" & This.Key & "'") > 0 Then
+			strMessage = System.LoadString("WF_NoProcess")
+			strMessage = System.FormatString(strMessage,Array(This.WF_ProcID.Value))
+			Validation.Add strMessage, 3, This, This.WF_ProcID		
+		End If	
+	End If
+End Sub
+%>
+}
+
+class "WF_History" unlogged
+{
+	title(Singular)
+		DEU "Warteschlangenhistorie",
+		ELL "Ιστορικό Ουράς",
+		ENU "Workflow Queue History",
+		FRA "Historique de la file d'attente",
+		ITA "Cronologia coda",
+		JPN "キューの履歴",
+		ZHS "队列历史"
+	gender DEU feminine
+	properties
+	{
+		"Forms" "'WF_History'"
+		"NoSync" 0
+		"Class Groups" 1
+			properties
+			{
+				"Workflow" 1
+			}
+	}
+	members
+	{
+		"WF_Queue" join "WF_Queue"
+		{
+			title(Singular)
+				DEU "WF_Warteschlange",
+				ENU "WF_Queue",
+				JPN "Workflow キュー"
+			gender DEU feminine
+			ontargetdelete delete
+			
+			folder "QueueHistory"
+			{
+				title(Singular)
+					DEU "Warteschlangenhistorie",
+					ELL "Ιστορικό Ουράς",
+					ENU "Queue History",
+					FRA "Historique de la file d'attente",
+					ITA "Cronologia coda",
+					JPN "キューの履歴",
+					ZHS "队列历史"
+				gender DEU feminine
+				properties
+				{
+					"Direct" False
+					"Hidden" "TRUE"
+				}
+				sort [ENU] "WhenAdded" desc
+			}
+			choose folder 
+			{
+				title(Singular)
+					DEU "WF_Warteschlange",
+					ENU "WF_Queue",
+					JPN "Workflow キュー"
+				gender DEU feminine
+			}
+		}
+		"Action" data LongVarChar
+		{
+			title(Singular)
+				DEU "Aktion",
+				ELL "Πράξη",
+				ENU "Action",
+				ITA "Azione",
+				JPN "アクション",
+				KOR "활동",
+				ZHS "操作"
+			gender DEU feminine,FRA feminine
+			default "\"\""
+		}
+		"WhenAdded" data TimeStamp
+		{
+			title(Singular)
+				ELL "Πότε Προστέθηκε",
+				ENU "WhenAdded",
+				JPN "追加日時"
+			default "Now()"
+		}
+	}
+	prompt ""
+		ENU "Action"
+	icon ""
+		ENU "'wf_history'"
+	defaulticon ""
+		ENU "wf_history"
+}
+
+class "WF_LogEvent" from "LG_Event" unlogged
+{
+	title(Singular)
+		DEU "Workflow Protokollierungsereignis",
+		ELL "Καταγραφή Γεγονότος Ροής-Εργασίας",
+		ENU "Workflow Log Event",
+		FRA "Journaliser l'événement Workflow",
+		ITA "Evento registro Workflow",
+		JPN "Workflow ログイベント",
+		KOR "워크 플로우 로그 이벤트",
+		ZHS "工作流程日志事件"
+	gender DEU neuter
+	properties
+	{
+		"Forms" "'WF_LogEvent'"
+		"Search" 0
+			properties
+			{
+				"Date" "Between(TimeStamp.Start,Value,DateAdd('d',1,Value))"
+					title(Singular)
+						DEU "Datum",
+						ELL "Ημερομηνία",
+						ENU "Date",
+						ITA "Data",
+						JPN "日付",
+						KOR "일자",
+						ZHS "日期"
+					gender DEU neuter,FRA feminine
+					properties
+					{
+						"DataType" 10
+					}
+				"Process" "WF_Process @ value"
+					title(Singular)
+						DEU "Workflow Prozess",
+						ELL "Επεξεργασία Ροής-Εργασίας",
+						ENU "Workflow Process",
+						FRA "Processus Workflow",
+						ITA "Processo Workflow",
+						JPN "Workflow プロセス",
+						KOR "워크 플로우 프로세스",
+						ZHS "工作流程处理"
+					properties
+					{
+						"Incremental" True
+					}
+				"LogEventType" "value0 = WF_LogEventType.value"
+					title(Singular)
+						DEU "Protokollierungsereignistyp",
+						ELL "Καταγραφή Τύπου Γεγονότος",
+						ENU "Log Event Type",
+						FRA "Journaliser le type d'événement",
+						ITA "Tipo evento registro ",
+						JPN "ログイベントタイプ",
+						ZHS "日志事件类型"
+					properties
+					{
+						"values" 0
+							properties
+							{
+								"value0" 1
+									title(Singular)
+										ENU "Log Event Type",
+										JPN "ログイベントタイプ"
+									properties
+									{
+										"enumeration" "WF_LogEventType"
+									}
+							}
+						"Incremental" True
+					}
+			}
+		"Default search" "Date"
+		"GridColumnCount" 3
+			properties
+			{
+				"Column1" "Prompt"
+					title(Singular)
+						DEU "Workflow Protokollierungsereignis",
+						ELL "Καταγραφή Γεγονότος Ροής-Εργασίας",
+						ENU "Workflow Log Event",
+						FRA "Journaliser l'événement Workflow",
+						ITA "Evento registro Workflow",
+						JPN "Workflow ログイベント",
+						KOR "워크 플로우 로그 이벤트",
+						ZHS "工作流程日志事件"
+					properties
+					{
+						"Resize" True
+						"ReadOnly" True
+					}
+				"Column2" "Notes"
+					title(Singular)
+						DEU "Anmerkungen",
+						ELL "Σημειώσεις",
+						ENU "Notes",
+						ITA "Note",
+						JPN "メモ",
+						KOR "메모",
+						ZHS "注释"
+					gender DEU feminine,FRA feminine
+					properties
+					{
+						"Resize" True
+						"ReadOnly" True
+					}
+				"Column3" "WorkflowServer"
+					properties
+					{
+						"ReadOnly" True
+					}
+			}
+		"NoSync" 0
+		"Class Groups" 1
+			properties
+			{
+				"Workflow" 1
+			}
+	}
+	members
+	{
+		"WF_Process" data VarChar(255)
+		{
+			title(Singular)
+				DEU "Workflow Prozess",
+				ELL "Επεξεργασία Ροής-Εργασίας",
+				ENU "Workflow process",
+				FRA "Processus Workflow",
+				ITA "Processo Workflow",
+				JPN "Workflow プロセス",
+				KOR "워크 플로우 프로세스",
+				ZHS "工作流程处理"
+			properties
+			{
+				"Hotkey" 0
+					title(Singular) ENU "P"
+			}
+			default "\"\""
+		}
+		"WF_LogEventType" enum "WF_LogEventType" forced
+		{
+			title(Singular)
+				DEU "O",
+				ELL "Καταγραφή τύπου γεγονότος",
+				ENU "Log event type",
+				FRA "Enregistrer le type d'événement",
+				ITA "Tipo evento registro ",
+				JPN "ログイベント タイプ",
+				KOR "로그 이벤트 유형",
+				ZHS "日志事件类型"
+			properties
+			{
+				"Hotkey" 0
+					title(Singular)
+						ENU "V",
+						FRA "G"
+			}
+		}
+		"PendingWork" join "WF_PendingWork"
+		{
+			title(Singular)
+				DEU "Ausstehende Arbeit",
+				ELL "Εκκρεμούσα εργασία",
+				ENU "Pending work",
+				FRA "Travail en attente",
+				ITA "Attività in sospeso ",
+				JPN "未処理ジョブ",
+				KOR "보류 작업",
+				ZHS "等待工作"
+			properties
+			{
+				"Hotkey" 0
+					title(Singular)
+						DEU "A",
+						ENU "P",
+						FRA "A"
+			}
+			ontargetdelete leave
+			choose folder 
+			{
+				title(Singular)
+					DEU "WF_Ausstehende Arbeit",
+					ENU "WF_PendingWork",
+					JPN "Workflow 未処理ジョブ"
+			}
+		}
+		"WorkflowProcess" join "WF_Process"
+		{
+			title(Singular)
+				ENU "Workflow Process",
+				JPN "Workflow プロセス"
+			default "PendingWork.WF_Process"
+			ontargetdelete leave
+			
+			folder "WF_LogEvents"
+			{
+				title(Singular)
+					ENU "Workflow Log Events",
+					JPN "Workflow ログ イベント"
+				properties
+				{
+					"DataExport" False
+						title(Singular) ENU "DataExport"
+				}
+			}
+			choose folder 
+			{
+				title(Singular)
+					ENU "WF_Process",
+					JPN "WF_Process"
+			}
+		}
+		"WorkflowServer" data VarChar(32)
+		{
+			title(Singular)
+				ENU "Workflow server",
+				JPN "Workflow サーバー"
+			default "\"\""
+		}
+	}
+	sort [ENU] "TimeStamp.Start" desc
+	prompt ""
+		ENU "TimeStamp.Start & \" \" & WF_Process"
+	icon ""
+		ENU "iif(WF_LogEventType = 2, \"lg_error\", \"lg_info\")"
+}
+
+class "WF_Job" unlogged
+{
+	title(Plural)
+		DEU "Workflow Aufträge",
+		ELL "Εργασίες Ροής-Εργασίας",
+		ENU "Workflow Jobs",
+		FRA "Tâches Workflow",
+		ITA "Compiti Workflow",
+		JPN "Workflow ジョブ",
+		KOR "워크 플로우 작업",
+		ZHS "工作流程工作"
+	title(Singular)
+		DEU "Workflow Auftrag",
+		ELL "Εργασία Ροής-Εργασίας",
+		ENU "Workflow Job",
+		FRA "Tâche Workflow",
+		ITA "Compito Workflow",
+		JPN "Workflow ジョブ",
+		ZHS "工作流程工作"
+	gender FRA feminine
+	properties
+	{
+		"NoSync" 0
+		"Forms" "iif(Started,'WF_Job_Started','WF_Job')"
+			properties
+			{
+				"WF_Process" "'WF_Job_Process'"
+			}
+		"ContextTitles" 0
+			properties
+			{
+				"WF_Process" 0
+					title(Singular)
+						DEU "WF_Prozess",
+						ENU "WF_Process",
+						JPN "Workflow プロセス"
+			}
+		"Class Groups" 1
+			properties
+			{
+				"Workflow" 1
+			}
+	}
+	members
+	{
+		"Title" data VarChar(50)
+		{
+			title(Singular)
+				DEU "Titel",
+				ELL "Τίτλος",
+				ENU "Title",
+				FRA "Titre",
+				ITA "Titolo",
+				JPN "タイトル",
+				KOR "타이틀",
+				ZHS "标题"
+			properties
+			{
+				"Hotkey" 0
+					title(Singular)
+						ENU "T",
+						JPN "T"
+			}
+		}
+		"Descr" data LongVarChar
+		{
+			title(Singular)
+				DEU "Beschreibung",
+				ELL "Περιγραφή",
+				ENU "Description",
+				ITA "Descrizione",
+				JPN "詳細",
+				KOR "설명",
+				ZHS "描述"
+			gender DEU feminine,FRA feminine
+			properties
+			{
+				"Hotkey" 0
+					title(Singular)
+						DEU "B",
+						ENU "D",
+						JPN "D"
+			}
+		}
+		"WF_Process" join "WF_Process"
+		{
+			title(Singular)
+				DEU "Workflow Prozess",
+				ENU "Workflow Process",
+				FRA "Processus Workflow",
+				ITA "Processo Workflow",
+				JPN "Workflow プロセス",
+				KOR "워크 플로우 프로세스",
+				ZHS "工作流程处理"
+			properties
+			{
+				"CanUIModify" "WF_PendingWork.Count = 0"
+			}
+			ontargetdelete delete
+			
+			folder "WF_Jobs"
+			{
+				title(Singular)
+					DEU "Workflow Aufträge",
+					ELL "Εργασίες Ροής-Εργασίας",
+					ENU "Workflow Jobs",
+					FRA "Tâches Workflow",
+					ITA "Compiti Workflow",
+					JPN "Workflow ジョブ",
+					KOR "워크 플로우 작업",
+					ZHS "工作流程工作"
+				properties
+				{
+					"DataExport" False
+						title(Singular) ENU "DataExport"
+				}
+				cancreatenew "Not IsNull(StartWithInst_Class)"
+			}
+			choose folder 
+			{
+				title(Singular)
+					DEU "Workflow Prozess",
+					ENU "Workflow Process",
+					FRA "Processus Workflow",
+					ITA "Processo Workflow",
+					JPN "Workflow プロセス",
+					KOR "워크 플로우 프로세스",
+					ZHS "工作流程处理"
+				filter "Len(StartWithInst_Class) > 0"
+				sort [ENU] "Title" asc
+			}
+		}
+		"Started" data Bit
+		{
+			title(Singular)
+				DEU "Begonnen",
+				ELL "Εκκινήθηκε",
+				ENU "Started",
+				FRA "Commencé",
+				ITA "Avviato ",
+				JPN "開始",
+				ZHS "开始"
+			default "0"
+		}
+		"Suspended" data Bit
+		{
+			title(Singular) ENU "Suspended"
+			default "0"
+		}
+		"Priority" data Integer
+		{
+			title(Singular) ENU "Priority"
+		}
+	}
+	prompt ""
+		ENU "Title"
+	PreSave "PreSave"
+	script VBScript
+<%
+Function GetTargetClassTopFolder()
+	' Returns the Default Top Level folder for the target class for this WF_Job
+	strTopFolder = ""
+	If Not this.WF_Process.Value.IsNull Then
+		If Not IsNull(this.WF_Process.Value.StartWithInst_class.value) Then
+			strTopFolder = ""
+			On Error Resume Next
+			Set oClassDef = System.Classes(this.WF_Process.Value.StartWithInst_class.value)
+			If not oClassDef is nothing Then
+				Set oFolders = System.Folders.FoldersForClass(oClassDef)
+				If oFolders.Count > 0 Then
+					strTopFolder = oFolders.Item(0).Name
+				End If
+			End If
+			On Error Goto 0
+		End If
+	End If
+	GetTargetClassTopFolder = strTopFolder
+End Function
+
+Function GetTargetClass()
+
+	' Return the target class for this job based on the selected process
+	
+	GetTargetClass = ""
+	On Error Resume Next
+	GetTargetClass = this.WF_Process.Value.StartWithInst_class.value
+	On Error goto 0
+	
+End Function
+
+Sub WF_DeleteJobMember(tobjobj, tobjAETrans)
+
+	Dim objJobFolder
+	Dim objJobEntry
+
+	Set objJobFolder = This.Folders("WF_PendingWork").Scan("objkey='" & Tobjobj.Key & "'")
+	For Each objJobEntry in objJobFolder
+		If objJobEntry.objKey = Tobjobj.Key Then
+			objJobEntry.Delete tobjAETrans
+		End If
+	Next
+
+	Set objJobEntry = Nothing
+	Set objJobFolder = Nothing
+		
+End Sub
+
+Sub WF_AddFromFolder(tobjFolder, tblnAlreadyPending, tblnNewToJob, tbInitializeOnly)
+
+	' Load from a Passed Folder
+
+	Dim objAETrans
+	Dim objFolderScan
+
+	Set objAETrans = System.BeginTransaction
+	objAETrans.AutoRevert = True
+
+	Set objFolderScan = tobjFolder.Scan()
+	For Each objObj In objFolderScan
+
+		blnAddToJob = True
+
+		' Check restriction on already pending items
+
+		If blnAddToJob Then
+			If tblnAlreadyPending Then
+
+				' Check if the item already exists in the job
+
+				If This.Folders("WF_PendingWork").Exists("objkey='" & objobj.Key & "' and Status='P'") Then
+					blnAddToJob = False
+				End If
+			End If
+		End If	
+
+		' Check restriction on items that have ever been in the job
+
+		If blnAddToJob Then
+			If tblnNewToJob Then
+
+				' Check if the item already exists in the job
+
+				If This.Folders("WF_PendingWork").Exists("objkey='" & objobj.Key & "'") Then
+					blnAddToJob = False
+				End If
+			End If
+		End If
+
+		If blnAddToJob Then
+			System.WF_StartWithInstance WF_Process.Value, this, objobj, objAETrans, Nothing, tbInitializeOnly
+		End If
+	Next
+
+	objAETrans.Commit
+
+	Set objAETrans = Nothing
+	Set objObj = Nothing
+	Set objFolderScan = Nothing
+
+End Sub
+
+Sub WF_DeleteFromFolder(tobjFolder)
+
+	' Remove from the job all items in the folder
+
+	Dim objAETrans
+	Dim objFolderScan
+	Dim objObj
+	
+	Set objAETrans = System.BeginTransaction
+	objAETrans.AutoRevert = True
+
+	Set objFolderScan = tobjFolder.Scan()
+	For Each objObj In objFolderScan
+		WF_DeleteJobMember objObj, objAETrans
+	Next
+      
+	objAETrans.Commit
+ 
+	Set objAETrans = Nothing
+	Set objObj = Nothing
+	Set objFolderScan = Nothing
+End Sub
+
+Sub WF_AddFromBucket(tstrBucketID, tblnSelectedOnly, tblnAlreadyPending, tblnNewToJob, tbInitializeOnly)
+
+	' Add from in a Bucket with the passed ID into this job
+
+	Dim objAETrans
+	Dim objBucketInstance
+	Dim strBucketClass
+	Dim objBucket
+	Dim objBucketMember
+
+	Set objAETrans = System.BeginTransaction
+	objAETrans.AutoRevert = True
+
+	If Len(Trim(tstrBucketID))>0 Then
+		Set objBucketInstance = System.Classes.Bucket.GetInstance(tstrBucketID)
+		If Not objBucketInstance Is Nothing Then
+			strBucketClass = objBucketInstance.ClassName
+			Set objBucket = System.Classes(strBucketClass).OpenBucket(tstrBucketID)
+			If Not objBucket Is Nothing Then
+				For Each objBucketMember in objBucket.Members
+					blnAddToJob = False
+
+					' Check if selected items only restriction and the item is selected 
+
+					If tblnSelectedOnly Then
+						blnAddToJob = objBucketMember.Selected
+					Else
+						blnAddToJob = True
+					End If
+
+					' Check restriction on already pending items
+
+					If blnAddToJob Then
+						If tblnAlreadyPending Then
+
+							' Check if the item already exists in the job
+
+							If This.Folders("WF_PendingWork").Exists("objkey='" & objBucketMember.Instance.Key & "' and Status='P'") Then
+								blnAddToJob = False
+							End If
+						End If
+					End If	
+
+					' Check restriction on items that have ever been in the job
+
+					If blnAddToJob Then
+						If tblnNewToJob Then
+
+							' Check if the item already exists in the job
+
+							If This.Folders("WF_PendingWork").Exists("objkey='" & objBucketMember.Instance.Key & "'") Then
+								blnAddToJob = False
+							End If
+						End If
+					End If	
+
+					If blnAddToJob Then
+						System.WF_StartWithInstance WF_Process.Value, this, objBucketMember.Instance, objAETrans, Nothing, tbInitializeOnly
+					End If
+				Next
+			End If
+		End If
+	End If	
+
+	objAETrans.Commit
+
+	Set objAETrans = Nothing
+	Set objObj = Nothing
+	Set objFolderScan = Nothing
+End Sub
+
+Sub WF_DeleteFromBucket(tstrBucketID, tblnSelectedOnly)
+
+	' Delete items in a Bucket with the passed ID from this job
+
+	Dim objAETrans
+	Dim objBucketInstance
+	Dim strBucketClass
+	Dim objBucket
+	Dim objBucketMember
+
+	Set objAETrans = System.BeginTransaction
+	objAETrans.AutoRevert = True
+
+	If Len(Trim(tstrBucketID))>0 Then
+		Set objBucketInstance = System.Classes.Bucket.GetInstance(tstrBucketID)
+		If Not objBucketInstance Is Nothing Then
+			strBucketClass = objBucketInstance.ClassName
+			Set objBucket = System.Classes(strBucketClass).OpenBucket(tstrBucketID)
+			If Not objBucket Is Nothing Then
+				For Each objBucketMember in objBucket.Members
+					blnDeleteFromJob = False
+
+					' Check if selected items only restriction and the item is selected 
+
+					If tblnSelectedOnly Then
+						blnDeleteFromJob = objBucketMember.Selected
+					Else
+						blnDeleteFromJob = True
+					End If
+
+					If blnDeleteFromJob Then
+						WF_DeleteJobMember objBucketMember.Instance, objAETrans
+					End If
+				Next
+			End If
+		End If
+	End If	
+
+	objAETrans.Commit
+
+	Set objAETrans = Nothing
+	Set objObj = Nothing
+	Set objFolderScan = Nothing
+
+End Sub
+
+Sub PreSave(Transaction)
+End Sub
+
+Sub AddInitItems(tobjAETrans)
+	' If WF_Process has been set, and property "InitItems" contains instances that
+	' match the StartWithInstance_Class of WF_Process, then add those instances
+	' to the job
+
+	Set objWF_Process = this.WF_Process.Value
+	Set Items = nothing
+	if this.Properties.Exists("InitItems") Then
+		Set Items = this.Properties("InitItems").Value
+	End if
+
+	If (Not objWF_Process.IsNull) and not (Items is nothing) Then
+		strClass = objWF_Process.StartWithInst_class.value
+		If (not IsNull(strClass)) and (Len(strClass) > 0) Then
+			strClass = LCase(strClass)
+			If this.Started Then
+				bInitializeOnly = false
+			Else
+				bInitializeOnly = true
+			End If
+		
+			' Add items.
+			Dim Item
+			For Each Item in Items
+				' Only add items that are of the right class
+				If (not (Item is Nothing)) and (Lcase(TypeName(Item)) = "iaeclassinst") and Item.IsKindOf(strClass) Then
+					System.WF_StartWithInstance objWF_Process, this, Item, tobjAETrans, Nothing, bInitializeOnly
+				End If
+			Next
+			this.Properties.Delete("InitItems")
+		End If
+	End If
+End Sub
+%>
+}
+
+class "WF_State" unlogged
+{
+	title(Singular)
+		DEU "WF_Status",
+		ENU "Workflow State",
+		JPN "Workflow 状態"
+	properties
+	{
+		"NoSync" 0
+		"Class Groups" 1
+			properties
+			{
+				"Workflow" 1
+			}
+	}
+	members
+	{
+		"StateKey" data VarChar(200)
+		{
+			title(Singular)
+				DEU "Schlüssel",
+				ELL "Κλειδί",
+				ENU "Key",
+				FRA "Code",
+				ITA "Chiave",
+				JPN "キー",
+				ZHS "标识符"
+			gender DEU feminine
+			NotNull
+			indexed
+		}
+		"Value" data LongVarChar
+		{
+			title(Singular)
+				DEU "Wert",
+				ELL "Τιμή",
+				ENU "Value",
+				FRA "Valeur",
+				JPN "値",
+				KOR "내용",
+				ZHS "值"
+			gender FRA feminine
+		}
+		"Value2" data LongVarChar
+		{
+			title(Singular)
+				DEU "Wert2",
+				ELL "Τιμή2",
+				ENU "Value2",
+				JPN "値2",
+				ZHS "值2"
+		}
+		"Value3" data LongVarChar
+		{
+			title(Singular)
+				DEU "Wert3",
+				ELL "Τιμή3",
+				ENU "Value3",
+				JPN "値3",
+				ZHS "值3"
+		}
+	}
+	prompt ""
+		ENU "StateKey"
+}
+
+class "WF_ServerGroup" unlogged
+{
+	title(Singular)
+		ENU "Workflow Server Group",
+		ITA "Gruppo server Workflow",
+		JPN "Workflow サーバー グループ",
+		KOR "워크 플로우 서버 그룹"
+	properties
+	{
+		"NoSync" 0
+		"Forms" "'WF_ServerGroup'"
+		"FormChoose" 0
+			properties
+			{
+				"WF_ServerGroup" "True"
+			}
+		"Class Groups" 1
+			properties
+			{
+				"Workflow" 1
+			}
+	}
+	members
+	{
+		"Name" data VarChar(255)
+		{
+			title(Singular)
+				ENU "Name",
+				ITA "Nome",
+				JPN "名前",
+				KOR "이름"
+		}
+	}
+	sort [ENU] "Name" asc
+	prompt ""
+		ENU "Name"
+}
+
+class "WF_Server" unlogged
+{
+	title(Singular)
+		ENU "Workflow Server",
+		ITA "Server Workflow",
+		JPN "Workflow サーバー",
+		KOR "워크 플로우 서버"
+	properties
+	{
+		"NoSync" 0
+		"Forms" "'WF_Server'"
+		"FormChoose" 0
+			properties
+			{
+				"WF_Server" "True"
+			}
+		"Class Groups" 1
+			properties
+			{
+				"Workflow" 1
+			}
+	}
+	members
+	{
+		"Name" data VarChar(255)
+		{
+			title(Singular)
+				ENU "Name",
+				ITA "Nome",
+				JPN "名前",
+				KOR "이름"
+		}
+		"AppServerName" data VarChar(255)
+		{
+			title(Singular)
+				ENU "App server name",
+				JPN "アプリケーション サーバー名"
+			default "\"\""
+		}
+	}
+	sort [ENU] "Name" asc
+	prompt ""
+		ENU "Name"
+}
+
+class "WF_ServerGroupWF_Server" unlogged
+{
+	title(Singular)
+		ENU "Workflow Server Group Member",
+		ITA "Membro gruppo server Workflow",
+		JPN "Workflow サーバー グループ メンバ"
+	properties
+	{
+		"NoSync" 0
+		"ContextTitles" 0
+			properties
+			{
+				"WF_Server" 0
+					title(Singular)
+						ENU "Server",
+						ITA "Server",
+						JPN "サーバー"
+				"WF_ServerGroup" 0
+					title(Singular)
+						ENU "Server Group",
+						ITA "Gruppo server ",
+						JPN "サーバー グループ",
+						KOR "서버 그룹"
+			}
+		"FormChoose" 0
+			properties
+			{
+				"WF_ServerGroupWF_ServerWF_Server" "true"
+					properties
+					{
+						"Context" "WF_Server"
+					}
+				"WF_ServerGroupWF_ServerWF_ServerGroup" "true"
+					properties
+					{
+						"Context" "WF_ServerGroup"
+					}
+			}
+		"Class Groups" 1
+			properties
+			{
+				"Workflow" 1
+			}
+	}
+	members
+	{
+		"WF_Server" join "WF_Server"
+		{
+			title(Singular)
+				ENU "Server",
+				ITA "Server",
+				JPN "サーバー"
+			properties
+			{
+				"NewWizard" True
+				"FoldTarget" True
+			}
+			NotNull
+			ontargetdelete delete
+			
+			folder "WF_ServerGroups" context "WF_ServerGroup"
+			{
+				title(Singular)
+					ENU "Workflow Server Groups",
+					ITA "Gruppi server Workflow",
+					JPN "Workflow サーバー グループ",
+					KOR "워크 플로우 서버 그룹"
+			}
+			choose folder 
+			{
+			}
+		}
+		"WF_ServerGroup" join "WF_ServerGroup"
+		{
+			title(Singular)
+				ENU "Server Group",
+				ITA "Gruppo server ",
+				JPN "サーバー グループ",
+				KOR "서버 그룹"
+			properties
+			{
+				"NewWizard" True
+				"FoldTarget" True
+			}
+			NotNull
+			ontargetdelete delete
+			
+			folder "WF_Servers" context "WF_Server"
+			{
+				title(Singular)
+					ENU "Workflow Servers",
+					ITA "Server Workflow",
+					JPN "Workflow サーバー",
+					KOR "워크 플로우 서버 그룹"
+			}
+			choose folder 
+			{
+			}
+		}
+	}
+	prompt ""
+		ENU "WF_Server.prompt&' '&WF_ServerGroup.prompt"
+	prompt "WF_Server"
+		ENU "WF_Server.Prompt"
+	prompt "WF_ServerGroup"
+		ENU "WF_ServerGroup.Prompt"
+	icon "WF_Server"
+		ENU "WF_Server.Icon"
+	icon "WF_ServerGroup"
+		ENU "WF_ServerGroup.Icon"
+}
+
+class "WF_PendingWorkLock" unlogged
+{
+	title(Singular)
+		ENU "Workflow Pending Work Lock",
+		JPN "Workflow 保留中作業のロック"
+	properties
+	{
+		"NoSync" 0
+		"Hidden" "TRUE"
+		"Class Groups" 1
+			properties
+			{
+				"Workflow" 1
+			}
+	}
+	key
+	{
+		nokeyalloc Guid
+	}
+	members
+	{
+		"ServerID" data VarChar(255)
+		{
+			title(Singular) ENU "ServerID"
+		}
+		"ID" data VarChar(255)
+		{
+			title(Singular) ENU "ID"
+		}
+		"TimeStamp" data TimeStamp
+		{
+			title(Singular)
+				ENU "Time stamp",
+				ITA "Marca temporale",
+				JPN "タイムスタンプ",
+				KOR "시간 스탬프"
+		}
+	}
+	prompt ""
+		ENU "ID & ' ' & ServerID & ' ' & Key"
+}
+
+class "WF_AppPool"
+{
+	title(Singular)
+		ENU "Workflow Application Pool",
+		ITA "Pool applicazione Workflow",
+		JPN "Workflow アプリケーション プール"
+	properties
+	{
+		"NoSync" 0
+		"Class Groups" 1
+			properties
+			{
+				"Workflow" 1
+			}
+		"FormChoose" 0
+			properties
+			{
+				"WF_AppPool" "true"
+			}
+	}
+	members
+	{
+		"Name" data VarChar(32)
+		{
+			title(Singular)
+				ENU "Name",
+				ITA "Nome",
+				JPN "名前"
+		}
+	}
+	sort [ENU] "Name" asc
+	prompt ""
+		ENU "Name"
+}
+
+class "WF_ServerGroupWF_AppPool"
+{
+	title(Singular)
+		ENU "Workflow Application Pool Server Group",
+		JPN "Workflow アプリケーション プール サーバー グループ"
+	properties
+	{
+		"NoSync" 0
+		"ContextTitles" 0
+			properties
+			{
+				"WF_AppPool" 0
+					title(Singular)
+						ENU "Application Pool Server Group",
+						ITA "Gruppo server pool applicazione",
+						JPN "アプリケーション プール サーバー グループ"
+				"WF_ServerGroup" 0
+					title(Singular)
+						ENU "Application Pool Server Group",
+						ITA "Gruppo server pool applicazione",
+						JPN "アプリケーション プール サーバー グループ"
+			}
+		"FormChoose" 0
+			properties
+			{
+				"WF_ServerGroupWF_AppPoolWF_AppPool" "true"
+					properties
+					{
+						"Context" "WF_AppPool"
+					}
+				"WF_ServerGroupWF_AppPoolWF_ServerGroup" "true"
+					properties
+					{
+						"Context" "WF_ServerGroup"
+					}
+			}
+		"Class Groups" 1
+			properties
+			{
+				"Workflow" 1
+			}
+	}
+	members
+	{
+		"WF_AppPool" join "WF_AppPool"
+		{
+			title(Singular)
+				ENU "Application Pool",
+				ITA "Pool applicazione ",
+				JPN "アプリケーション プール"
+			properties
+			{
+				"NewWizard" True
+				"FoldTarget" True
+			}
+			NotNull
+			ontargetdelete delete
+			
+			folder "WF_ServerGroups" context "WF_ServerGroup"
+			{
+				title(Singular)
+					ENU "Server Groups",
+					ITA "Gruppi server ",
+					JPN "サーバー グループ"
+			}
+			choose folder 
+			{
+			}
+		}
+		"WF_ServerGroup" join "WF_ServerGroup"
+		{
+			title(Singular)
+				ENU "Server Group",
+				ITA "Gruppo server ",
+				JPN "サーバー グループ"
+			properties
+			{
+				"NewWizard" True
+				"FoldTarget" True
+			}
+			NotNull
+			ontargetdelete delete
+			
+			folder "WF_AppPools" context "WF_AppPool"
+			{
+				title(Singular)
+					ENU "Application Pools",
+					ITA "Pool applicazione ",
+					JPN "アプリケーション プール"
+			}
+			choose folder 
+			{
+			}
+		}
+	}
+	prompt ""
+		ENU "WF_AppPool.prompt&' '&WF_ServerGroup.prompt"
+	prompt "WF_AppPool"
+		ENU "WF_AppPool.Prompt"
+	prompt "WF_ServerGroup"
+		ENU "WF_ServerGroup.Prompt"
+	icon "WF_AppPool"
+		ENU "WF_AppPool.Icon"
+	icon "WF_ServerGroup"
+		ENU "WF_ServerGroup.Icon"
+}
+
+class "WF_ServerWF_AppPool"
+{
+	title(Singular)
+		ENU "Workflow Application Pool Member",
+		JPN "Workflow アプリケーション プール メンバ"
+	properties
+	{
+		"NoSync" 0
+		"ContextTitles" 0
+			properties
+			{
+				"WF_AppPool" 0
+					title(Singular)
+						ENU "Application Pool Member",
+						ITA "Membro pool applicazione ",
+						JPN "アプリケーション プール メンバ"
+				"WF_Server" 0
+					title(Singular)
+						ENU "Application Pool Member",
+						ITA "Membro pool applicazione ",
+						JPN "アプリケーション プール メンバ"
+			}
+		"FormChoose" 0
+			properties
+			{
+				"WF_ServerWF_AppPoolWF_AppPool" "true"
+					properties
+					{
+						"Context" "WF_AppPool"
+					}
+				"WF_ServerWF_AppPoolWF_Server" "true"
+					properties
+					{
+						"Context" "WF_Server"
+					}
+			}
+		"Class Groups" 1
+			properties
+			{
+				"Workflow" 1
+			}
+	}
+	members
+	{
+		"WF_AppPool" join "WF_AppPool"
+		{
+			title(Singular)
+				ENU "Application Pool",
+				ITA "Pool applicazione ",
+				JPN "アプリケーション プール"
+			properties
+			{
+				"NewWizard" True
+				"FoldTarget" True
+			}
+			NotNull
+			ontargetdelete delete
+			
+			folder "WF_Servers" context "WF_Server"
+			{
+				title(Singular)
+					ENU "Workflow Servers",
+					ITA "Server Workflow",
+					JPN "Workflow サーバー"
+			}
+			choose folder 
+			{
+			}
+		}
+		"WF_Server" join "WF_Server"
+		{
+			title(Singular)
+				ENU "Workflow Server",
+				ITA "Server Workflow",
+				JPN "Workflow サーバー"
+			properties
+			{
+				"NewWizard" True
+				"FoldTarget" True
+			}
+			NotNull
+			ontargetdelete delete
+			
+			folder "WF_AppPools" context "WF_AppPool"
+			{
+				title(Singular)
+					ENU "Application Pools",
+					ITA "Pool applicazione ",
+					JPN "アプリケーション プール"
+			}
+			choose folder 
+			{
+			}
+		}
+	}
+	prompt ""
+		ENU "WF_AppPool.prompt&' '&WF_Server.prompt"
+	prompt "WF_AppPool"
+		ENU "WF_AppPool.Prompt"
+	prompt "WF_Server"
+		ENU "WF_Server.Prompt"
+	icon "WF_AppPool"
+		ENU "WF_AppPool.Icon"
+	icon "WF_Server"
+		ENU "WF_Server.Icon"
+}
+
+template "lbrWorkflow::LG_Event_Mod" class "LG_Event"
+{
+	properties
+	{
+		"Forms" "'LG_Event'"
+	}
+	cancreatenew "true"
+}
+
+template "lbrWorkflow::stdConfiguration_Mod" class "stdConfiguration"
+{
+	properties
+	{
+		"Forms" "'stdConfiguration'"
+			properties
+			{
+				"WF" "\"WF_stdConfiguration\""
+			}
+		"ContextTitles" 0
+			properties
+			{
+				"WF" 0
+			}
+		"Class Groups" 1
+			properties
+			{
+				"Workflow" 1
+			}
+		"FormChoose" 0
+			properties
+			{
+				"stdConfiguration" "False"
+			}
+	}
+	members
+	{
+		"wf_StyleSheet" data VarChar(250)
+		{
+			title(Singular)
+				DEU "Style Sheet",
+				ELL "Στυλ Φύλλου",
+				ENU "Style Sheet",
+				FRA "Feuille de style",
+				ITA "Style Sheet",
+				JPN "スタイルシート",
+				KOR "스타일 시트",
+				ZHS "样式表"
+			gender FRA feminine
+			default "\"\""
+		}
+	}
+}
+
+enum "WF_PendingWork_Status" Char(1)
+{
+	title(Singular)
+		ENU "Pending Work Status",
+		ITA "Stato attività in sospeso ",
+		JPN "保留中の作業ステータス"
+	values
+	{
+		value "P"
+		{
+			DEU "Ausstehend",
+			ELL "Εκκρεμούσα",
+			ENU "Pending",
+			FRA "En attente",
+			ITA "In sospeso",
+			JPN "未処理",
+			ZHS "等待"
+			icon ENU "'wf_stat_p'"
+		}
+		value "I"
+		{
+			DEU "Wird verarbeitet",
+			ELL "Επεξεργασία",
+			ENU "Processing",
+			FRA "Traitement en cours",
+			ITA "In elaborazione",
+			JPN "処理中",
+			ZHS "正在处理"
+			icon ENU "'wf_stat_i'"
+		}
+		value "E"
+		{
+			DEU "Fehlerhaft",
+			ELL "Εσφαλμένη",
+			ENU "Errored",
+			FRA "Avec erreurs",
+			ITA "Con errori",
+			JPN "失敗",
+			ZHS "出错的"
+			icon ENU "'wf_stat_e'"
+		}
+		value "C"
+		{
+			DEU "Abgeschlossen",
+			ELL "Ολοκληρωμένη",
+			ENU "Completed",
+			FRA "Terminé",
+			ITA "Completato",
+			JPN "完了",
+			KOR "완료",
+			ZHS "已完成"
+			icon ENU "'wf_stat_c'"
+		}
+		value "X"
+		{
+			DEU "Abgebrochen",
+			ELL "Ακυρωθείσα",
+			ENU "Cancelled",
+			FRA "Annulé",
+			ITA "Annullato",
+			JPN "キャンセル",
+			ZHS "取消的"
+		}
+		value "N"
+		{
+			JPN "初期化",
+			ENZ "Initialized"
+		}
+		value "A"
+		{
+			ENZ "Abandoned"
+		}
+	}
+}
+
+enum "WF_LogEventType" Integer
+{
+	title(Singular)
+		DEU "Workflow Protokollierungsereignistyp",
+		ELL "Τύπος Καταγραφής Γεγονότος Ροής-Εργασίας",
+		ENU "Workflow Log Event Type",
+		FRA "Type d'événement Workflow journalisé",
+		ITA "Tipo evento registro Workflow",
+		JPN "Workflow ログイベントタイプ",
+		ZHS "工作流程日志事件类型"
+	values
+	{
+		value 0
+		{
+			ELL "Μη σύνδεση",
+			ENU "No logging",
+			FRA "Pas de journalisation",
+			ITA "Nessuna registrazione",
+			JPN "ログなし",
+			ZHS "无日志"
+		}
+		value 1
+		{
+			ELL "ΕπεξεργασίαΡοής",
+			ENU "Process flow",
+			JPN "プロセスフロー"
+		}
+		value 2
+		{
+			DEU "Fehler",
+			ELL "Σφάλμα",
+			ENU "Error",
+			FRA "Erreur",
+			ITA "Errore",
+			JPN "エラー",
+			KOR "오류",
+			ZHS "错误"
+		}
+		value 4
+		{
+			DEU "Ereignisanbietersuche",
+			ELL "Προμηθευτής Ανίχνευσης Γεγονότος",
+			ENU "Event provider polling",
+			FRA "Interrogation du fournisseur d'événements",
+			ITA "Sondaggio fornitore evento",
+			JPN "イベントプロバイダ ポーリング",
+			ZHS "事件提供人轮询"
+		}
+		value 8
+		{
+			ELL "ΕισαγωγήΓεγονότος",
+			ENU "Entry event",
+			JPN "エントリー イベント"
+		}
+		value 16
+		{
+			ENU "Process list refresh"
+		}
+	}
+}
+
+enum "WF_SMSServerConfig_RequestType" TinyInt
+{
+	title(Singular) ENU "WF_SMSServerConfig_RequestType"
+	values
+	{
+		value 0
+		{
+			ENU "GET"
+		}
+		value 1
+		{
+			ENU "POST"
+		}
+	}
+}
+
+icon "wf_stat_e"
+{
+	large16
+$
+	4752454154454C4B000A0010410410010682004010B83801010E88C4A26007FC
+	5A2AFF000FE2F1B7800006FF8F48181047FC922B2793496532C95CBA512F9500
+	1F9079A411E7229C47DE7341FCF234001848283237FC6D81467FBCE934B8DC86
+	2D4FA854A2D0382C1E130C0002224048A57A2210B080062301880072381C8009
+	44825000D46935000F6793DC20410631184C4004E27538006AB59AA007B61800
+	DEC48017ABE5E8019ACE66801DD948C46558AE56000E67139800522814801CDA
+	4C437B2EAE8CA512B19CA4671919BF4672119B646430188C90481195A2DA3370
+	8CDE233828CA0D0B1992D8C61190402233688CE1A33A48CA914B19B0C658AC68
+	CDEA33A0E48003107B5410839F1414ADE69CF412DD04CD4131DA0527B11707B3
+	413DC005A41CC55DDF6148506788B235F87720016859169077AD0420D5A0216A
+	6E1A275DF66AC94001BB7A1043B90786A037ADCE56DBE7F904689047E1043D90
+	77D95B559041896963CA57D8E6634002B085844945C40022E3F1EE3F41192410
+	DE41D727E800845F36E193101E83D96D62234355A17F65818A58410E655E1B41
+	E276210797A2C41D8E7BD115F10456DE48C9078AD81839FF4457641010002788
+	A1077F2760020D411E657E83A1285A1A87A2289A2A8BA328DA3A8FA4291A4A93
+	A5295A5A97A6299A69120040200C030100501AA3A92A301402A2007022A30240
+	A02EAFAC2AF03230A129D020090340D0380F586BDAF40B0441204AA757C13ADC
+	0CAC2BEB281002C0F03C1404AC5014110501505817B60170581506019B641706
+	81B02C06B4AD40641C076E90741E07C15082EA0742105EE3B941408823BA0240
+	901D08023096FA098270801FBD15E04ED3051A10A827BE8240AC1D09AFA0AC23
+	B730545307B5161BDC1E0770D090260942006561C5913C6014584280570BC781
+	DC5018C92E4C1B08584180B2FEC782BC0C15CC6F55841B0B421C472D0782ACF7
+	33B533608C2EC002509F1DC3B220572544B270B02D0BB43084230A81EC3421D1
+	7540002F594310C833B502C0801EDB01E0B42C05423DB41E07016D88340D4360
+	D8370E34906C19E001906C180A022E04190B029C942F0E43A0EC3C0F03D0F83F
+	038140500F02ECBAF40C100400361D410420D443108340D044114040FC461180
+	DCA39A03C4701004120074383A1244A0BD0E01C4B0483F0440AE5BC3F0C0EAD1
+	11EE3BA4384C01C410440E13411F4BD3F48091211113BD913C5014430F67BB14
+	8531505515857163E71620C014050201344451FC05B0905C0D7F01742F1785F1
+	817B18C64FF8320650CC04E0190D20E17024B1E0481403384F0D05C43586B0D8
+	1B43686C8201B83795E0E00D60483C0740C0388720DE1CC398740EA1AC3A4230
+	EC14CAF85D0B81420540C7764443486E0EF061428398341401E0780621C48943
+	486CA221684F0F24442907A0F41BC3506E0D2A201C85D87C4383D87C0E81D02F
+	87D0FD0AD4786F0EF04C3507F52414C3987D8B21C94DA8420200000000000000
+	0000000000000000
+$
+	small16
+$
+	4752454154454C4B000A0010408410010682004010B83800810E88C4A26007FC
+	5A2A07823F21AF883C76091F0048647077041DB90D6F46400040FC111E7F8237
+	E62007E3FE09178141E130883C2C091140452871241A1507159CC569744A6D3A
+	9F4D0888844209F54EA7558608C675BAC8044433198CABC22ADD521560B157AB
+	75D0000C6357B38C00152B3802E602088460D61181108910B70CE0981825CE1F
+	122253A020000000
+$
+}
+
+icon "wf_stat_i"
+{
+	large16
+$
+	4752454154454C4B000A0010410410010682004010B83801010E88C4A26007FC
+	5A2AFF000FE2F1B7800006FF8F48245218FBFD810493CA65115964AA5B2B98CC
+	266FC8200E6B1F79C8A75399A8FDE73E000C2414290301FF1BA3C6DE7487FD32
+	37218B546A5548B40E0B0784C30000889012296088842C600188C062001C8E07
+	200251209400351A4D4003D9E4F70810418C46131001389D4E001AAD66A801ED
+	880037B1600148A0520045A351600562B9580066B399A007767800E67B39B2AD
+	6CC2919CA4C53B9BD188CA914BA966B9B38525714AD29DB62D1ACB400168B25A
+	00315CCC5B6A96E0184686000625B5F948D6D48010B040821421A07368C208DE
+	C0210B5D18A76D0B46F6F4F6BEBC355CD86773D9DD8D4AE40C4AEBF2F5BCBD83
+	F2E096C821058D0A1B75C8736F8AE704B42D9BD4117041198411F9639A95C994
+	2F4BE7E4202550625095250000621F41D68412044120A709796A452142041CCB
+	E890006DD0420D5C0216C87D90104407FD047C1048762A6DC089090764104651
+	043D9076A55D561FE8807B141B725173646541EE544119C4A5076B1045D22200
+	233896433157A60D8F000B49A0629A10468D588EE69971079BD8741DF982D115
+	F904575FB7310791D8341E3189D0E5E1D5001D8412450022FA1DBE41DFD58693
+	A5295A5A97A6299A6A9BA729DA7A9FA82A1A8AA3A92A5A9AA7AA2A9AAA960040
+	200C030100501AB3AD2B301402A6007022B30240A02EBFB02BF0324CA580D020
+	0E03C100441204C1405416B401602C0FADEC5020170300B058180641A06ED1B4
+	00B03005A50010341C026CAB401D0781F08021B3ED1B4C08AE160B1809B66D1B
+	B02208C1A04EE0B4AE35840D0140F092E0BEC22BB813BC6E101B03C1707BE81E
+	08B15096FEB800BC3EF6C4708C5315088250830CC3B10C1B1EC831507C1A0872
+	5C7327C4F290982708028CB914C1330BAF1FCA8290A82BCDD13CE712CEF15098
+	2C0B42EC671BCE31DCC70A0A41804B4B4482F59C310C833BA424B6816BB3470D
+	34AB800C0D41C448360DC385AC3A038090EC11CEC3C0A41DD4EF20F4030F90E0
+	BC3F8E84210843112B2BA41102C2A11761C000C0EF66444460DC47118360D848
+	1244A0176D0EC240AC18DD2E00443D128074484012C4C0BD0E01C4DE0810093A
+	DEBBAD042C4447A4E990E13807E5B6D03FBBEF3BB0260C41C4FF0850144520C3
+	C2E9C531505515857F3BCF16059014050200D44452F605A16C5C0DFD81742F17
+	85F1817D18BE5F94631900DFA90D41C5C12C5BFC3F0144651406619C681A5731
+	AC6B5C8691B0369600DC0DDF8BF00841001806F0E01B4388710E41CC34872818
+	1D02A1610BA1702885B7E6141D39110CE1B03AC0052A0FE010510841D81886F2
+	2507A1029882C1403B9110A61E03C06D0D01B033A9807E1761410E0F21E83907
+	20BE1EC3E41453E1B43ABFB0D01F5510540E21EE21870556A508080000000000
+$
+	small16
+$
+	4752454154454C4B000A0010408410010682004010B83800810E88C4A26007FC
+	5A2A07823F21B1B823E20F1F8F482470470435B90D6F46400040FC111E7F8237
+	E62007E3FE09178141E130883C2C091140452871241A1507159CA161D379BD12
+	9F50A8C4C2222110821C1211D567C22118CAAD0AAE8CEC10CB10CAAF6511D8ED
+	001AED7EAE0420D66B70F00552C9100084423062211080552A94208042241307
+	0788003110E2AD420200000000000000
+$
+}
+
+icon "wf_stat_p"
+{
+	large16
+$
+	4752454154454C4B000A0010410410010682004010B83801010E88C4A26007FC
+	5A2B168CC6A371C8EC7A3F208FBF07F1691C59E6FF924A254FC07BFDE72D7F80
+	06003994D1FEC094CE2752B97CE9FEF08CD063F0382C1E130C0002224048A53A
+	2618838E60E41838A60F4B8212A0EAC83AF60E7B838C60E7383AD20EC5A555A0
+	E108894A0E83005C6088BB1445DD074A4220E6283B360ED5839AAD107BC43AEB
+	047B41D491588DFE09328237B0400AFC12A70E7351C01558259F2507CD6260F5
+	B875F6A304B7C3ADB6582586085AA7ECB67B4DAEDB6FB8DCEEB77BCDEEFB7FC0
+	E0F0B87C4E2F1B8FC8E4F2B97CCE6F3B9FD0E8F4BA7D4EAF5BAFD8ECF6A26010
+	100C060402F040C0704020130DDE804140B060341BE8870381E0FB6ED8220709
+	0440C06F0C380F04C14055B702C1605DE941C0E060190681B07018039B581607
+	4481504C1D0781E076026C8048781F0802100A1E42E0A830228A02283A105382
+	18B8230902501E2E098018582707A2908A1A0514544C250582490A420802907C
+	2A0AC2C0B42D0B82F0BC2E92C270C14E0C40790E420340B008050C8300641905
+	01B0B41497C336A11409825080249141F821040AC27076536D00A954207C0037
+	89119C6736DE6907C344440E040100C02C09C2B6DC0A09A7A7FC350501404C36
+	0DE676F0300764E0B23E6FA0B0DA940C9D640400000000000000000000000000
+$
+	small16
+$
+	4752454154454C4B000A0010408410010682004010B83800810E88C4A26007FC
+	5A2AFF8245E311A8CC723F1B8DB9E3CDF3FC11BC3F820103F0447C980125823F
+	23D1B81C160F09860000911404527F148CC7A8144A2D1A8F48A4D2A80019CCE2
+	08208741804228384422101108AA30C08D42A55F88D568901000000000000000
+$
+}
+
+icon "wf_history"
+{
+	large16
+$
+	4752454154454C4B000A0010410410010682004010B83801010E88C4A26007FC
+	5800F01FC5A33167E0001EFF8F481FE0001C5E4CFF60456532B7847DFF2E9047
+	A4D338BCAE09369B3F07F2A9DCA9E6FF18002814279BF01943A3C106003A5D35
+	80F007B02A152A00FDE156784C2435B7E45ABF5F81C160F0986000111202452D
+	7121C0E6087139C10904A82022D0000C06208502900020613100062402080052
+	2814D9EEF4B18C10D26A822B959047339B0ECE66800C48D45800A57DBF840210
+	45B2D2F2C66280072BE5EE7D4AA4001A8F27B001CEE3B2C8000B4592D0008374
+	BCE1609898268F3EF67B0018AEE770039BCE6F74B97A90022F618342A0E09818
+	2C278629E99CF92004A45D49E462E5800BDCCEDB27BFED5E74210F58622E528B
+	AF62EE6E6F2DEE22DF00C59D5E5D3129E41CD1722D172B1E40E5B45E43063839
+	7C0AC7ACAC45CB48289D271AB781B81EDA6795D31A9E41A917271EB189DD0216
+	E5E5B8149F016917080D6355087757A5EC83888837B8316B504810206E0207C8
+	08705C74216584031509BB165046210E5ED045BD0461A5241D68040285EC4110
+	10E5D504651046B9046D4082D9940C4855D4390E1045E9765E104639045C9046
+	9D046AA75629C641C10235B5080DE69C412F9721689584C509559F41DDB76D04
+	67A7696C105A0311858A8C57E0E4C676C2935994104955F9A0439CE410944210
+	760904669048DD0464504128489E08D69020399AA16A897949562AB7691AA412
+	AA0007B2150418AC26ECAE5F89CA8000334CE6C62B5FA9441DCA411B1492B41A
+	6781C50420C855A0BDB0196669B7ABED441EDF000DE41D9199DABA46CBB058E2
+	90A5A9C509FC0065D6398DCB71CF69CCF671CFF71F01B24794398210420418AC
+	6F400355B8399A13171520F12A4276849D6810AC7C0C57C8EE714EEC78C58426
+	06187B8B8D571C838BA809EDBF41E79B25076F904B71795B341D0B43D1345D1B
+	47D2349D29110040200D6AD2D1201401D5006008070200902B514100B0300D03
+	80F0401104B5C003530081305015058175E8190681B0701D07B48D376007C200
+	8421088230902509827D20050A3690A42A0AC2B0B02D0B82F84B74D1C04D3413
+	0C8330CC340D4360DD6E0981DE0F8504C3A0EC3C0F43EE302F0FE61D23920084
+	1108430D0341139A11446D2B8411C481244A12C3D1302413409D2C1E1384F143
+	AF1445214C54D6F4BEE055158571600BD9800F11BD16C27D4366078280A00541
+	004077DF41C5C1745CD1C1E07B500145E0354D4105F180614486218C64190651
+	996CFB40D008008670BA1A1F99123201AC3586C5DA44DF10060B01B4370600DE
+	1C171AAE0E41CC3A0750EB024870760EE1DC3C10E00A1E43D07B0F81F60990E0
+	FC1A83F87E0D21A5FD10E0EE2004088221C20C4208510C21C440897E8CE44508
+	B8144103B08C11A238478901181D88205C1222483D8931282544B10E0E710221
+	0001042004B89813025E1A44C1222644D09B1382744F0000CB1A84F8A014218E
+	3518288911851474145122250710D028D7D8A614E2A0000A19022A4550AB0D52
+	04560628B42B44C475145178408AE0001C1F90AF1602C4590001562285549C93
+	82805989F1682D45B0B716E2E23A0B91702E8568B52E11E8520BB0DE0005E06A
+	93B2703A8730C6199740BF17E302528C01823086188C20F24C304B14C82AC500
+	AA93E27D578C418A318630C7190324650C518844C378A30BE410394B41410683
+	23FB0001506581102233066AD519615089C930E0438560AB13E33C888760F01E
+	05A8D015A345A3072159392188D2102204400D31A9315AE0B512E3546A8D0922
+	F56228D3A12359EAB512020000000000
+$
+	small16
+$
+	4752454154454C4B000A0010408410010682004010B83800810E88C4A26007FC
+	5800C77FC11C03F823C03F047C03E08FC01C11FD0D8D412540073A0208DF8800
+	1BC2082012128C1C4C0F9247F4AE550382C1E130C00012232F8A52A248541CFC
+	0083A6C562EC563316A0858746A594BAEC52890E0088E261222146220111116C
+	0000A090A1682144ED90701000C000039C20E26825EC012F315E2F60844000CC
+	403B9DCE088442000C60039DC0055ACDDC017FA4C3B0D5D80800000000000000
+$
+}
+
+icon "wf_stat_c"
+{
+	large16
+$
+	4752454154454C4B000A0010410410010682004010B83801010E88C4A26007FC
+	5A2AFF000FE2F1B7800006FF8F48245218FBFD810493CA65115964AA5B2B98CC
+	266FC8200E6B1F79C8A75399A8FDE73E000C2414290301FF1BA3C6DE7487FD32
+	37218B546A5548B40E0B0784C30000889012296088842C600188C062001C8E07
+	200251209400351A4D4003D9E4F70810418C46131001389D4E001AAD66A801ED
+	880037B1600148A0520045A351600562B9580066B399A007767A311952295480
+	02D164B400736AB52E68CAF57D19C04672D19C5C673519BE466F519B54658AC6
+	8CDBA3329C1B5A33768CE2388000C41ED90420E345052B89A4E6005A2D96907B
+	841331045EF4F4972CA6BFC4944AA539A18E7412D104EC413B90462DE7485228
+	7C801D58220D5C0216C7B59010440749043B9077ADF975408839076410465104
+	3D9076915D561D17B575141D525173646201EE204119C410DE41D747C0007FDF
+	383CC55E98363DD98CC628CD043995900207765078A23841E15785DD4457E411
+	5D7B8009199141D86411FD001F643978410100025641211001FB951A573D6198
+	26198A639926599A679A2699AA6B9B26D9BA6F9C2719CA739D2759DA779E2794
+	300200C030100501A81A0A810140299407022810240A02E8DA3A8D0321898C0D
+	0200E03C1004412A6A9BA680B03E85A4C0804C0C02E9CA981202C0C016610040
+	D05009A62A7A9E9E0228658294026A4ACAB2AA6ABADC0503C15A701605DED7B4
+	1906A9C02C065840DB02C2A6C1B0701DB501D07819B2ACCAFEC1A701F08021B8
+	02107418B66CDB3EDDB7EE1B8EE5B6ED0A6ADEB86E2B929BB2EE6B729BBC2EAB
+	CE9DB6914B3AF7A682208D7A5E81C05EECBFAE7A6C240881FC381F06C16C2107
+	0942609C2763EB0056A5AEE9C0302A051120AC2C0B42D0B82F038090C299C769
+	D0C4030C90E094330D0350D8360DC38A02B00471CAC80C0C321444390B03A0E4
+	2B0AC3B0F03D017290C2EEA98110C43D01D120D03E0FC25438071033B04015D8
+	361D8010A4911D5F594384101F4CCA40FDBB6FDB8090F51110B7510C4411426D
+	D75A118471204912B81E084B1300501408035111178B134211382CE2C4F09450
+	1445214C54E6399154560379D435071383EBC4211105710C5869C5B16C5C1745
+	D173AA1785F580600B3A30D8340997D17C6318C641945B193BC198475844F138
+	44E93A6D69111645E19FB298833ED0440D86809C6144BCDF3E65F18431A51111
+	86A1A85F1685E166650CC4FF5D0E1AC6C190641446D1BBC49B05F19FAD1686F9
+	BC4718C6DFC925A7A226404000000000
+$
+	small16
+$
+	4752454154454C4B000A0010408410010682004010B83800810E88C4A26007FC
+	5A2A07823F21B1B823E20F1F8F482470470435B90D6F46400040FC111E7F8237
+	E62007E3FE09178141E130883C2C091140452871241A1507159CC569744A6D3A
+	9F4D0888844208704AA6229F562A90A1108C675C8657AC155B157EC201ADD540
+	631ABD4E08300054AC371008442306198CC604422440000319C12FF70C1C4889
+	4E80800000000000
+$
+}
+
+icon "wf_"
+{
+	large16
+$
+	4752454154454C4B000A0010410410010682004010B83801010E88C4A26007FC
+	5A2B167FBE03F168DC59E0100803DC10403B024B270000E212A9601E5D0703C1
+	C3F3383C3619369CC2A752A8380E632E9603E521F948FE48003FBE208FF7E4AA
+	2E0F8B300FF1679C5A070583C2671069FC1C2114B0C1DFF4CB2D8ACF68B4DAAD
+	76CB6DBADF1145A311E02B9A3C1C8D4723840914823C50994C260402F180C011
+	70C4E2B176E3E9FD0410381C4E24132194CA68329A4D26C381C8E461116883D8
+	CD2E9B4A7E3FA041A7536180A06C290C1505C2007594461C8A1784A229017215
+	0B0547913AF0000907E441395C79F4F21D37E601A0E05E4F5B97CED3EA502053
+	99ACC0463F14842BE5216C2CFC5598034FF419241EFA2F0E424F71C8B037DC02
+	81035070BCD504692005690706D070390701802410140220A09D0D0B9070B612
+	41C2C4342741C184C5701F07E208011D4721B0291D051094A92985E05CF83547
+	D0E0FF36480108FD3246D0B4FF2704A030FE28470114FF14C460E09509422074
+	710801D0607207E4A1C01E074191C01F0701A1BD07121078620B4343103DC817
+	5071A10719A6441C6741C5C0150B0E15F5C0741DC7A0306A150391E49414C0F3
+	BCD21E8333FCD72043F8C07C100FF33C710DCFF23C4504CFF22C560E4FE2A87C
+	170FA26069128EE214580E8DC1FC520E0D5204500DCD31E84F0F8D0029041CD0
+	D0E82175436138140007A17822008A515420008AB1581F004AA15C1D000AC146
+	1A2A430030002380942C4C0190BAD13B59C591786000463174580DC781241533
+	4C71C8293F4E421C423F8DD20685384790F0FD2704F088FF1943F08CFD2A4691
+	10FF3569B3F8D72707A3F4D326C793E0D0254753CCD3274833C4C2154263C44F
+	04C0B2B1880003E1FC140047039C6F0ECE83FCB422CF73DCAE204F53D8AA200F
+	53E0AD210F63B47D114F428C34018BF06DD514014B4411579375845816C5E028
+	5F11825248A316C13CC88BA14E6220433FCEC2123F340710D0FF1B9F33FC8917
+	8493FCDF1EC48458B62391D3B5163F4F6458FC559193FCF21D0313FC860E82B3
+	5C6C140441C0BC0EC21298F929878DCB87E21163ECB8248FF2D844044BD07932
+	1160D0000B5B0501384C0AC6E10C0C34CD51EE373E495D98EF230453F4EC2083
+	C3FCAB148203F47710C21C8C8E1A0FD3A08813CFF3E4C92BCFD3F9193F76CE24
+	FD3B4700B8FE2786213CDB360BA280AB35C520CCCA3D0A21D372F1519F0CFFF7
+	5163E8B6E34B410C1227C48048000B66B001D5B545C184031403F0AC6A250560
+	44F03E0921047F8FB1321307F8F712612C7F8DD104A143D03D0243FC411B21FE
+	3585587E1FE3D83CA3F1FA2843D1161A22E48B0DB18C5346C8C829A35C618FF1
+	E81ADE58BD1201E06F8EF1982BC600DC0B00CC6F8F4110136148A91023FC7A8A
+	82A83D0544151EC29CAA0F611C1587F8B708604C3883801A0000620A27059C26
+	0510AC03C2983B03227C6006B03A3EC7F89F0A23F87E89B77A3F44A84A1FA330
+	3E3AE0D81180B8FD1301CDAA0E717C2207E8F11341AC7F8F00FA1187E8F21061
+	287F8DC0F4142420800AEEFA1D0FE1861D42A8FB3CA230778DA17E28C700CC10
+	6198728D40F013C788EA0F81107D0EE0BE0847E8D90C40BC780E1106150710F1
+	1441D86686407A0A820170082118258220B20EC0B0B81C42181A3C51521808B0
+	9F0AA4684A84E1FE300330273DA1300B8FF17022C2C0FF1DE31C49BBE1962687
+	F8FA182E347E8C11290204E87922C78E6C8920E23F84887E0D43F44B0850E23E
+	C520900F63E0528910FA3D4530901023C4538690963CC6B85A05C3D46D0A7112
+	3507C0DB17A2FE6E8D3160130238410605C01D84008C0C82D83B02830476BFE7
+	8A2C035BC3148175B98999162C82E81B51C13C0F8FD18E26C3737319A2787E8F
+	D1A829C7F8FE1A82A1E10D4159390678A9468200313230A60C47E8C40DCBEC3E
+	8680A83F83C06C0BA3F85707D0C83F46D8850B83F45505B0623E05C08E0E43AC
+	748D216E3647F8EB19C348770DC1863384407309E300268330242BC1F03805A2
+	502C05A0B81640258C3A641C1B83D0840F42D03A02832475896092F0C5BBDB1F
+	E2A83191A13D2385E8625E62282ACD518428E0E0F31A42AAA20D715D5106B0AD
+	22C356DA8FF1B02CA4008590E2D01E81C22C144008FF1C01A9DB0DA6EA3FC798
+	720503FC7306102A3FC518660803F85D0A31183EC780D71723DC7F8EA1943E46
+	A8B01023E45F87505A3EC5305A0183F436BE71C6198308551047E802932B1E0F
+	02183F0B60E8088CA1D4264278FC1FE2EC3F3C315E1AAA20A20A43F45A86B032
+	3FC338600503F4578A21083FC770D31683F47E0DA16D5106C0B17858908B0DA1
+	6A3F47807E50A3C0468657C2F71E38F91B8332090780871B85689187E3605C0F
+	E1FC38C628FF1922502B8FE1CE2281E8FF1C42114888B09601C7B06E0B210047
+	8043F402487037BF77F41DE001D9689E18C31124585A59D1521907F8C30FE0D4
+	7F84C09008C7F87F0FA1C6E28C816B3906CC1F1FC363114ACCF43FC6DC1F1DE1
+	F1410F61401EDC4B887BF0106A0BD9101FE438E61942A2100B76AA332D78BB0F
+	ABEC6F07D4FC3583CA37106118030EF0E61902687B00A7EAFC9040720F021040
+	0A60E4098C61A4230263C5182232CD87D22C2F4388FD1BA29A6E0780680587E8
+	6707EA085B8A01383F4748CFC443D46C62A1F635F4C8FC1B22EC7E8EE10011E0
+	00B0118F08738D77C038C6AE1F1CA356000E31A03F47C0B5C7A3C448859A8036
+	05A628C542F4520871FE2B83A2EF1EC2702A0FF1A21E9BB07708E03C6C0750D6
+	1702D00300400DF86B10781001C84A06C068578AB0E00CC7D0FF17E2188B0C11
+	155105CCED1FF8430307C9AA0C41F018CE0168308FF166298500FF1CA32058B7
+	31A5B586AE991B8328583630EC0F87F8E30EAEB87607B75D207A58EF0F40EE1F
+	8950B64586CDB21F2350578FF19429C428FF0FAED47F8BE0CE0AC8B239898196
+	6C07409C07C5F0780EA1BC1B8240480962A9040740F01E02A0760DC1907E5BC0
+	58740EF1599DF228967C02D83EBC517EE18750A50C23F44003FB8209C190241F
+	A12C2F60B12C238490FD19E2F7A0695C4A2BC446770C81582A8FD1041EC3B0FF
+	1882B3730FF199E347E0C71283F4778C39C03845F0931FA2904643E06C0F0138
+	FD0F8160084291201047E8E310D9304D05100E3FC3A851048288378690C68048
+	903A0731741A83907C1642883603030C5B07B07F18C644EA1FE3167044C839FD
+	83BDCF141B200F18480800A17480B811121C1EC1FC2543FC284231C042080CC0
+	2C3FC1BC0840243FC1540F49F81A81A19ACF0025DCF42E53802A8259C0556017
+	C3FC16C0DD4D41CC0A80103FC3381DCA156799AC335A90DDC1300303841C4168
+	0FC1901B8188154C61F91F9401C0E00E80F40E00F00DC0C02241D81280603A43
+	902981B4F0C33C288F08304234F802E01DCF14331FF03BC29416C3F4228134ED
+	81000A00183F40C80980D83FC0900ECBBC1FC124A3436C21C1003F417C0DC020
+	3FC1180900403F41981AD1FC2B01EC1583F41E411D3541100700003F41A41040
+	29ED41C8EA83FC2996803B02381143F829C1680383E81E01440882681D419815
+	1F8C5A61140EC0680D9AC816412C0DC0702CC2581880A43CC3B02D10543FC348
+	290458308240D9DED1FD9A2C3FC2E8195EE41D08BCC800583FC080FAC3FC1D91
+	74458318DA434C1DD9BC1740C80443FCABD71114045420C1221EC22414C0983F
+	C378E984582C01A0F8027014DD841CD9CC21414004C3201CC1700FC1301E01A8
+	161AC22A1F9401A2A40BC0E00D80D01C41400D80583042741A00BC3CC3A82D45
+	503FD518F14320262169E42310E19D841F0F142B13382C81980C83F42E01BC8D
+	C3D825D8383FC275C2038423811C3F41780BC0303FC2401611D03A4274144458
+	2A818132532C3FC281BE43782148BC25CFE837C1D41580C419C1D419C14C81C6
+	2C0E5F940380DE11A40C0D40CC1D413C0D80642F02601900BC3BC37029C1C053
+	433DCF1C262F19B023C4582E81F1CA230C3063042B56803D425500C3EC274140
+	4582AD54039823CA142CC1BC0B0D5429E4FC29A4FC28C1643FC3A0225930284D
+	343801D01300641CC1C416C0F47F869C0EA6700040E40E19800DC0E40F40DC0D
+	C0D40D01B81240D807C2B01E41400883702D820812C3E43982C630C32C271074
+	28CF143260283F82FC21CF142D41D55102BCEE43FC2920983FA184F0A3A95D1C
+	1CEE8221D5C3BC24C8FD5921B426C16C06835C1B81140481B81B012407A66869
+	C44E6700E800A5480E6551AC80B40D80DC0E015C0F00D00AC21C1540F80882D8
+	2041600A83782C01E81083EC33825D32C3882A67143D02D50FA5AC4582FDD913
+	65B053664682E67143FC2A416A0B81D40A03F82681640503801F013806428418
+	011008015019010C064FAE7985BC0E00E00E401C0E654806E2B00EE40E7C0168
+	0F00D80B42041240EC09028017810807830421415C0943B834025817D5016C44
+	5834C298F1430C2310FC2A631831C2040ED3DC16C0743741C011C065FF965415
+	41500F807807C15410809963A8B86967A27AA6700268C00E80627C40E80A40CC
+	0E41025600BC09A65A78C3743A02C58216E42AD781E283FC2C81D00CC3EC2101
+	4C06C3401781040702349080880FC14C0E00580841400E4069C629BEA8C4527A
+	0005F940E4009F2810801C0EC0D40B414C1F814407C3603402393442AC1CC0D0
+	3BC1BCA302E01380E40781C40FC0D809C0B81180D406C04C1000DC0A1DF2A92B
+	405C00F40F81000241040FC0F80F414C1040A820C1701040782481340F009016
+	C1000E80C006C11C0E008E3F6B46BBEBC0B5115ABC6B40404000000000000000
+	0000000000000000
+$
+	small16
+$
+	4752454154454C4B000A001040A410010682004010B83800A10E88C4A26007FC
+	5800F37FBC000C17EC6E3B1B40000200091492087083CA6510793C8E5B30824B
+	A5D299146D80019BCE400F801C6DF83F8DC0E0B0784C3000200000E0E4003452
+	9F077FC12A515A853C80432202092492503AAD60B0D8AC4824120C2D65B399CB
+	64A4516CBA594A8180E099758EC30DBBD42D368B305AD76DB7DC6E775BD58AF3
+	86839E4FA82031F8AC2956E3F22C73789DFE9527049FE491C89D18040301885A
+	1D181810062300408041DC1C2307186C60E49839220E35838177514349648C60
+	641C44CFFE1711C88221BFD2C4D103FD22580CF3FA3D3E9743ADD40E41081D7E
+	AF7BBBDD02C2C0FE20001E1C522B9740E932A851F6F849121FFF1F9B60E4337F
+	9F4A434EF459FF801FF774B61804827DE0752013C8E377960130470FC4271916
+	2744F852162705A094FF2C88C17DDF75208761D2380A0204D888A2088D545420
+	F846133FE1585CFF8661B8761F8A6397522589E3A8ADDD580440E82D1C0FD284
+	504589F15E4992C99140163FCDA2C880458D228E2A3FCCA194403F4911C0573F
+	4932006B3ECB01BC503DE669A1DD3FCF5368C20DC300846207820080369D6774
+	38410D828200FD2B866458A917A83A15DD358BF2791636CB3458DE2DE8FA463E
+	960D830CA93F0EA324A03F4D21DC243FC781582E306A2A910E1003609C813E0B
+	21C9162EC76AC2B2240600A4FF2648720D1637CBD458DC2EABFB066C800FC3EA
+	583FCDFB04C22606D3FCE6210373FC79160302AAD4B590E0DC340C061872823F
+	CC523516B88FF3C8A9164FF0D032084FF26898268FF3D0D62FAF2BD258A50A02
+	407A3FCA61741F3FCD51E0283FC6E16C441B706C22DAB72DE2CAE0B96E1B8EE7
+	BA6EBBB6EFBC6F3BD71ABE221C79D2BEAFCBFB00C0B04C2B09C1C6D438330E03
+	C09E3032C9645B31458C2208FF36C96138FF0CC28054FF13C56A0B41A089110C
+	1167037C10B4270863FC6D1443CD3F513FC720E4104589E16AEE1601338C6816
+	84A07B60D890E0E03A0E8030D4330BC6A26861090FDDBF713FCD2286E421D16C
+	3CFF2104B74B7D748CE2184C3FCC91DC393FC550A5152FC780D8FFE378F3FCAE
+	188FF2805BCFC7315C34181770DC3A0F012B702B1D7A31D49216C223ECF02F08
+	9458D0271163308AECBB43FCA91811629C5DB3C97134FF2906006BC0F08FF284
+	5D05CFF1D44704475625110E0380EC0DF47D30C8340D44A12C3B0949D2405B08
+	CFB3309317FE2F90FBC04A6458BF1FFC6179D22485304CF7FC7F31684107843F
+	3D14F57D4F4806BD77B2F6DEEBDF7C2F8DF2C077D0355F53907DA285F78FF7EA
+	FD1F90F77EEFE5FD9896CE0F40602C0620CC1E09C0B60611A4221FE3384C05F1
+	E2224298171E81113C0340A20E40C0048650D20C43820E06C0E01D01E0900D00
+	E0890FE2088C0A004872C392EE40400000000000000000000000000000000000
+$
+}
+
+icon "wf_filter"
+{
+	large16
+$
+	4752454154454C4B000A0010410410010682004010B83801010E88C4A26007FC
+	5A2B168CC65E0038B4722CC08EBFE432091492472694C962F18824B07EFF820F
+	DF90407CD001369ACDE73389DCFA75409ECCA6F308D51A8F0382C1E130C84000
+	070E08452A70798C565D558BC663131ADD7AB560AED86B964AFD8ACF65B1D9AD
+	368B5DBAD570B6DC6D974B7DCAEF75B9DDAF378BDDFAF580BC0F4DA9B3060F0A
+	423AA8D3F89C5918F8AA57E3F2387386570E10CC5FEFB81BE67B3774C3E1B086
+	0C6E33149FC9E4B20AFCBE132D84CCEC741B4CEED73931C39037453462E9FFBD
+	DF9D57EED7FF0F8A9966F2394FF3327D93CDE7BFF0E80EA6DF3FB6ECEE001BAD
+	E6FB81DFE3F1B88FFE4F2F8BCEE87A7A784EAFB7AFF0ED762D1D4EA1DD78E77F
+	FDFF3E2F12B8D53B0FF7FE01238CA71605715F57BDF27C5DB835DC7B5F67E1FA
+	84DFD7920380A003FE0886E067B09B7BA2083E238317382A201ECC1716297161
+	6714A43462F8C4FF24CCC71635714441ED918E9918920E896406E6117B62C3FE
+	468B8FF8C2328DE368D24E8F4AF9463F7CE5575C496B25864646921E47889933
+	9C8985E598E6071448214B533E689AA549BA410025A2BE729722A78E2D792669
+	92629F0FF9B26B9A4CF9BE4295963775841005E260C43FE8AA32759E2913FC94
+	93A94714B035A01A6201158A2354FFA769F6B89B1C283A15DBA1C9BA268BA36A
+	CA4277AC296A4E4EA6CFFAD6A1A829E87DB0A92A6A984C200AC37EC0B088130E
+	01B1A01ABE491CCC03B8FFB36CF2ECDA806D38047730ACFB62CF1288E300FFB7
+	6DF61C30B8EBE9C2C4B0EC137EC93FEECB2E5E792D1B42CE3FED6BD6D47EAD9B
+	E6DCB7AE0BF6E3B967083E27200782D0DD3FF06C22ECBBA76976921B8BEB3F11
+	B3CA0341C5C59C5268CFC6B1C3FC592E0EFC7F213FC421F8AE33F26CA19866B0
+	267704C2B09C1EEDB1F34B2B0E9DA49C50FFCEF193FF3EC6F1D71720C8B44C97
+	27CA748CB1B3CB9DB17C942F8FFD3F5121CC580755B2335C362BCE6F07173BCE
+	EB2AC8A634DC5D9343C93461309FA7F6BA8A886EAE65A353D4B503FF58DDF56C
+	DB7BBBF10C4B3CDFF6293B673FF84D1B6ADB0FFDBA1F6EE88DC9641909930CFF
+	E4793DE378C3335DF6B0D837F1F8C4B3F9FB3CB8BE3A480787C904D290DB3FFA
+	AEB2A91038F56F95E5392DE757DEB99CDF5CA49E2E77A1E80FFE88FFE9BC4BE3
+	A8C8BAEEB7ABE3371D359EED3B41E4B4370FFF4FD519CA3338FFF67DB17097A3
+	3DFA305925BE3F94FF15495A33E9A305DAB3EEA30862ADD0FC9D0148A5368FFF
+	DFF9F2BCAEC1D91177A2ED9EBBD67A8F71ED4077BCF807FBE263EF9DF23EB7D4
+	FA2093F01FF055FA8FF830FEDFD3F8796EB1FF37071CF3CBD8470F02947FC258
+	4E1AC520CD1FF0AE16874164C2218B0855E1D0F243738A1B5BFC3B59E19C5E43
+	E8803FC2D8B01C910E228FF0A02814FC4A53E10C3F8B01FF13E28BFF8465CE14
+	C2884D0BA1645B8610C87FC3448ECE0E2C398C07921E8FF8D10FE20ACF88911A
+	374498971C6274508A51D62AA843AE61C2847B0941F4C8C7E322148438B419F2
+	0E42C0D81B0420741191AFE84A0C591F2442508817237E4A496088200580BF93
+	527151AA58ACA123DC7D8FE2BE408AF90F21A420CF91302E45C8B7D904D46052
+	9212497049592F2E64F49D9362FE504008F328953CC498331661CC699332265C
+	C299B31E674CA9A07C88080000000000
+$
+	small16
+$
+	4752454154454C4B000A0010408410010682004010B83800810E88C4A26007FC
+	5A2AFF823F03F047C470011E8EC7E42007803E08F003C11C00395CB4012C974C
+	A612A8C4122F0283C26110785880012F82012294483C662B37A345E2D19A6462
+	9B4BA8D42A74FAAD3AAF52AB566B154A70F4DA9B30108EAA34F918F8AA57D7D3
+	670B5842B95AAED6EE719B5900A68C5D3FCEABF76BFD32CDBF1993EC97FDAD01
+	70C4DD2E355C39DD78E7BDDF5FEAE6ABB1FE8E655FB0F8AB967B195EB0200F6C
+	1BF5F2FCA468DF926CCBF110F769CEE83177024DA15FA4D364D32CEBF6F2FC48
+	42AD59FB2E2E2EEC5E4C311FFB9C95F929AD7FAC1AD972B289AB86B01C38D9FB
+	813100AC6FA058797E6E9DFE73603B9FEBB6D65CEEC2F59291CC0ECA6C61DCC6
+	61CF0B46EBFDE3795A5738FF1B8BE7ACA03417E268CF5F8592E0EF3FC421F8AE
+	33D6E7E54E17C942F8FF21CC565E007320279E057ADD05F8A634E0D83CFF1309
+	F7617685D171909930E1C879FF792216E97E890FF1F8C47ACB87B8FF83A10134
+	A436DF610231466338D4792D0DC3FC6728CCE3FC5C25DCB1649672C55255CB17
+	5CA3FC862AD85148A5368FF91E498C1B4564471E0A53FC6B290CD3FC742C9FE7
+	347464C6D81A532F1EB16CB0390FF140A0760431FCB092A4C0016B1404A1F569
+	148872D0CF9625A970FF979CB14894314FF128882E4DF110802C0BF5ADDB9B9D
+	DAB5B3ABAB1AC2B3A3A8E40400000000
+$
+}
+stringtable
+{
+	"wf_BackToJobDefn"
+		DEU "Zurück zur Jobdefinition",
+		ELL "Επιστροφή στον ορισμό εργασίας",
+		ENU "Back to job definition",
+		FRA "Retour à la définition de la tâche",
+		ITA "Torna alla definizione del compito",
+		JPN "ジョブの定義に戻る",
+		ZHS "返回至工作定义"
+	"wf_from_segment"
+		DEU "Vom Ordner...",
+		ELL "Από Φάκελο",
+		ENU "From Folder...",
+		FRA "A partir d'un dossier...",
+		ITA "Dalla cartella...",
+		JPN "フォルダから...",
+		ZHS "从夹......"
+	"wf_item"
+		DEU "Element",
+		ELL "Στοιχείο",
+		ENU "Item",
+		FRA "Elément",
+		ITA "Elemento",
+		JPN "アイテム",
+		KOR "품목",
+		ZHS "条目"
+	"wf_from_bucket"
+		DEU "Vom Bucket...",
+		ELL "Από τον Κάδο",
+		ENU "From Bucket...",
+		FRA "A partir d'un compartiment...",
+		ITA "Dal secchio...",
+		JPN "バケットから",
+		ZHS "从存储桶......",
+		KOR "버킷으로부터"
+	"wf_delitem_prompt"
+		DEU "Sind Sie sicher, dass Sie dieses Element von diesem Auftrag löschen möchten?",
+		ELL "Είστε β'εβαιος ότι θέλετε να καταργήσετε αυτό το στοιχείο από την εργασία ;",
+		ENU "Are you sure you want to delete this item from the job?",
+		FRA "Etes-vous sûr de vouloir supprimer cet élément de la tâche?",
+		ITA "Sei sicuro di voler rimuovere questo elemento dal compito?",
+		JPN "このジョブからこのアイテムを削除しますか?",
+		ZHS "您确信要从工作中删除这一条目吗？"
+	"wf_SelectInstOfClass"
+		DEU "Bitte wählen Sie eine Instanz der Klasse aus",
+		ELL "Παρακαλείσθε να επιλέξτε μια παρουσία κλάσης",
+		ENU "Plase select an instance of class",
+		FRA "Veuillez sélectionner une instance de classe",
+		ITA "Seleziona un’istanza di classe",
+		JPN "クラスのインスタンスを選択してください",
+		ZHS "请选择一个类的实例"
+	"wf_InvalidProcessDefinition"
+		ENU "Invalid workflow process definition",
+		JPN "無効な Workflow プロセス定義"
+	"WF_NoProcess" ENU "There is already a workflow process with the process id %1"
+}
+
+
+sysclass "WF_PendingWork" from "WF_PendingWork"
+{
+	
+	folder "WF_PendingWork"
+	{
+		title(Singular)
+			DEU "Workflow Ausstehende Arbeit",
+			ELL "Εκκρεμούσα Εργασία Ροή-Εργασία",
+			ENU "Workflow Pending Work",
+			FRA "En attente de travail Workflow",
+			ITA "Attività Workflow in sospeso ",
+			JPN "Workflow 未処理ジョブ ",
+			ZHS "工作流程待定工作"
+		gender DEU feminine
+		properties
+		{
+			"FolderSets" 0
+				properties
+				{
+					"User" 0
+				}
+			"Hidden" "true"
+		}
+		filter "WhenDue <= Now And (IsNull(WF_Process.Suspended) Or Not WF_Process.Suspended) And (IsNull(WF_Job.Suspended) Or Not WF_Job.Suspended)"
+		sort [ENU] "WhenDue" asc
+	}
+	
+	folder "WF_PendingWorkByUser"
+	{
+		title(Singular)
+			DEU "Workflow Ausstehende Arbeit nach Benutzer",
+			ELL "Εκκρεμούσα Εργασία Ροή-Εργασία από Χρήστη",
+			ENU "Workflow Pending Work By User",
+			FRA "En attente de travail Workflow par l'uitilisateur",
+			ITA "Attività Workflow in sospeso da parte dell’utente ",
+			JPN "ユーザーによる Workflow 未処理ジョブ",
+			ZHS "工作流程待定工作（按用户）"
+		gender DEU feminine
+		properties
+		{
+			"FolderSets" 0
+				properties
+				{
+					"User" 0
+				}
+			"Hidden" "true"
+		}
+		filter "(WhenDue <= Now)  and (AssignedUser = User.Object)"
+		sort [ENU] "WhenDue" asc
+	}
+	
+	folder "WF_PendingWorkHidden"
+	{
+		title(Singular)
+			ENU "WF_PendingWorkHidden",
+			JPN "WF_PendingWorkHidden"
+		properties
+		{
+			"FolderSets" 0
+				properties
+				{
+					"User" 0
+				}
+			"Hidden" "TRUE"
+		}
+		sort [ENU] 
+			"Status" asc,
+			"Priority" asc,
+			"WhenDue" asc
+	}
+}
+
+sysclass "WF_Queue" from "WF_Queue"
+{
+	
+	folder "WorkflowQueues"
+	{
+		title(Singular)
+			DEU "Workflow Warteschlangen",
+			ELL "Ουρές Ροή-Εργασία",
+			ENU "Workflow Queues",
+			FRA "Files d'attente de Workflow",
+			ITA "Code Workflow",
+			JPN "Workflow キュー",
+			ZHS "工作流程队列"
+		gender DEU feminine,FRA feminine
+		properties
+		{
+			"AppShellHidden" True
+			"FolderSets" 0
+				properties
+				{
+					"Admin" 0
+				}
+		}
+	}
+}
+
+sysclass "WF_Process" from "WF_Process"
+{
+	
+	folder "WF_Processes" context "Admin"
+	{
+		title(Singular)
+			DEU "Workflow Prozesse",
+			ELL "Επεξεργασία Ροή-Εργασία",
+			ENU "Workflow Processes",
+			FRA "Processus Workflow",
+			ITA "Processi Workflow",
+			JPN "Workflow プロセス",
+			KOR "워크 플로우 프로세스",
+			ZHS "工作流程处理"
+		properties
+		{
+			"FolderSets" 0
+				properties
+				{
+					"Admin" 0
+				}
+		}
+	}
+	
+	folder "WF_MaintenanceProcesses"
+	{
+		title(Singular)
+			ENU "Workflow Maintenance Processes",
+			ITA "Processi gestione Workflow",
+			JPN "Workflow メンテナンス プロセス"
+		properties
+		{
+			"FolderSets" 0
+				properties
+				{
+					"Admin" 0
+				}
+			"Hidden" ""
+		}
+		filter "IsMaintenance"
+	}
+}
+
+sysclass "WF_History" from "WF_History"
+{
+}
+
+sysclass "WF_LogEvent" from "WF_LogEvent"
+{
+	
+	folder "WF_LogEvent"
+	{
+		title(Singular)
+			DEU "Workflow Ereignisprotokoll",
+			ELL "Καταγραφή γεγονότος Ροή-Εργασία",
+			ENU "Workflow Event Log",
+			FRA "Journal d'événements Workflow",
+			ITA "Registro eventi Workflow",
+			JPN "Workflow インベントログ",
+			KOR "워크 플로우 이벤트 로그",
+			ZHS "工作流程事件日志"
+		gender DEU neuter
+		properties
+		{
+			"FolderSets" 0
+				properties
+				{
+					"Admin" 0
+				}
+		}
+		cancreatenew "false"
+	}
+}
+
+sysclass "WF_Job" from "WF_Job"
+{
+	
+	folder "Workflow Jobs"
+	{
+		title(Singular)
+			DEU "Workflow Auftrag",
+			ELL "Εργασίας Ροή-Εργασία",
+			ENU "Workflow Jobs",
+			FRA "Tâches Workflow",
+			ITA "Compiti Workflow",
+			JPN "Workflow ジョブ",
+			KOR "워크 플로우 작업",
+			ZHS "工作流程工作"
+		gender FRA feminine
+		properties
+		{
+			"FolderSets" 0
+				properties
+				{
+					"Admin" 0
+				}
+		}
+	}
+}
+
+sysclass "WF_State" from "WF_State"
+{
+	
+	folder "WF_State"
+	{
+		title(Singular)
+			DEU "Workflow Status",
+			ELL "Κατάσταση Ροή-Εργασία",
+			ENU "Workflow State",
+			FRA "Etat de Workflow",
+			ITA "Stato Workflow",
+			JPN "Workflow ステータス",
+			ZHS "工作流程状态"
+		properties
+		{
+			"FolderSets" 0
+				properties
+				{
+					"Admin" 0
+				}
+			"Hidden" "true"
+		}
+	}
+}
+
+sysclass "WF_ServerGroup" from "WF_ServerGroup"
+{
+	
+	folder "WF_ServerGroup"
+	{
+		title(Singular)
+			ENU "Workflow Server Groups",
+			ITA "Gruppi server Workflow",
+			JPN "Workflow サーバー グループ",
+			KOR "워크 플로우 서버 그룹"
+		properties
+		{
+			"FolderSets" 0
+				properties
+				{
+					"Admin" 0
+				}
+			"Hidden" "TRUE"
+		}
+	}
+}
+
+sysclass "WF_Server" from "WF_Server"
+{
+	
+	folder "WF_Server"
+	{
+		title(Singular)
+			ENU "Workflow Servers",
+			ITA "Server Workflow",
+			JPN "Workflow サーバー",
+			KOR "워크 플로우 서버 그룹"
+		properties
+		{
+			"FolderSets" 0
+				properties
+				{
+					"Admin" 0
+				}
+			"Hidden" "TRUE"
+		}
+	}
+}
+
+sysclass "WF_ServerGroupWF_Server" from "WF_ServerGroupWF_Server"
+{
+}
+
+sysclass "WF_PendingWorkLock" from "WF_PendingWorkLock"
+{
+	
+	folder "WF_PendingWorkLock"
+	{
+		title(Singular)
+			ENU "Workflow Pending Work Lock",
+			JPN "Workflow 保留中作業のロック"
+		properties
+		{
+			"FolderSets" 0
+				properties
+				{
+					"User" 0
+				}
+		}
+	}
+}
+
+sysclass "WF_AppPool" from "WF_AppPool"
+{
+	
+	folder "WF_AppPool"
+	{
+		title(Singular)
+			ENU "Workflow Application Pools",
+			ITA "Pool applicazione Workflow",
+			JPN "Workflow アプリケーション プール"
+		properties
+		{
+			"FolderSets" 0
+				properties
+				{
+					"Admin" 0
+				}
+			"Hidden" "TRUE"
+		}
+	}
+}
+
+sysclass "WF_ServerGroupWF_AppPool" from "WF_ServerGroupWF_AppPool"
+{
+}
+
+sysclass "WF_ServerWF_AppPool" from "WF_ServerWF_AppPool"
+{
+}
+
+systemplate "lbrWorkflow::LG_Event_Mod" template "lbrWorkflow::LG_Event_Mod"
+systemplate "lbrWorkflow::stdConfiguration_Mod" template "lbrWorkflow::stdConfiguration_Mod"
+
+}
+layout
+<%
+<?xml version="1.0"?>
+<AeDesigner_doc version="3">
+	<class_diagram name="lbrWorkflow" width="2500" height="1000" ID="{8D51358B-87EC-4E7D-87A6-69871C0F6817}">
+		<class name="WF_PendingWork" left="613" top="597" right="747" bottom="975">
+			<member name="ObjClass" type="data"/>
+			<member name="ObjKey" type="data"/>
+			<member name="Descr" type="data"/>
+			<member name="Status" type="enum"/>
+			<member name="WhenAdded" type="data"/>
+			<member name="ErrorInfo" type="data"/>
+			<member name="Defn" type="data"/>
+			<member name="Step" type="data"/>
+			<member name="Props" type="data"/>
+			<member name="StepDesc" type="data"/>
+			<member name="StepActions" type="data"/>
+			<member name="ActionPrompt" type="data"/>
+			<member name="WhenDue" type="data"/>
+			<member name="WhenTimeout" type="data"/>
+			<member name="ProgressPercentComplete" type="data"/>
+			<member name="ProgressDescr" type="data"/>
+			<member name="WhenToAwake" type="data"/>
+			<member name="AssignedUser" type="join"/>
+			<member name="AssignedQueue" type="join"/>
+			<member name="ImpersonationID" type="data"/>
+			<member name="WhoCreated" type="data"/>
+			<member name="ErrorProcessing" type="data"/>
+			<member name="RecordStamp" type="class"/>
+			<member name="Priority" type="data"/>
+			<hide show_base_members="1">
+				<link_in_list name="AssignedUser" forced="1"/>
+				<link_in_list name="AssignedQueue" forced="1"/>
+				<link_in_list name="stdRecordStamp" forced="0"/>
+				<link_in_list name="RecordStamp" forced="0"/>
+			</hide>
+		</class>
+		<class name="WF_Queue" left="240" top="483" right="374" bottom="573">
+			<member name="ClassName" type="data"/>
+			<member name="Title" type="data"/>
+			<member name="Descrip" type="data"/>
+			<hide show_base_members="1"/>
+		</class>
+		<class name="WF_Process" left="612" top="359" right="746" bottom="542">
+			<member name="Active" type="data"/>
+			<member name="Defn" type="data"/>
+			<member name="Title" type="data"/>
+			<member name="MaxRunningProcesses" type="data"/>
+			<member name="StartWithInst_Class" type="data"/>
+			<member name="StartWithInst_FirstStep" type="data"/>
+			<member name="IsMaintenance" type="data"/>
+			<member name="WF_ProcID" type="data"/>
+			<member name="EnableLogging" type="data"/>
+			<member name="Priority" type="data"/>
+			<member name="RecordStamp" type="class"/>
+			<hide show_base_members="1">
+				<link_in_list name="stdRecordStamp" forced="0"/>
+				<link_in_list name="RecordStamp" forced="0"/>
+			</hide>
+		</class>
+		<class name="WF_History" left="22" top="507" right="156" bottom="597">
+			<member name="Action" type="data"/>
+			<member name="WhenAdded" type="data"/>
+			<member name="WF_Queue" type="join"/>
+			<hide show_base_members="1">
+				<link_in_list name="stdTimeStamp" forced="0"/>
+				<link_in_list name="WF_Queue" forced="1"/>
+			</hide>
+		</class>
+		<class name="lbrSystemEventLog::LG_Event" included_class="1" left="104" top="888" right="238" bottom="978">
+			<member name="TimeStamp" type="class"/>
+			<member name="Process" type="data"/>
+			<member name="Notes" type="data"/>
+			<member name="RecordStamp" type="class"/>
+			<hide show_base_members="1">
+				<link_in_list name="TimeStamp" forced="0"/>
+				<link_in_list name="RecordStamp" forced="0"/>
+			</hide>
+		</class>
+		<class name="WF_LogEvent" left="103" top="741" right="237" bottom="831">
+			<member name="WF_Process" type="data"/>
+			<member name="WF_LogEventType" type="enum"/>
+			<member name="WorkflowProcess" type="join"/>
+			<member name="WorkflowServer" type="data"/>
+			<hide show_base_members="1">
+				<link_in_list name="TimeStamp" forced="1"/>
+				<link_in_list name="workflowProcess" forced="1"/>
+			</hide>
+		</class>
+		<class name="WF_Job" left="240" top="597" right="374" bottom="687">
+			<member name="Title" type="data"/>
+			<member name="Descr" type="data"/>
+			<member name="Started" type="data"/>
+			<hide show_base_members="1"/>
+		</class>
+		<class name="stdbaseentities::stdConfiguration" included_class="1" left="612" top="17" right="746" bottom="107">
+			<member name="Notes" type="data"/>
+			<member name="wf_StyleSheet" type="data"/>
+		</class>
+		<class name="WF_State" left="22" top="397" right="156" bottom="487">
+			<member name="Value" type="data"/>
+			<member name="StateKey" type="data"/>
+			<member name="Value2" type="data"/>
+			<member name="Value3" type="data"/>
+			<hide show_base_members="1"/>
+		</class>
+		<class name="WF_PendingWorkLock" left="22" top="289" right="156" bottom="379">
+			<member name="ServerID" type="data"/>
+			<member name="ID" type="data"/>
+			<member name="TimeStamp" type="data"/>
+			<hide show_base_members="1">
+				<link_in_list name="RecordStamp" forced="0"/>
+			</hide>
+		</class>
+		<class name="WF_ServerGroup" left="1013" top="739" right="1147" bottom="829">
+			<member name="Name" type="data"/>
+			<hide show_base_members="1"/>
+		</class>
+		<class name="WF_Server" left="1335" top="426" right="1469" bottom="516">
+			<member name="Name" type="data"/>
+			<member name="AppServerName" type="data"/>
+			<hide show_base_members="1"/>
+		</class>
+		<class name="WF_ServerGroupWF_Server" left="1335" top="739" right="1469" bottom="829">
+			<hide show_base_members="1"/>
+		</class>
+		<class name="WF_AppPool" left="1013" top="145" right="1147" bottom="235">
+			<member name="Name" type="data"/>
+			<hide show_base_members="1"/>
+		</class>
+		<class name="WF_ServerGroupWF_AppPool" left="1013" top="442" right="1147" bottom="532">
+			<hide show_base_members="1"/>
+		</class>
+		<class name="WF_ServerWF_AppPool" left="1335" top="145" right="1469" bottom="235">
+			<hide show_base_members="1"/>
+		</class>
+		<generalization base="LG_Event" derived="WF_LogEvent"/>
+		<link_join name="PendingWork" class="WF_LogEvent" target="WF_PendingWork"/>
+		<link_join name="WF_Process" class="WF_PendingWork" target="WF_Process"/>
+		<link_join name="WF_Process" class="WF_Job" target="WF_Process"/>
+		<link_join name="WF_Job" class="WF_PendingWork" target="WF_Job"/>
+		<link_join name="WF_Server" class="WF_ServerGroupWF_Server" target="WF_Server"/>
+		<link_join name="WF_ServerGroup" class="WF_ServerGroupWF_Server" target="WF_ServerGroup"/>
+		<link_join name="WF_ServerGroup" class="WF_PendingWork" target="WF_ServerGroup"/>
+		<link_join name="WF_ServerGroup" class="WF_Process" target="WF_ServerGroup"/>
+		<link_join name="WF_AppPool" class="WF_Process" target="WF_AppPool"/>
+		<link_join name="WF_AppPool" class="WF_PendingWork" target="WF_AppPool"/>
+		<link_join name="WF_AppPool" class="WF_ServerGroupWF_AppPool" target="WF_AppPool"/>
+		<link_join name="WF_ServerGroup" class="WF_ServerGroupWF_AppPool" target="WF_ServerGroup"/>
+		<link_join name="WF_AppPool" class="WF_ServerWF_AppPool" target="WF_AppPool"/>
+		<link_join name="WF_Server" class="WF_ServerWF_AppPool" target="WF_Server"/>
+		<hide name="stdUser" pos_x="100" pos_y="194" show_base_members="1">
+			<link_in_list name="Address" forced="0"/>
+			<link_in_list name="Phone" forced="0"/>
+			<link_in_list name="Fax" forced="0"/>
+			<link_in_list name="Mobile" forced="0"/>
+			<link_in_list name="eMailAddress" forced="0"/>
+			<link_in_list name="Name" forced="0"/>
+		</hide>
+		<hide name="ClassObj" pos_x="457" pos_y="68" show_base_members="1"/>
+		<hide name="LG_Detail" pos_x="127" pos_y="921" show_base_members="1"/>
+		<hide name="SystemObj" pos_x="459" pos_y="70" show_base_members="1"/>
+	</class_diagram>
+	<TargetPlatforms>1
+	</TargetPlatforms>
+	<ScreenResolutions>
+		<form name="WF_History" width="800" height="600" platform="0"/>
+		<form name="WF_Server" width="800" height="600" platform="0"/>
+		<form name="WF_ServerGroup" width="800" height="600" platform="0"/>
+		<form name="WF_AppPool" width="800" height="600" platform="0"/>
+	</ScreenResolutions>
+</AeDesigner_doc>
+%>

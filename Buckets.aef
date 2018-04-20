@@ -1,0 +1,62 @@
+﻿
+
+modify form "Object" for "Bucket" as "Bucket"
+{
+	before "Tabs" Height 12
+	{
+		"Key" expression ENU "Key" 0,0,303(100),10 sidetag
+			text 
+				ZHS "存储桶标识符&", 
+				DEU "Bucket &ID", 
+				ELL "&Αναγνωριστικό Ομαδοποίησης", 
+				ENU "Bucket &ID", 
+				FRA "&ID du compartiment", 
+				ITA "&ID Secchio", 
+				JPN "バケット &ID", 
+				PLK "&ID zasobnika", 
+				THA "รหัสที่เก็บข้อมูล (&I)"
+		 tagset(1)
+	}
+	modify tabset "Tabs"
+	{
+		Insert "Expr" before "Descrip"
+			ZHT "籃子", 
+			ZHS "存储桶", 
+			DEU "Bucket", 
+			ELL "Ομαδοποίηση", 
+			ENU "Bucket", 
+			FRA "Compartiment", 
+			ITA "Secchio", 
+			JPN "バケット", 
+			KOR "버킷", 
+			PLK "Zasobnik", 
+			THA "ที่เก็บข้อมูล"
+		
+		{
+			"Expr" control "Elk9.BucketEditor" 0,0,279(100),135(100)
+$
+	00030000d8130000d81300001300050000801300ffffffff0300010000000b00
+	ffff090000000000000000000000000000000000080010000000420075006300
+	6b006500740073000000
+$
+		}
+	}
+}
+
+component "Elk9.BucketBuilder" name "Buckets"
+	ZHT "籃子", 
+	ZHS "存储桶", 
+	DEU "Töpfe", 
+	ELL "Ομαδοποιήσεις", 
+	ENU "Buckets", 
+	FRA "Paniers", 
+	ITA "Secchi", 
+	JPN "バケット", 
+	KOR "버킷", 
+	PLK "Zasobniki",
+	THA "ที่เก็บข้อมูล"
+ icon "Buckets.bmp" mask fuchsia visible forcedform enabled "!IsWindowsCE"
+{
+	"UseInfoSystem" = "true"
+	"BucketFolderName" = "Buckets"
+}

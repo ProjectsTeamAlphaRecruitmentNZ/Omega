@@ -1,0 +1,154 @@
+<publish publishversion="1.0.0.0">
+  <corefiles>
+    <featureGroup name="#FG_Spell_Checker">
+      <file name="Accent.tlx" deploy="True" relativepath="Dictionaries" group="" optional="True" dependantmodules="Ssce5532.dll;" />
+      <file name="Correct.tlx" deploy="True" relativepath="Dictionaries" group="" optional="True" dependantmodules="Ssce5532.dll;" />
+      <file name="Ssce5532.dll" deploy="True" relativepath="" group="" optional="True" dependantmodules="" />
+      <file name="Ssceam.tlx" deploy="True" relativepath="Dictionaries" group="" optional="True" dependantmodules="Ssce5532.dll;Ssceam2.clx;" />
+      <file name="Ssceam2.clx" deploy="True" relativepath="Dictionaries" group="" optional="True" dependantmodules="Ssce5532.dll;Ssceam.tlx;" />
+      <file name="Sscebr.tlx" deploy="True" relativepath="Dictionaries" group="" optional="True" dependantmodules="Ssce5532.dll;Sscebr2.clx;" />
+      <file name="Sscebr2.clx" deploy="True" relativepath="Dictionaries" group="" optional="True" dependantmodules="Ssce5532.dll;Sscebr.tlx;" />
+      <file name="Ssceca.tlx" deploy="True" relativepath="Dictionaries" group="" optional="True" dependantmodules="Ssce5532.dll;Ssceca2.clx;" />
+      <file name="Ssceca2.clx" deploy="True" relativepath="Dictionaries" group="" optional="True" dependantmodules="Ssce5532.dll;Ssceca.tlx;" />
+      <file name="Sscefr.tlx" deploy="True" relativepath="Dictionaries" group="" optional="True" dependantmodules="Ssce5532.dll;Sscefr2.clx;" />
+      <file name="Sscefr2.clx" deploy="True" relativepath="Dictionaries" group="" optional="True" dependantmodules="Ssce5532.dll;Sscefr.tlx;" />
+      <file name="Sscege.tlx" deploy="True" relativepath="Dictionaries" group="" optional="True" dependantmodules="SSsce5532.dll;scegn2.clx;Sscego2.clx" />
+      <file name="Sscegn2.clx" deploy="True" relativepath="Dictionaries" group="" optional="True" dependantmodules="Ssce5532.dll;Sscege.tlx;" />
+      <file name="Sscego2.clx" deploy="True" relativepath="Dictionaries" group="" optional="True" dependantmodules="Ssce5532.dll;Sscege.tlx;" />
+      <file name="Sscesp.tlx" deploy="True" relativepath="Dictionaries" group="" optional="True" dependantmodules="Ssce5532.dll;Sscesp2.clx;" />
+      <file name="Sscesp2.clx" deploy="True" relativepath="Dictionaries" group="" optional="True" dependantmodules="Ssce5532.dll;Sscesp.tlx;" />
+      <file name="Tech.tlx" deploy="True" relativepath="Dictionaries" group="" optional="True" dependantmodules="Ssce5532.dll;" />
+    </featureGroup>
+    <featureGroup name="#FG_StayinFront_CRM_core" order="1">
+      <file name="ActivElk.dll" deploy="True" relativepath="" group="" optional="False" dependantmodules="" />
+      <file name="AeGrid.dll" deploy="True" relativepath="" group="" optional="False" dependantmodules="Vsflex7u.ocx" />
+      <file name="Elk9.dll" deploy="True" relativepath="" group="" optional="False" dependantmodules="" />
+      <file name="Elk9Utl.dll" deploy="True" relativepath="" group="" optional="False" dependantmodules="" />
+      <file name="ElkMFC80.dll" deploy="True" relativepath="" group="" optional="False" dependantmodules="" />
+      <file name="SFLib80.dll" deploy="True" relativepath="" group="" optional="False" dependantmodules="" />
+      <file name="SFRemote.dll" deploy="True" relativepath="" group="" optional="False" dependantmodules="" />
+      <file name="StayinFront.Engine.dll" deploy="True" relativepath="" group="" optional="False" dependantmodules="" />
+      <file name="StayinFront.Engine.Net.dll" deploy="True" relativepath="" group="" optional="False" dependantmodules="" />
+      <file name="StayinFront.Libraries.dll" deploy="True" relativepath="" group="" optional="False" dependantmodules="" />
+      <file name="StayinFront.Shell.dll" deploy="True" relativepath="" group="" optional="False" dependantmodules="" />
+      <file name="StayinFront.Shell.Net.dll" deploy="True" relativepath="" group="" optional="False" dependantmodules="" />
+      <file name="StayinFrontCRM.chm" description="StayinFront CRM Help file" deploy="True" relativepath="" group="" optional="False" dependantmodules="" />
+      <file name="StayinFrontCRM.exe" deploy="True" relativepath="" group="" optional="False" dependantmodules="" />
+      <file name="VE9Scrpt.dll" deploy="True" relativepath="" group="" optional="False" dependantmodules="" />
+      <file name="Vsflex7u.ocx" deploy="True" relativepath="" group="" optional="False" dependantmodules="" />
+    </featureGroup>
+    <featureGroup name="#FG_Workflow">
+      <file name="AeDesCtl.dll" deploy="True" relativepath="" group="" optional="True" dependantmodules="SftTv32U.dll;AeScrEdt.dll;AeEAI.dll;" />
+      <file name="AeEAI.dll" deploy="True" relativepath="" group="" optional="True" dependantmodules="sfl300asu.dll;OT900asu.dll;OV900asu.dll;vc6-re200l.dll;RWUXThemeSU.dll" />
+      <file name="AeScrEdt.dll" deploy="True" relativepath="" group="" optional="True" dependantmodules="msvm30.dll" />
+      <file name="AeWorkFl.dll" deploy="True" relativepath="" group="" optional="True" dependantmodules="sfl300asu.dll;OT900asu.dll;OV900asu.dll;vc6-re200l.dll;RWUXThemeSU.dll" />
+      <file name="ot900asu.dll" deploy="True" relativepath="" group="" optional="True" dependantmodules="" />
+      <file name="ov900asu.dll" deploy="True" relativepath="" group="" optional="True" dependantmodules="" />
+      <file name="StayinFront.Workflow.Aspect.dll" deploy="True" relativepath="" group="" optional="True" dependantmodules="" />
+      <file name="StayinFront.Workflow.dll" deploy="True" relativepath="" group="" optional="True" dependantmodules="" />
+    </featureGroup>
+    <featureGroup name="#FG_Mail_Merge">
+      <file name="AeMerge.dll" deploy="True" relativepath="" group="" optional="True" dependantmodules="AeWorkFl.dll" />
+    </featureGroup>
+    <featureGroup name="#FG_Reports">
+      <file name="AeReport.dll" deploy="True" relativepath="" group="" optional="True" dependantmodules="" />
+    </featureGroup>
+    <featureGroup name="#FG_Dashboard">
+      <file name="AeUtility.dll" deploy="True" relativepath="" group="" optional="True" dependantmodules="cmax40.dll" />
+      <file name="StayinFront.Shell.Dashboard.Components.dll" deploy="True" relativepath="" group="" optional="True" dependantmodules="StayinFront.Shell.Dashboard.dll" />
+      <file name="StayinFront.Shell.Dashboard.dll" deploy="True" relativepath="" group="" optional="True" dependantmodules="" />
+    </featureGroup>
+    <featureGroup name="#FG_KPI">
+      <file name="ChartFX.Base.dll" deploy="True" relativepath="" group="" optional="True" dependantmodules="ChartFX.Base.dll" />
+      <file name="ChartFX.WinForms.Gauge.dll" deploy="True" relativepath="" group="" optional="True" dependantmodules="ChartFX.Base.dll" />
+      <file name="StayinFront.Analytics.KPIs.Dashboard.dll" deploy="True" relativepath="" group="" optional="True" dependantmodules="StayinFront.Analytics.KPIs.dll" />
+      <file name="StayinFront.Analytics.KPIs.dll" deploy="True" relativepath="" group="" optional="True" dependantmodules="StayinFront.Analytics.Common.dll;ChartFX.WinForms.Gauge.dll;StayinFront.Workflow.dll;StayinFront.Designer.dll;cmax40.dll" />
+    </featureGroup>
+    <featureGroup name="#FG_Analytics">
+      <file name="ChartFx.WinForms.Adornments.dll" deploy="True" relativepath="" group="" optional="True" dependantmodules="ChartFx.WinForms.Annotation.dll;ChartFx.WinForms.Base.dll;ChartFx.WinForms.dll" />
+      <file name="ChartFx.WinForms.Annotation.dll" deploy="True" relativepath="" group="" optional="True" dependantmodules="ChartFx.WinForms.Adornments.dll;ChartFx.WinForms.Base.dll;ChartFx.WinForms.dll" />
+      <file name="ChartFx.WinForms.Base.dll" deploy="True" relativepath="" group="" optional="True" dependantmodules="ChartFx.WinForms.Annotation.dll;ChartFx.WinForms.Adornments.dll;ChartFx.WinForms.dll" />
+      <file name="ChartFx.WinForms.dll" deploy="True" relativepath="" group="" optional="True" dependantmodules="ChartFx.WinForms.Annotation.dll;ChartFx.WinForms.Base.dll;ChartFx.WinForms.Adornments.dll" />
+      <file name="FarPoint.CalcEngine.dll" deploy="True" relativepath="" group="" optional="True" dependantmodules="FarPoint.Excel.dll;FarPoint.PluginCalendar.WinForms.dll;FarPoint.Win.dll;FarPoint.Win.Spread.dll" />
+      <file name="FarPoint.Excel.dll" deploy="True" relativepath="" group="" optional="True" dependantmodules="FarPoint.CalcEngine.dll;FarPoint.PluginCalendar.WinForms.dll;FarPoint.Win.dll;FarPoint.Win.Spread.dll" />
+      <file name="FarPoint.Win.dll" deploy="True" relativepath="" group="" optional="True" dependantmodules="FarPoint.CalcEngine.dll;FarPoint.Excel.dll;FarPoint.PluginCalendar.WinForms.dll;FarPoint.Win.Spread.dll" />
+      <file name="FarPoint.Win.Spread.dll" deploy="True" relativepath="" group="" optional="True" dependantmodules="FarPoint.CalcEngine.dll;FarPoint.Excel.dll;FarPoint.PluginCalendar.WinForms.dll;FarPoint.Win.dll" />
+      <file name="StayinFront.Analytics.Common.dll" deploy="True" relativepath="" group="" optional="True" dependantmodules="StayinFront.Analytics.UI.dll" />
+      <file name="StayinFront.Analytics.Dashboard.dll" deploy="True" relativepath="" group="" optional="True" dependantmodules="StayinFront.Analytics.UI.dll" />
+      <file name="StayinFront.Analytics.DataEngine.dll" deploy="True" relativepath="" group="" optional="True" dependantmodules="StayinFront.Analytics.UI.dll;" />
+      <file name="StayinFront.Analytics.Extensions.dll" deploy="True" relativepath="" group="" optional="True" dependantmodules="StayinFront.Analytics.UI.dll" />
+      <file name="StayinFront.Analytics.UI.dll" deploy="True" relativepath="" group="" optional="True" dependantmodules="StayinFront.Analytics.DataEngine.dll;FarPoint.Win.dll;ChartFx.WinForms.dll" />
+    </featureGroup>
+    <featureGroup name="#FG_Designer">
+      <file name="cmax40.dll" deploy="True" relativepath="" group="" optional="True" dependantmodules="" />
+      <file name="msvm30.dll" deploy="True" relativepath="" group="" optional="True" dependantmodules="" />
+      <file name="RWUXThemeSU.dll" deploy="True" relativepath="" group="" optional="True" dependantmodules="" />
+      <file name="sfl300asu.dll" deploy="True" relativepath="" group="" optional="True" dependantmodules="" />
+      <file name="SftTv32U.dll" deploy="True" relativepath="" group="" optional="True" dependantmodules="" />
+      <file name="StayinFront.Designer.dll" deploy="True" relativepath="" group="" optional="True" dependantmodules="" />
+      <file name="vc6-re200l.dll" deploy="True" relativepath="" group="" optional="True" dependantmodules="" />
+    </featureGroup>
+    <featureGroup name="#FG_PDA_Sync">
+      <file name="PDADrvrs.dll" deploy="False" relativepath="" group="" optional="True" dependantmodules="" />
+      <file name="PDASync.dll" deploy="False" relativepath="" group="" optional="True" dependantmodules="PDADrvrs.dll" />
+    </featureGroup>
+    <featureGroup name="#FG_InProcess_WebServer">
+      <file name="StayinFront.InProcessWebServer.dll" deploy="True" relativepath="" group="" optional="True" dependantmodules="StayinFront.Web.dll" />
+      <file name="StayinFront.Web.dll" deploy="True" relativepath="" group="" optional="True" dependantmodules="" />
+    </featureGroup>
+    <featureGroup name="#FG_Outlook_Integration">
+      <file name="StayinFront.Outlook.Addin.dll" deploy="True" relativepath="" group="" optional="True" dependantmodules="StayinFront.Outlook.Common.dll;StayinFront.Outlook.CRMComponent.dll;StayinFront.Outlook.Addin.dll.manifest;StayinFront.Outlook.Addin.dll.config;" />
+      <file name="StayinFront.Outlook.Addin.dll.config" deploy="True" relativepath="" group="" datafile="True" optional="True" dependantmodules="" />
+      <file name="StayinFront.Outlook.Addin.dll.manifest" deploy="True" relativepath="" group="" optional="True" dependantmodules="" />
+      <file name="StayinFront.Shell.Outlook.dll" deploy="True" relativepath="" group="" optional="True" dependantmodules="StayinFront.Outlook.Common.dll;StayinFront.Outlook.CRMComponent.dll;StayinFront.WebServices.Lists.dll" />
+      <file name="StayinFront.WebServices.Lists.dll" deploy="True" relativepath="" group="" optional="True" dependantmodules="" />
+    </featureGroup>
+    <featureGroup name="#FG_Rich_Text">
+      <file name="tx15.dll" deploy="True" relativepath="RichText Control" group="" optional="True" dependantmodules="" />
+      <file name="tx15_bmp.flt" deploy="True" relativepath="RichText Control" group="" optional="True" dependantmodules="tx4ole15.ocx" />
+      <file name="tx15_css.dll" deploy="True" relativepath="RichText Control" group="" optional="True" dependantmodules="tx4ole15.ocx" />
+      <file name="tx15_doc.dll" deploy="True" relativepath="RichText Control" group="" optional="True" dependantmodules="tx4ole15.ocx" />
+      <file name="tx15_dox.dll" deploy="True" relativepath="RichText Control" group="" optional="True" dependantmodules="tx4ole15.ocx" />
+      <file name="tx15_gif.flt" deploy="True" relativepath="RichText Control" group="" optional="True" dependantmodules="tx4ole15.ocx" />
+      <file name="tx15_htm.dll" deploy="True" relativepath="RichText Control" group="" optional="True" dependantmodules="tx4ole15.ocx" />
+      <file name="tx15_ic.dll" deploy="True" relativepath="RichText Control" group="" optional="True" dependantmodules="tx15_ic.ini;tx4ole15.ocx" />
+      <file name="tx15_ic.ini" deploy="True" relativepath="RichText Control" group="" optional="True" dependantmodules="" />
+      <file name="tx15_jpg.flt" deploy="True" relativepath="RichText Control" group="" optional="True" dependantmodules="tx4ole15.ocx" />
+      <file name="tx15_obj.dll" deploy="True" relativepath="RichText Control" group="" optional="True" dependantmodules="tx4ole15.ocx" />
+      <file name="tx15_pdf.dll" deploy="True" relativepath="RichText Control" group="" optional="True" dependantmodules="tx4ole15.ocx" />
+      <file name="tx15_png.flt" deploy="True" relativepath="RichText Control" group="" optional="True" dependantmodules="tx4ole15.ocx" />
+      <file name="tx15_rtf.dll" deploy="True" relativepath="RichText Control" group="" optional="True" dependantmodules="tx4ole15.ocx" />
+      <file name="tx15_tif.flt" deploy="True" relativepath="RichText Control" group="" optional="True" dependantmodules="tx4ole15.ocx" />
+      <file name="tx15_tls.dll" deploy="True" relativepath="RichText Control" group="" optional="True" dependantmodules="tx4ole15.ocx" />
+      <file name="tx15_wmf.flt" deploy="True" relativepath="RichText Control" group="" optional="True" dependantmodules="tx4ole15.ocx" />
+      <file name="tx15_wnd.dll" deploy="True" relativepath="RichText Control" group="" optional="True" dependantmodules="tx4ole15.ocx" />
+      <file name="tx15_xml.dll" deploy="True" relativepath="RichText Control" group="" optional="True" dependantmodules="tx4ole15.ocx" />
+      <file name="tx4ole15.ocx" deploy="True" relativepath="RichText Control" group="" optional="True" dependantmodules="tx15.dll;" />
+    </featureGroup>
+    <featureGroup name="#FG_Dashboard_11">
+      <file name="ve9dash.ocx" deploy="False" relativepath="" group="" optional="True" dependantmodules="VE9DPart.dll;AeUtility.dll" />
+      <file name="VE9DPart.dll" deploy="False" relativepath="" group="" optional="True" dependantmodules="" />
+    </featureGroup>
+    <featureGroup name="#FG_Calendar">
+      <file name="VeCalend.dll" deploy="True" relativepath="" group="" optional="True" dependantmodules="" />
+    </featureGroup>
+  </corefiles>
+  <customcomponents>
+    <file name="comdlg32.ocx" deploy="True" relativepath="" group="" path="C:\Program Files (x86)\StayinFront\CRM\comdlg32.ocx" />
+    <file name="VE9FolderMultiSelector.ocx" deploy="True" relativepath="" group="" path="C:\Program Files (x86)\StayinFront\CRM\VE9FolderMultiSelector.ocx" />
+    <file name="ieframe.dll" deploy="True" relativepath="" group="" path="C:\Windows\SysWOW64\ieframe.dll" />
+    <file name="MSCOMCTL.OCX" deploy="True" relativepath="" group="" path="C:\Windows\SysWOW64\MSCOMCTL.OCX" />
+    <file name="CTCLIP32.OCX" deploy="True" relativepath="" group="" path="C:\PROGRA~2\STAYIN~1\CRM\CTCLIP32.OCX" />
+  </customcomponents>
+  <supportingfiles />
+  <publishdetails path="" url="">
+    <updatebehaviour type="0" />
+    <connection applicationserver="" autoconnect="True" />
+    <certificate path="" />
+    <application name="" company="StayinFront, Inc" />
+    <executable module="StayinFrontCRM.exe" parameters="" iconfile="" />
+  </publishdetails>
+  <fileAssociations>
+    <fileAssociation extension=".vex" description="StayinFront CRM Shortcut" progid="VisualElk.Shortcut" />
+  </fileAssociations>
+</publish>

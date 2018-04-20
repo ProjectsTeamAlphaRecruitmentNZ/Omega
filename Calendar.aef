@@ -1,0 +1,1013 @@
+﻿
+
+form "DayView"
+	ENU "Day", 
+	ESP "Día", 
+	JPN "日", 
+	KOR "일", 
+	PLK "Dzień", 
+	THA "วัน"
+ 202,200
+{
+	"DayView" control "ELK9Calendar.DayView" 0,0,46(100),200(100)
+	Events
+	{
+		"OnUserChanged" "DayView_OnUserChanged"
+	}
+	{
+		"_Version" = "65536"
+		"_ExtentX" = "2646"
+		"_ExtentY" = "1323"
+		"_StockProps" = "77"
+		"ForeColor" = "0"
+		"Enabled" = "-1"
+		"DayNames" =
+			DEU "Sonntag;Montag;Dienstag;Mittwoch;Donnerstag;Freitag;Samstag", 
+			FRA "Dim;Lun;Mar;Mer;Jeu;Ven;Sam", 
+			JPN "日;月;火;水;木;金;土"
+		
+		"MonthNames" =
+			DEU "Januar;Februar;März;April;Mai;Juni;Juli;August;September;Oktober;November;Dezember", 
+			FRA "Janvier;Février;Mars;Avril;Mai;Juin;Juillet;Août;Septembre;Octobre;Novembre;Décembre", 
+			JPN "1月,2月,3月,4月,5月,6月,7月,8月,9月,10月,11月,12月"
+		
+		"DateFormat" = "dddd d"
+		"TitleText" = ""
+		"PrintTitle" = "ctMDay Report Title"
+		"PrintSubTitle" = "Report Sub-Title"
+		"BorderColor" = "0"
+		"SelectedBackColor" = "8388608"
+		"SelectedForeColor" = "16777215"
+		"SelectedTimeColor" = "8421504"
+		"NonPrimeColor" = "49344"
+		"PrimeTimeColor" = "8454143"
+		"TimeBackColor" = "12632256"
+		"TimeForeColor" = "0"
+		"BarMoveColor" = "8388608"
+		"BarSizeColor" = "12632256"
+		"DefTaskColor" = "16711680"
+		"DefBackColor" = "16777215"
+		"HeaderBackColor" = "12632256"
+		"HeaderForeColor" = "0"
+		"ColumnSepColor" = "16777215"
+		"TentativeColor" = "12632256"
+		"TitleForeColor" = "0"
+		"PrintAppColor" = "16777215"
+		"TimeUnits" = "3"
+		"BorderType" = "0"
+		"TimeBorder" = "2"
+		"HeaderBorder" = "2"
+		"TimeType" = "1"
+		"ColumnAppType" = "1"
+		"HeaderAlign" = "2"
+		"TitleAlign" = "2"
+		"TitleBorder" = "1"
+		"PrintTitleAlign" = "2"
+		"PrintMapMode" = "1"
+		"PrintTimeUnits" = "3"
+		"HeightOffset" = "0"
+		"TimeEnd" = "0"
+		"TimeStart" = "0"
+		"TaskBarWidth" = "6"
+		"PrimeTimeStart" = "480"
+		"PrimeTimeEnd" = "1020"
+		"TimeTextWidth" = "75"
+		"Selected" = "-1"
+		"HeaderHeight" = "30"
+		"SetTopTime" = "480"
+		"ColumnSepWidth" = "4"
+		"DisplayColumns" = "1"
+		"VirtualColumns" = "0"
+		"Day" = "1"
+		"Month" = "1"
+		"Year" = "2000"
+		"DateOffset" = "0"
+		"HeaderXOffset" = "0"
+		"HeaderYOffset" = "0"
+		"TitleXOffset" = "0"
+		"TitleYOffset" = "0"
+		"ZoneOffset" = "0"
+		"HorzPosition" = "-1"
+		"PrintTimeWidth" = "100"
+		"PrintTimeEnd" = "0"
+		"PrintTimeStart" = "0"
+		"PrintOffset" = "0"
+		"PrintColsPerPage" = "1"
+		"PrintColumnStart" = "-1"
+		"PrintColumnEnd" = "-1"
+		"PrintHeaderHeight" = "30"
+		"PrintTaskWidth" = "6"
+		"PrintSpace" = "0"
+		"PageXOffset" = "0"
+		"PageYOffset" = "0"
+		"TextYOffset" = "0"
+		"ConflictOffset" = "0"
+		"Code" = "0"
+		"MilitaryTime" = "-1"
+		"DisplayOnly" = "0"
+		"IncludeAmPm" = "-1"
+		"TaskBars" = "-1"
+		"DisplayHeader" = "-1"
+		"HeaderLineBreak" = "0"
+		"TitleLineBreak" = "0"
+		"TitleDate" = "0"
+		"SortWithKey" = "0"
+		"MultiZones" = "0"
+		"PrintTimeStats" = "-1"
+		"CustomMenu" = "0"
+		"FixedBarSize" = "0"
+		"UseImageList" = "0"
+		"SmallIcons" = "0"
+		"KillFocusEvent" = "-1"
+		"DateSource" = "DayPicker"
+		"UserSource" = ""
+		"AutoSave" = "-1"
+		"ViewType" = "0"
+		"Filter" = ""
+	}
+	"DayPicker" control "ELK9Calendar.DayPicker" 50(100),0,152(100),96 tagset(1)
+	{
+		"_cx" = "4763"
+		"_cy" = "4180"
+		"UserSource" = ""
+		"AutoSave" = "-1"
+		"Filter" = ""
+	}
+	"UserPickerForm" control "Elk9.Form.1" 50(100),100,152(100),18 tagset(1) ENU "UserPickerForm"
+	Events
+	{
+		"OnChange" "UserPickerForm_OnChange"
+	}
+	{
+		"_cx" = "16748"
+		"_cy" = "11642"
+		"AutoSave" = "-1"
+		"Border" = "0"
+		"Context" = ""
+		"BackColor" = "4294967295"
+		"Enabled" = "-1"
+		"ForeColor" = "4294967295"
+		"ShowTabs" = "-1"
+	}
+	"Summary" control "ELK9Calendar.DayViewSummary" 50(100),118,152(100),82(100) tagset(1)
+	{
+		"_cx" = "6826"
+		"_cy" = "5980"
+		"DateSource" = "DayPicker"
+		"UserSource" = ""
+		"Filter" = ""
+		"AppointmentSource" = "DayView"
+		"ShowLegend" = "-1"
+		"MilitaryTime" = "-1"
+		"IncludeAmPm" = "-1"
+		"PrimeTimeStart" = "480"
+		"PrimeTimeEnd" = "1020"
+	}
+	OnInit "Form_Init"
+	OnActivate "Form_OnActivate"
+	Script VBScript
+<%
+Dim m_oUser ' *-- Dim m_oUser as Variant
+Dim m_bUserSet ' *-- Dim m_bUserSet as Boolean
+
+Sub Form_Init()
+	If IsEmpty(m_bUserSet) Then
+		Set m_oUser=System.User.Object
+	End If
+	Form.DayView.Control.MilitaryTime = System.GetCalPropMilitaryTime(Form.DayView.Control.MilitaryTime)
+	Form.UserPickerForm.Control.LoadForm System.GetUserPickerFormName,Nothing
+End Sub
+
+Sub Form_OnActivate()
+	SetInternalUser(m_oUser)
+End Sub
+
+Sub DayView_OnUserChanged(newUser) ' *-- Sub DayView_OnUserChanged(newUser As Variant)
+	SetAllFormsUser(newUser)
+End Sub
+
+Sub UserPickerForm_OnChange()
+	Dim newUser ' *-- 	Dim newUser as Variant
+	Dim bGroup: bGroup = False ' *-- 	Dim bGroup as Boolean: bGroup = False
+	Form.UserPickerForm.Control.FormForm.GetUser newUser,bGroup
+	If bGroup Then
+		Form.DayView.Control.PickUsers newUser
+	End If
+	SetAllFormsUser(newUser)
+End Sub
+
+Sub SetAllFormsUser(newUser) ' *-- Sub SetAllFormsUser(newUser as Variant)
+	SetInternalUser(newUser)
+	Dim oForm ' *-- 	Dim oForm as FormForm
+	For Each oForm In Form.Container
+		On Error Resume Next
+		oForm.SetUser(newUser)
+		On Error Goto 0
+	Next
+End Sub
+
+Sub SetInternalUser(newUser) ' *-- Sub SetInternalUser(newUser as Variant)
+	SetUser(newUser)
+	Form.DayPicker.Control.User=newUser
+	Form.DayView.Control.User=newUser
+	On Error Resume Next
+	Form.UserPickerForm.Control.FormForm.SetUser(newUser)	
+	On Error Goto 0
+End Sub
+
+Sub SetUser(newUser) ' *-- Sub SetUser(newUser as Variant)
+	If IsObject(newUser) Then
+		Set m_oUser=newUser
+	Else
+		m_oUser=newUser	
+	End If
+	m_bUserSet=True	
+End Sub
+%>
+}
+
+form "WorkWeekView"
+	ENU "Work Week", 
+	ESP "Semana de trabajo", 
+	JPN "稼働週", 
+	KOR "업무 주", 
+	PLK "Tydzień pracy", 
+	THA "สัปดาห์ทำงาน"
+ 200,200
+{
+	"DayView" control "ELK9Calendar.DayView" 0,0,46(100),200(100)
+	Events
+	{
+		"OnUserChanged" "DayView_OnUserChanged"
+	}
+	{
+		"_Version" = "65536"
+		"_ExtentX" = "2646"
+		"_ExtentY" = "1323"
+		"_StockProps" = "77"
+		"ForeColor" = "0"
+		"Enabled" = "-1"
+		"DayNames" =
+			DEU "Sonntag;Montag;Dienstag;Mittwoch;Donnerstag;Freitag;Samstag", 
+			FRA "Dim;Lun;Mar;Mer;Jeu;Ven;Sam", 
+			JPN "日;月;火;水;木;金;土"
+		
+		"MonthNames" =
+			DEU "Januar;Februar;März;April;Mai;Juni;Juli;August;September;Oktober;November;Dezember", 
+			FRA "Janvier;Février;Mars;Avril;Mai;Juin;Juillet;Août;Septembre;Octobre;Novembre;Décembre", 
+			JPN "1月,2月,3月,4月,5月,6月,7月,8月,9月,10月,11月,12月"
+		
+		"DateFormat" = "ddd d"
+		"TitleText" = ""
+		"PrintTitle" = "ctMDay Report Title"
+		"PrintSubTitle" = "Report Sub-Title"
+		"BorderColor" = "0"
+		"SelectedBackColor" = "8388608"
+		"SelectedForeColor" = "16777215"
+		"SelectedTimeColor" = "8421504"
+		"NonPrimeColor" = "49344"
+		"PrimeTimeColor" = "8454143"
+		"TimeBackColor" = "12632256"
+		"TimeForeColor" = "0"
+		"BarMoveColor" = "8388608"
+		"BarSizeColor" = "12632256"
+		"DefTaskColor" = "16711680"
+		"DefBackColor" = "16777215"
+		"HeaderBackColor" = "12632256"
+		"HeaderForeColor" = "0"
+		"ColumnSepColor" = "16777215"
+		"TentativeColor" = "12632256"
+		"TitleForeColor" = "0"
+		"PrintAppColor" = "16777215"
+		"TimeUnits" = "3"
+		"BorderType" = "0"
+		"TimeBorder" = "2"
+		"HeaderBorder" = "2"
+		"TimeType" = "1"
+		"ColumnAppType" = "1"
+		"HeaderAlign" = "2"
+		"TitleAlign" = "2"
+		"TitleBorder" = "1"
+		"PrintTitleAlign" = "2"
+		"PrintMapMode" = "1"
+		"PrintTimeUnits" = "3"
+		"HeightOffset" = "0"
+		"TimeEnd" = "0"
+		"TimeStart" = "0"
+		"TaskBarWidth" = "6"
+		"PrimeTimeStart" = "480"
+		"PrimeTimeEnd" = "1020"
+		"TimeTextWidth" = "75"
+		"Selected" = "-1"
+		"HeaderHeight" = "30"
+		"SetTopTime" = "480"
+		"ColumnSepWidth" = "4"
+		"DisplayColumns" = "7"
+		"VirtualColumns" = "0"
+		"Day" = "1"
+		"Month" = "1"
+		"Year" = "2000"
+		"DateOffset" = "0"
+		"HeaderXOffset" = "0"
+		"HeaderYOffset" = "0"
+		"TitleXOffset" = "0"
+		"TitleYOffset" = "0"
+		"ZoneOffset" = "0"
+		"HorzPosition" = "-1"
+		"PrintTimeWidth" = "100"
+		"PrintTimeEnd" = "0"
+		"PrintTimeStart" = "0"
+		"PrintOffset" = "0"
+		"PrintColsPerPage" = "1"
+		"PrintColumnStart" = "-1"
+		"PrintColumnEnd" = "-1"
+		"PrintHeaderHeight" = "30"
+		"PrintTaskWidth" = "6"
+		"PrintSpace" = "0"
+		"PageXOffset" = "0"
+		"PageYOffset" = "0"
+		"TextYOffset" = "0"
+		"ConflictOffset" = "0"
+		"Code" = "0"
+		"MilitaryTime" = "-1"
+		"DisplayOnly" = "0"
+		"IncludeAmPm" = "-1"
+		"TaskBars" = "-1"
+		"DisplayHeader" = "-1"
+		"HeaderLineBreak" = "0"
+		"TitleLineBreak" = "0"
+		"TitleDate" = "0"
+		"SortWithKey" = "0"
+		"MultiZones" = "0"
+		"PrintTimeStats" = "-1"
+		"CustomMenu" = "0"
+		"FixedBarSize" = "0"
+		"UseImageList" = "0"
+		"SmallIcons" = "0"
+		"KillFocusEvent" = "-1"
+		"DateSource" = "DayPicker"
+		"UserSource" = ""
+		"AutoSave" = "-1"
+		"ViewType" = "1"
+		"Filter" = ""
+	}
+	"DayPicker" control "ELK9Calendar.DayPicker" 50(100),0,150(100),96
+	{
+		"_cx" = "4763"
+		"_cy" = "4180"
+		"UserSource" = ""
+		"AutoSave" = "-1"
+		"Filter" = ""
+	}
+	"UserPickerForm" control "Elk9.Form.1" 50(100),100,150(100),18 ENU "UserPickerForm"
+	Events
+	{
+		"OnChange" "UserPickerForm_OnChange"
+	}
+	{
+		"_cx" = "16748"
+		"_cy" = "11642"
+		"AutoSave" = "-1"
+		"Border" = "0"
+		"Context" = ""
+		"BackColor" = "4294967295"
+		"Enabled" = "-1"
+		"ForeColor" = "4294967295"
+		"ShowTabs" = "-1"
+	}
+	"Summary" control "ELK9Calendar.DayViewSummary" 50(100),118,150(100),82(100)
+	{
+		"_cx" = "6826"
+		"_cy" = "5980"
+		"DateSource" = "DayPicker"
+		"UserSource" = ""
+		"Filter" = ""
+		"AppointmentSource" = "DayView"
+		"ShowLegend" = "-1"
+		"MilitaryTime" = "-1"
+		"IncludeAmPm" = "-1"
+		"PrimeTimeStart" = "480"
+		"PrimeTimeEnd" = "1020"
+	}
+	OnInit "Form_Init"
+	OnActivate "Form_OnActivate"
+	Script VBScript
+<%
+Dim m_oUser ' *-- Dim m_oUser as Variant
+Dim m_bUserSet ' *-- Dim m_bUserSet as Boolean
+
+Sub Form_Init()
+	If IsEmpty(m_bUserSet) Then
+		Set m_oUser=System.User.Object
+	End If
+	Form.DayView.Control.MilitaryTime = System.GetCalPropMilitaryTime(Form.DayView.Control.MilitaryTime)
+	Form.UserPickerForm.Control.LoadForm System.GetUserPickerFormName,Nothing
+End Sub
+
+Sub Form_OnActivate()
+	SetInternalUser(m_oUser)
+End Sub
+
+Sub DayView_OnUserChanged(newUser) ' *-- Sub DayView_OnUserChanged(newUser As Variant)
+	SetAllFormsUser(newUser)
+End Sub
+
+Sub UserPickerForm_OnChange()
+	Dim newUser ' *-- 	Dim newUser as Variant
+	Dim bGroup: bGroup = False ' *-- 	Dim bGroup as Boolean: bGroup = False
+	Form.UserPickerForm.Control.FormForm.GetUser newUser,bGroup
+	If bGroup Then
+		Form.DayView.Control.PickUsers newUser
+	End If
+	SetAllFormsUser(newUser)
+End Sub
+
+Sub SetAllFormsUser(newUser) ' *-- Sub SetAllFormsUser(newUser as Variant)
+	SetInternalUser(newUser)
+	Dim oForm ' *-- 	Dim oForm as FormForm
+	For Each oForm In Form.Container
+		On Error Resume Next
+		oForm.SetUser(newUser)
+		On Error Goto 0
+	Next
+End Sub
+
+Sub SetInternalUser(newUser) ' *-- Sub SetInternalUser(newUser as Variant)
+	SetUser(newUser)
+	Form.DayPicker.Control.User=newUser
+	Form.DayView.Control.User=newUser
+	On Error Resume Next
+	Form.UserPickerForm.Control.FormForm.SetUser(newUser)	
+	On Error Goto 0
+End Sub
+
+Sub SetUser(newUser) ' *-- Sub SetUser(newUser as Variant)
+	If IsObject(newUser) Then
+		Set m_oUser=newUser
+	Else
+		m_oUser=newUser	
+	End If
+	m_bUserSet=True	
+End Sub
+%>
+}
+
+form "WeekView"
+	ENU "Week", 
+	ESP "Semana", 
+	JPN "週", 
+	KOR "주", 
+	PLK "Tydzień", 
+	THA "สัปดาห์"
+ 200,200
+{
+	"DayView" control "ELK9Calendar.DayView" 0,0,46(100),200(100)
+	Events
+	{
+		"OnUserChanged" "DayView_OnUserChanged"
+	}
+	{
+		"_Version" = "65536"
+		"_ExtentX" = "2646"
+		"_ExtentY" = "1323"
+		"_StockProps" = "77"
+		"ForeColor" = "0"
+		"Enabled" = "-1"
+		"DayNames" =
+			DEU "Sonntag;Montag;Dienstag;Mittwoch;Donnerstag;Freitag;Samstag", 
+			FRA "Dim;Lun;Mar;Mer;Jeu;Ven;Sam", 
+			JPN "日;月;火;水;木;金;土"
+		
+		"MonthNames" =
+			DEU "Januar;Februar;März;April;Mai;Juni;Juli;August;September;Oktober;November;Dezember", 
+			FRA "Janvier;Février;Mars;Avril;Mai;Juin;Juillet;Août;Septembre;Octobre;Novembre;Décembre", 
+			JPN "1月,2月,3月,4月,5月,6月,7月,8月,9月,10月,11月,12月"
+		
+		"DateFormat" = "ddd d"
+		"TitleText" = ""
+		"PrintTitle" = "ctMDay Report Title"
+		"PrintSubTitle" = "Report Sub-Title"
+		"BorderColor" = "0"
+		"SelectedBackColor" = "8388608"
+		"SelectedForeColor" = "16777215"
+		"SelectedTimeColor" = "8421504"
+		"NonPrimeColor" = "49344"
+		"PrimeTimeColor" = "8454143"
+		"TimeBackColor" = "12632256"
+		"TimeForeColor" = "0"
+		"BarMoveColor" = "8388608"
+		"BarSizeColor" = "12632256"
+		"DefTaskColor" = "16711680"
+		"DefBackColor" = "16777215"
+		"HeaderBackColor" = "12632256"
+		"HeaderForeColor" = "0"
+		"ColumnSepColor" = "16777215"
+		"TentativeColor" = "12632256"
+		"TitleForeColor" = "0"
+		"PrintAppColor" = "16777215"
+		"TimeUnits" = "3"
+		"BorderType" = "0"
+		"TimeBorder" = "2"
+		"HeaderBorder" = "2"
+		"TimeType" = "1"
+		"ColumnAppType" = "1"
+		"HeaderAlign" = "2"
+		"TitleAlign" = "2"
+		"TitleBorder" = "1"
+		"PrintTitleAlign" = "2"
+		"PrintMapMode" = "1"
+		"PrintTimeUnits" = "3"
+		"HeightOffset" = "0"
+		"TimeEnd" = "0"
+		"TimeStart" = "0"
+		"TaskBarWidth" = "6"
+		"PrimeTimeStart" = "480"
+		"PrimeTimeEnd" = "1020"
+		"TimeTextWidth" = "75"
+		"Selected" = "-1"
+		"HeaderHeight" = "30"
+		"SetTopTime" = "480"
+		"ColumnSepWidth" = "4"
+		"DisplayColumns" = "7"
+		"VirtualColumns" = "0"
+		"Day" = "1"
+		"Month" = "1"
+		"Year" = "2000"
+		"DateOffset" = "0"
+		"HeaderXOffset" = "0"
+		"HeaderYOffset" = "0"
+		"TitleXOffset" = "0"
+		"TitleYOffset" = "0"
+		"ZoneOffset" = "0"
+		"HorzPosition" = "-1"
+		"PrintTimeWidth" = "100"
+		"PrintTimeEnd" = "0"
+		"PrintTimeStart" = "0"
+		"PrintOffset" = "0"
+		"PrintColsPerPage" = "1"
+		"PrintColumnStart" = "-1"
+		"PrintColumnEnd" = "-1"
+		"PrintHeaderHeight" = "30"
+		"PrintTaskWidth" = "6"
+		"PrintSpace" = "0"
+		"PageXOffset" = "0"
+		"PageYOffset" = "0"
+		"TextYOffset" = "0"
+		"ConflictOffset" = "0"
+		"Code" = "0"
+		"MilitaryTime" = "-1"
+		"DisplayOnly" = "0"
+		"IncludeAmPm" = "-1"
+		"TaskBars" = "-1"
+		"DisplayHeader" = "-1"
+		"HeaderLineBreak" = "0"
+		"TitleLineBreak" = "0"
+		"TitleDate" = "0"
+		"SortWithKey" = "0"
+		"MultiZones" = "0"
+		"PrintTimeStats" = "-1"
+		"CustomMenu" = "0"
+		"FixedBarSize" = "0"
+		"UseImageList" = "0"
+		"SmallIcons" = "0"
+		"KillFocusEvent" = "-1"
+		"DateSource" = "DayPicker"
+		"UserSource" = ""
+		"AutoSave" = "-1"
+		"ViewType" = "2"
+		"Filter" = ""
+	}
+	"DayPicker" control "ELK9Calendar.DayPicker" 50(100),0,150(100),96
+	{
+		"_cx" = "4763"
+		"_cy" = "4180"
+		"UserSource" = ""
+		"AutoSave" = "-1"
+		"Filter" = ""
+	}
+	"UserPickerForm" control "Elk9.Form.1" 50(100),100,150(100),18 ENU "UserPickerForm"
+	Events
+	{
+		"OnChange" "UserPickerForm_OnChange"
+	}
+	{
+		"_cx" = "16748"
+		"_cy" = "11642"
+		"AutoSave" = "-1"
+		"Border" = "0"
+		"Context" = ""
+		"BackColor" = "4294967295"
+		"Enabled" = "-1"
+		"ForeColor" = "4294967295"
+		"ShowTabs" = "-1"
+	}
+	"Summary" control "ELK9Calendar.DayViewSummary" 50(100),118,150(100),82(100)
+	{
+		"_cx" = "6826"
+		"_cy" = "5980"
+		"DateSource" = "DayPicker"
+		"UserSource" = ""
+		"Filter" = ""
+		"AppointmentSource" = "DayView"
+		"ShowLegend" = "-1"
+		"MilitaryTime" = "-1"
+		"IncludeAmPm" = "-1"
+		"PrimeTimeStart" = "480"
+		"PrimeTimeEnd" = "1020"
+	}
+	OnInit "Form_Init"
+	OnActivate "Form_OnActivate"
+	Script VBScript
+<%
+Dim m_oUser ' *-- Dim m_oUser as Variant
+Dim m_bUserSet ' *-- Dim m_bUserSet as Boolean
+
+Sub Form_Init()
+	If IsEmpty(m_bUserSet) Then
+		Set m_oUser=System.User.Object
+	End If
+	Form.DayView.Control.MilitaryTime = System.GetCalPropMilitaryTime(Form.DayView.Control.MilitaryTime)
+	Form.UserPickerForm.Control.LoadForm System.GetUserPickerFormName,Nothing
+End Sub
+
+Sub Form_OnActivate()
+	SetInternalUser(m_oUser)
+End Sub
+
+Sub DayView_OnUserChanged(newUser) ' *-- Sub DayView_OnUserChanged(newUser As Variant)
+	SetAllFormsUser(newUser)
+End Sub
+
+Sub UserPickerForm_OnChange()
+	Dim newUser ' *-- 	Dim newUser as Variant
+	Dim bGroup: bGroup = False ' *-- 	Dim bGroup as Boolean: bGroup = False
+	Form.UserPickerForm.Control.FormForm.GetUser newUser,bGroup
+	If bGroup Then
+		Form.DayView.Control.PickUsers newUser
+	End If
+	SetAllFormsUser(newUser)
+End Sub
+
+Sub SetAllFormsUser(newUser) ' *-- Sub SetAllFormsUser(newUser as Variant)
+	SetInternalUser(newUser)
+	Dim oForm ' *-- 	Dim oForm as FormForm
+	For Each oForm In Form.Container
+		On Error Resume Next
+		oForm.SetUser(newUser)
+		On Error Goto 0
+	Next
+End Sub
+
+Sub SetInternalUser(newUser) ' *-- Sub SetInternalUser(newUser as Variant)
+	SetUser(newUser)
+	Form.DayPicker.Control.User=newUser
+	Form.DayView.Control.User=newUser
+	On Error Resume Next
+	Form.UserPickerForm.Control.FormForm.SetUser(newUser)	
+	On Error Goto 0
+End Sub
+
+Sub SetUser(newUser) ' *-- Sub SetUser(newUser as Variant)
+	If IsObject(newUser) Then
+		Set m_oUser=newUser
+	Else
+		m_oUser=newUser	
+	End If
+	m_bUserSet=True	
+End Sub
+%>
+}
+
+form "MonthView"
+	ENU "Month", 
+	ESP "Mes", 
+	JPN "月", 
+	KOR "월", 
+	PLK "Miesiąc", 
+	THA "เดือน"
+ 200,200
+{
+	"MonthView" control "ELK9Calendar.MonthView" 0,0,45(100),200(100)
+	Events
+	{
+		"OnUserChanged" "MonthView_OnUserChanged"
+	}
+	{
+		"AutoSave" = "-1"
+	}
+	"UserPickerForm" control "Elk9.Form.1" 50(100),0,150(100),18 ENU "UserPickerForm"
+	Events
+	{
+		"OnChange" "UserPickerForm_OnChange"
+	}
+	{
+		"_cx" = "16748"
+		"_cy" = "11642"
+		"AutoSave" = "-1"
+		"Border" = "0"
+		"Context" = ""
+		"BackColor" = "4294967295"
+		"Enabled" = "-1"
+		"ForeColor" = "4294967295"
+		"ShowTabs" = "-1"
+	}
+	"Summary" control "ELK9Calendar.DayViewSummary" 50(100),18,150(100),182(100)
+	{
+		"_cx" = "6826"
+		"_cy" = "5980"
+		"DateSource" = "MonthView"
+		"UserSource" = ""
+		"Filter" = ""
+		"AppointmentSource" = "MonthView"
+		"ShowLegend" = "-1"
+		"MilitaryTime" = "-1"
+		"IncludeAmPm" = "-1"
+		"PrimeTimeStart" = "480"
+		"PrimeTimeEnd" = "1020"
+	}
+	OnInit "Form_Init"
+	OnActivate "Form_OnActivate"
+	Script VBScript
+<%
+Dim m_oUser ' *-- Dim m_oUser as Variant
+Dim m_bUserSet ' *-- Dim m_bUserSet as Boolean
+
+Sub Form_Init()
+	If IsEmpty(m_bUserSet) Then
+		Set m_oUser=System.User.Object
+	End If
+	Form.UserPickerForm.Control.LoadForm System.GetUserPickerFormName,Nothing
+End Sub
+
+Sub Form_OnActivate()
+	SetInternalUser(m_oUser)
+End Sub
+
+Sub MonthView_OnUserChanged(newUser) ' *-- Sub MonthView_OnUserChanged(newUser As Variant)
+	SetAllFormsUser(newUser)
+End Sub
+
+Sub UserPickerForm_OnChange()
+	Dim newUser ' *-- 	Dim newUser as Variant
+	Dim bGroup: bGroup = False ' *-- 	Dim bGroup as Boolean: bGroup = False
+	Form.UserPickerForm.Control.FormForm.GetUser newUser,bGroup
+	If bGroup Then
+		Form.MonthView.Control.PickUsers newUser
+	End If
+	SetAllFormsUser(newUser)
+End Sub
+
+Sub SetAllFormsUser(newUser) ' *-- Sub SetAllFormsUser(newUser as Variant)
+	SetInternalUser(newUser)
+	Dim oForm ' *-- 	Dim oForm as FormForm
+	For Each oForm In Form.Container
+		On Error Resume Next
+		oForm.SetUser(newUser)
+		On Error Goto 0
+	Next
+End Sub
+
+Sub SetInternalUser(newUser) ' *-- Sub SetInternalUser(newUser as Variant)
+	SetUser(newUser)
+	form.MonthView.control.User=newUser
+	On Error Resume Next
+	form.UserPickerForm.control.FormForm.SetUser(newUser)	
+	On Error Goto 0
+End Sub
+
+Sub SetUser(newUser) ' *-- Sub SetUser(newUser as Variant)
+	If IsObject(newUser) Then
+		Set m_oUser=newUser
+	Else
+		m_oUser=newUser	
+	End If
+	m_bUserSet=True	
+End Sub
+%>
+}
+
+form "YearView"
+	ENU "Year", 
+	ESP "Año", 
+	JPN "年", 
+	PLK "Rok", 
+	THA "ปี"
+ 280,211
+{
+}
+
+form "DefaultUserPickerForm" 142,14
+{
+	"UserCombo" combobox tag ENU "UserCombo" 0,0,142(100),14
+	OnInit "Form_Init"
+	Script VBScript
+<%'(UTF8)
+Dim m_oUser ' *-- Dim m_oUser as Variant
+
+Sub Form_Init()
+	Dim oUserFolder ' *-- 	Dim oUserFolder as IAeFolder
+	Dim bBrief	 ' *-- 	Dim bBrief as Boolean	
+	bBrief=False
+	If UCase(System.GetCalendarProperty("UserSelectionStyle"))="BRIEFMENU" Then	
+		bBrief=True
+	End If
+
+	Set oUserFolder=System.Folders(System.GetCalendarProperty("UsersFolder"))
+	Redim aChoices(2,1)
+	If Not bBrief Then
+		Redim users(oUserFolder.Count-1)
+		Dim i:i=0
+		Dim oUser' *--                  Dim oUser as stdUser
+		For Each oUser In oUserFolder
+			If Not oUser.IsSameAs(System.User.Object) Then
+				Set users(i)=oUser
+				i=i+1
+			End If
+		Next
+		Redim aChoices(i+2,1)
+		i=3
+		For Each objUser In users
+			If IsObject(objUser) Then
+				aChoices(i,1)=objUser.Prompt
+				aChoices(i,0)=objUser.Key
+				i=i+1
+			End If
+		Next
+	End If
+	'aChoices has to initialized here because if it is initialized before adding the user details, when we do ‘Redim aChoices(i+2,1) ‘, the values in the array will be lost.
+	aChoices(0,1)="<" & System.LoadString("Calendar_EveryOne") & ">"
+	aChoices(0,0)="<Everyone>"
+	aChoices(1,1)=System.LoadString("Calendar_Group") & "..."
+	aChoices(1,0)="<Group>"
+	aChoices(2,1)=System.User.Object.Prompt
+	aChoices(2,0)=System.User.Object.Key
+
+	Form.UserCombo.Choices=aChoices
+	Form.UserCombo.Value=System.User.Object.Key
+End Sub
+
+'	<Everyone> is an array with 1 element containing Nothing
+'	<Group> is an array containing value object(s)
+'	An individual is an object or an array with 1 element that is an object
+Sub GetUser(ByRef oUser, ByRef bGroup) ' *-- Sub GetUser(ByRef oUser as Variant, ByRef bGroup as Boolean)
+	Select Case Form.UserCombo.Value
+		Case "<Everyone>"
+			Dim aEveryone(0)
+			Set aEveryone(0)=Nothing
+			m_oUser=aEveryone
+			bGroup=False
+		Case "<Group>"
+			If IsObject(m_oUser) Then
+				'	Convert return value to array
+				Dim aGroupUser(0)
+				Set aGroupUser(0)=m_oUser
+				m_oUser=aGroupUser
+			End If
+			bGroup=True
+		Case Else
+			Dim oUserClass ' *-- 			Dim oUserClass as IAeClassDef
+			Set oUserClass=System.Folders(System.GetCalendarProperty("UsersFolder")).TargetClass
+			Set m_oUser=oUserClass.GetInstance(Form.UserCombo.Value)		
+			bGroup=False
+	End Select
+	If IsObject(m_oUser) Then
+		Set oUser=m_oUser
+	Else
+		oUser=m_oUser
+	End If
+End Sub
+
+Sub SetUser(oUser) ' *-- Sub SetUser(oUser as Variant)
+	If IsObject(oUser) Then
+		Set m_oUser=oUser
+		Form.UserCombo.Value=m_oUser.key
+	Else
+		If IsArray(oUser) Then
+			If Ubound(oUser)=Lbound(oUser) Then
+				If oUser(Lbound(oUser)) Is Nothing Then
+					m_oUser=oUser
+					Form.UserCombo.Value="<Everyone>"
+				Else
+					Set m_oUser=oUser(Lbound(oUser))
+					Form.UserCombo.Value=m_oUser.key
+				End If
+			Else
+				m_oUser=oUser
+				Form.UserCombo.Value="<Group>"
+			End If
+		End If
+	End If
+End Sub
+%>
+}
+
+form "Calendar"
+	ENU "Calendar", 
+	ESP "Calendario", 
+	JPN "カレンダー", 
+	KOR "달력", 
+	PLK "Kalendarz", 
+	THA "ปฏิทิน"
+ 200,200
+{
+	"_MainControl" control "ELK9Calendar.CalendarControl" 0,0,200(100),200(100)
+	{
+		"ViewMode" = "1"
+	}
+}
+
+form "HicardUserPickerForm" 288,14
+{
+	"UserEdit" edit tag ENU "UserEdit" 0,0,288(100),14 autohscroll choose
+	OnChoose "UserEdit_Choose"
+	OnInit "Form_Init"
+	Script VBScript
+<%
+Dim m_oUser ' *-- Dim m_oUser as stdUser
+
+Sub Form_Init()
+	Set m_oUser=System.User.Object
+	Form.UserEdit.Value=m_oUser.Prompt
+End Sub
+
+Sub GetUser(ByRef oUser, ByRef bGroup) ' *-- Sub GetUser(ByRef oUser as Variant, ByRef bGroup as Boolean)
+	Set oUser=m_oUser
+	bGroup=False
+End Sub
+
+Sub SetUser(oUser) ' *-- Sub SetUser(oUser as Variant)
+	If IsObject(oUser) Then
+		Set m_oUser=oUser
+		Form.UserEdit.Value=oUser.prompt
+	End If
+End Sub
+
+Sub UserEdit_Choose()
+	Dim oFolder: Set oFolder = CreateObject("Elk9.Folder") ' *-- 	Dim oFolder as new Elk9.Folder
+	oFolder.Folder=System.Folders(System.GetCalendarProperty("UsersFolder"))
+	Set oUser=System.Aspect("Elk9.Aspect").ChooseHiCardInst(oFolder,System.LoadString("ChooseUser"),0)
+	If Not oUser Is Nothing Then
+		Set m_oUser=oUser
+		Form.UserEdit.Value=m_oUser.Prompt
+	End If
+End Sub
+%>
+}
+
+view "Elk9Calendar.CalendarControl"
+	name 
+		ZHT "行事曆", 
+		ZHS "日历", 
+		DEU "Kalendar", 
+		ELL "Ημερολόγιο", 
+		ENU "Calendar",
+		ESP "Calendario",
+		FRA "Calendrier", 
+		ITA "Calendario", 
+		JPN "カレンダー", 
+		KOR "달력",
+		PLK "Kalendarz"
+
+	deftitle 
+		ZHT "行事曆", 
+		ZHS "日历", 
+		DEU "Kalendar", 
+		ELL "Ημερολόγιο", 
+		ENU "Calendar",
+		ESP "Calendario",
+		FRA "Calendrier", 
+		ITA "Calendario", 
+		JPN "カレンダー", 
+		KOR "달력",
+		PLK "Kalendarz"
+ icon "stdActivity"
+{
+	"ViewMode" = "1"
+}
+
+view "Elk9.ListForm"
+	name 
+		DEU "Kalender mit Resultaten", 
+		ENU "Calendar with Criteria Tree",
+		ESP "Calendario con el árbol de criterios",
+		FRA "Calendrier avec Arbre de Critères", 
+		ITA "Calendario con Finestra di Ricerca", 
+		JPN "クライテリアツリーとカレンダー",
+		PLK "Kalendarz w drzewie kryteria"
+
+	deftitle 
+		DEU "Kalender mit Resultaten", 
+		ELL "Ημερολόγιο με κριτήρια", 
+		ENU "Calendar with Criteria Tree",
+		ESP "Calendario con el árbol de criterios",
+		FRA "Calendrier avec Arbre de Critères", 
+		ITA "Calendario con Finestra di Ricerca", 
+		JPN "クライテリアツリーとカレンダー",
+		PLK "Kalendarz w drzewie kryteria"
+ icon "stdActivity"
+{
+	"FormName" = "Calendar"
+	"Sticky" = "True"
+	"FolderSet" = "User"
+	"Sources" = "1"
+}

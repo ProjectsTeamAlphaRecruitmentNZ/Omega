@@ -1,0 +1,512 @@
+﻿
+
+form "stdOrganization" for "stdOrganization" 302,222
+{
+	"Name" edit member "Name" 0,0,301(100),14 sidetag tagset(1)
+	"Phone" form member "Phone" 0,16,301(100),14 context "CompositeNumber" sidetag tagset(1)
+	"Fax" form member "Fax" 0,32,301(100),14 context "CompositeNumber" sidetag tagset(1)
+	"WWW" form member "WWW" 0,48,301(100),14 sidetag tagset(1)
+	"Tabs" tabset  0,64,301(100),158(100)
+	{
+		"tbAddress" tab
+			ZHT "地址 ", 
+			ZHS "地址", 
+			DEU "Adresse", 
+			ELL "Διεύθυνση", 
+			ENU "Address", 
+			ESP "Dirección", 
+			FRA "Adresse", 
+			ITA "Indirizzo", 
+			JPN "住所 ", 
+			KOR "주소 ", 
+			PLK "Adres", 
+			THA "ที่อยู่"
+		
+		{
+			"Address" form member "Address" 0,0,278(100),128(100) tagset(2) dynamic
+		}
+	}
+}
+
+form "stdOpportunity" for "stdOpportunity" 350,90
+{
+	"Title" edit member "Title" 2,0,346(100),14 sidetag tagset(1)
+	"Tabs" tabset  0,16,350(100),73(100)
+	{
+		"Notes" tab
+			ZHT "附註 ", 
+			ZHS "注释", 
+			DEU "Notizen", 
+			ELL "Σημειώσεις", 
+			ENU "Notes", 
+			ESP "Notas", 
+			FRA "Notes", 
+			ITA "Appunti", 
+			JPN "メモ ", 
+			KOR "특이사항 ", 
+			PLK "Uwagi", 
+			THA "หมายเหตุ"
+		 font ("MS Sans Serif")
+		{
+			"Notes" edit member "Notes" 0,0,327(100),43(100) multiline autovscroll vscroll
+		}
+	}
+}
+
+form "stdActivityBase" for "stdActivity" 318,142
+{
+	"Tabs" tabset  0,0,318(100),142(100) multiline
+	{
+	}
+}
+
+modify form "stdActivityBase" for "stdActivity" as "stdActivity"
+{
+}
+
+modify form "stdActivity" for "stdEmailActivity" as "stdEmailActivity"
+{
+	before "Tabs" Height 16
+	{
+		"Date" form member "stdTimeStamp" 0,0,281,14 context "Start" sidetag tagset(1)
+	}
+}
+
+modify form "stdActivity" for "stdPhoneCallActivity" as "stdPhoneCallActivity"
+{
+	before "Tabs" Height 30
+	{
+		"Start" form member "stdTimeStamp" 0,0,281(100),14 context "Start" sidetag tagset(1)
+		"PhoneCallType" radioset member "PhoneCallType" 0,16,238,12 Orientation(Horizontal) Alignment(left,top)
+	}
+}
+
+modify form "stdActivity" for "stdMeetingActivity" as "stdMeetingActivity"
+{
+	before "Tabs" Height 32
+	{
+		"Start" form member "stdTimeStamp" 0,0,312(50),14 context "StartDuration" sidetag tagset(1)
+		"MeetingType" combobox member "MeetingType" 0,16,168,14 sidetag tagset(1)
+	}
+}
+
+form "MultiAttendee" 290,124
+{
+	"oleChooser" control "Elk9.Chooser.1" 0,0,100(30),81
+	{
+		"_cx" = "6006"
+		"_cy" = "3440"
+		"HasSource" = "-1"
+		"Sources" = "3"
+		"HasSegments" = "-1"
+		"HasSearch" = "-1"
+		"BackColor" = "4294967295"
+		"ForeColor" = "4294967295"
+		"ListControl" = ""
+		"FolderSet" = "Attendees"
+	}
+	"Attendees" control "Elk9.grid" 135(30),0,155(100),124(100)
+	{
+		"_cx" = "7107568"
+		"_cy" = "7107568"
+		"Enabled" = "-1"
+		"FolderName" = "Attendees"
+		"ConfirmDelete" = "0"
+		"AllowDelete" = "-1"
+		"AllowOpen" = "-1"
+		"AllowAdds" = "-1"
+		"Toolbar" = "-1"
+		"ManualFill" = "0"
+		"Configurable" = "0"
+		"MaxRows" = "0"
+		"PrintButton" = "0"
+		"Collapsable" = "0"
+		"ShowGroupBox" = "0"
+		"OpenOnAdd" = "0"
+		"Filter" = ""
+		"GridID" = "{BD7E167F-3072-46E8-9C4C-333A7A918810}"
+		"BackColor" = "2147483653"
+		"ForeColor" = "4294967295"
+		"ColumnCount" = "0"
+		"TotalCount" = "0"
+		"Caption_StringCount" = "0"
+	}
+	"cmdAdd" button
+		tag 
+			ENU "->", 
+			FRA "->"
+	 109(30),40(50),22(30),15(50)
+		OnClick "cmdAdd_Click"
+	"cmdDelete" button
+		tag 
+			ENU "<-", 
+			FRA "<-"
+	 109(30),57(50),22(30),15(50)
+		OnClick "cmdDelete_Click"
+	"oleTreeView" control "Elk9.Tree.1" 0,81,100(30),43(100)
+	Events
+	{
+		"Click" "oleTreeView_Click"
+	}
+	{
+		"_cx" = "5080"
+		"_cy" = "5080"
+		"MaxItems" = "0"
+		"HasButtons" = "-1"
+		"HasLines" = "-1"
+		"HasLinesAtRoot" = "0"
+		"HasFolderAtRoot" = "-1"
+		"BackColor" = "2147483653"
+		"BorderStyle" = "1"
+		"Enabled" = "-1"
+		"ForeColor" = "4294967295"
+		"FormControl" = ""
+	}
+	OnInit "Form_Init"
+	Script VBScript
+<%
+Sub Form_Init()
+
+	Refresh
+
+End Sub
+
+Public Sub Refresh()
+
+	' Configure the Attendee Tab Chooser Controls
+
+	With Form.oleChooser.Control
+		.HasSource = True
+		.HasSegments = True
+		.ListControl = Form.oleTreeView.Control
+		.AeSystem = System
+		.Folder = System.Folders("Contacts")
+	End With
+
+	' Configure the grid to connect to the attendees folder of the parent form object
+
+	Form.Attendees.control.aeObject = This.Parent.Object
+	Form.Attendees.control.Fill
+
+End Sub
+
+Sub cmdAdd_Click()
+
+	' Add the selected person from the list into the grid
+
+	Dim objSelected
+	Dim objGridRow
+	Dim blnAlreadyExists
+
+	Set objSelected = This.Parent.oleTreeView.Control.SelectedItem
+	
+	' Add a new row to the grid for Contact and stdUser Class Objects
+
+	strClass = UCase(objSelected.Class.Name)
+	If (strClass = "CONTACT") Or (strClass = "STDUSER") Then
+		
+		' Check if the instance already exists
+
+		blnExistsInFolder = False
+		
+		' Check if the instance already exists in the folder
+
+		If this.parent.parent.Object.Folders.attendees.Exists("Who='"+objSelected.Key+"'") Then
+			blnExistsInFolder = True
+		End If
+
+		' And also if the instance already exists in the grid
+
+		Dim intLoop 
+		For intLoop = 0 To (This.Parent.Attendees.Control.Rowcount-1)
+			If Not This.Parent.Attendees.Control.RowObject(IntLoop).Who.IsNull Then
+				If This.Parent.Attendees.Control.RowObject(IntLoop).Who.Value.Key = objSelected.Key Then
+					blnExistsInCursor = True
+				End If
+			End If
+		Next
+
+		If ((Not blnExistsInFolder) And (Not blnExistsInCursor)) Or (blnExistsInFolder And (Not blnExistsInCursor)) Then
+			nNewRow = This.Parent.Attendees.Control.AddRow
+			Set ObjGridRow = This.Parent.Attendees.Control.RowObject(nNewRow)
+			With ObjGridRow
+				.Who = ObjSelected
+			End With
+		End If
+	End If
+
+End Sub
+
+Sub cmdDelete_Click()
+
+	' Remove the Selected Row in the Grid
+
+	Dim objGridRow
+
+	If This.Parent.Attendees.Control.RowCount > 0 Then
+		nGridRow = This.Parent.Attendees.Control.SelectedRow
+		This.Parent.Attendees.Control.DeleteRow nGridRow
+	End If
+	
+End Sub
+
+Sub oleTreeView_Click(SelectedItem, Context, IsFolder)
+
+	If Not IsNullObject(SelectedItem) Then
+
+		' Enable the Add Button only if the selected object is a Contact
+
+		If IsFolder Then
+			This.Parent.cmdAdd.Enabled = False
+		Else
+			strClass = UCase(SelectedItem.Class.Name)
+		End If
+
+		If (strClass = "CONTACT") Or (strClass = "STDUSER") Then
+			This.Parent.cmdAdd.Enabled = True	
+		Else
+			This.Parent.cmdAdd.Enabled = False
+		End If
+	End If
+
+End Sub
+%>
+}
+
+modify form "stdActivity" for "stdFaxActivity" as "stdFaxActivity"
+{
+	before "Tabs" Height 30
+	{
+		"Start" form member "stdTimeStamp" 0,0,281(100),14 context "Start" sidetag tagset(1)
+		"FaxCallType" radioset member "FaxCallType" 0,16,273,12 Orientation(Horizontal) Alignment(left,top)
+	}
+}
+
+modify form "stdActivityBase" for "stdTaskActivity" as "stdTaskActivity"
+{
+	before "Tabs" Height 64
+	{
+		"Start" form member "stdTimeStamp" 0,0,281,14 context "Start" sidetag tagset(1)
+		"Due" form member "Due" 0,16,281,14 context "Start" sidetag tagset(1)
+		"Priority" combobox member "Priority" 0,32,120,14 sidetag tagset(1)
+		"Status" combobox member "Status" 0,48,120,14 sidetag tagset(1)
+		"Percent" edit member "Percent" 126,48,100,14
+			Format 
+				ZHS "##0", 
+				ENU "##0"
+		 sidetag
+	}
+	modify tabset "Tabs"
+	{
+		Insert "Results"
+			ZHT "結果 ", 
+			ZHS "结果", 
+			DEU "Ergebnisse", 
+			ELL "Αποτελέσματα", 
+			ENU "Results", 
+			ESP "Resultados", 
+			FRA "Résultats", 
+			ITA "Risultato", 
+			JPN "結果 ", 
+			KOR "결과 ", 
+			PLK "Wyniki", 
+			THA "ผลลัพธ์"
+		
+		{
+			"Result" edit member "Result" 0,0,296(100),108(100) multiline autovscroll vscroll
+		}
+	}
+}
+
+form "stdConfiguration" for "stdConfiguration" 305,219
+{
+	"Tabset" tabset  0,0,305(100),219(100) multiline
+	{
+		"Notes" tab
+			ZHT "附註 ", 
+			ZHS "注释", 
+			DEU "Notizen", 
+			ELL "Σημειώσεις", 
+			ENU "Notes", 
+			ESP "Notas", 
+			FRA "Notes", 
+			ITA "Appunti", 
+			JPN "メモ ", 
+			KOR "특이사항", 
+			PLK "Uwagi", 
+			THA "หมายเหตุ"
+		
+		{
+			"Notes" edit member "Notes" 0,0,282(100),185(100) multiline vscroll
+		}
+	}
+}
+
+form "stdUserBase" for "stdUser" 304,125
+{
+	"Tabset" tabset  0,0,304(100),125(100) multiline
+	{
+	}
+}
+
+modify form "stdUserBase" for "stdUser" as "stdUser2"
+{
+	before "Tabset" Height 60
+	{
+		"ID" edit member "ID" 0,0,198(100),14 sidetag tagset(1)
+		"IsAdmin" checkbox member "IsAdmin" 220(100),2,74(100),9 autosize
+		"stdPersonName" form member "Name" 0,16,304(100),14 sidetag tagset(1)
+	}
+	modify tabset "Tabset"
+	{
+		Insert "ContactDetails"
+			ZHT "聯絡細節 ", 
+			ZHS "联系方法", 
+			DEU "Kontaktdetails", 
+			ELL "Λεπτομέρειες επικοιωνίας", 
+			ENU "Contact details", 
+			ESP "Detalles de contacto", 
+			FRA "Détails du contact", 
+			ITA "Dettagli contatto", 
+			JPN "担当者詳細 ", 
+			KOR "개인 세부사항 ", 
+			PLK "Szczegóły dot. os. kontaktowej", 
+			THA "รายละเอียดผู้ติดต่อ"
+		
+		{
+			"stdPhone" form member "Phone" 0,0,282(100),14(100) sidetag tagset(1)
+			"stdFax" form member "Fax" 0,10,282(100),14(100) sidetag tagset(1)
+			"stdMobile" form member "Mobile" 0,32,282(100),14(100) sidetag tagset(1)
+			"stdEmail" form member "eMailAddress" 0,48,282(100),14(100) sidetag tagset(1)
+			"stdAddress" form member "Address" 0,64,282(100),31(100) sidetag tagset(1)
+		}
+		Insert "Groups"
+			ZHT "存取群組", 
+			ZHS "访问组", 
+			DEU "Zugangsgruppen", 
+			ELL "Ομάδες πρόσβασης", 
+			ENU "Access groups", 
+			ESP "Grupos de acceso", 
+			FRA "Groupes d'accès", 
+			ITA "Accesso gruppi", 
+			JPN "アクセスグループ", 
+			KOR "액세스 그룹", 
+			PLK "Grupy dostępu", 
+			THA "กลุ่มการเข้าถึง"
+		
+		{
+			"ocxAccessGrps" control "Elk9.JoinSetList.1" 0,0,279(100),95(100)
+			{
+				"_cx" = "5080"
+				"_cy" = "5080"
+				"Enabled" = "-1"
+				"BackColor" = "2147483653"
+				"ForeColor" = "4294967295"
+				"FolderName" = "Groups"
+				"JoinMember" = "Group"
+			}
+		}
+	}
+}
+
+form "stdPersonBase" for "stdPerson" 304,125
+{
+	"Tabs" tabset  0,0,304(100),125(100)
+	{
+	}
+}
+
+modify form "stdPersonBase" for "stdPerson" as "stdPerson"
+{
+	before "Tabs" Height 102
+	{
+		"Name" form member "Name" 0,0,304(100),14 context "CompositeName" sidetag tagset(1)
+		"Address" form member "Address" 0,16(10),304(100),84(50) sidetag tagset(1) dynamic
+	}
+	modify tabset "Tabs"
+	{
+		Insert "ContactDetails"
+			ZHT "聯絡細節 ", 
+			ZHS "联系方法", 
+			DEU "Kontaktdetails", 
+			ELL "Λεπτομέρειες επικοινωνίας", 
+			ENU "Contact details", 
+			ESP "Detalles de contacto", 
+			FRA "Détails du contact", 
+			ITA "Dettagli &contatto", 
+			JPN "担当者詳細 ", 
+			KOR "개인 세부사항 ", 
+			PLK "Szczegóły dot. os. kontaktowej", 
+			THA "รายละเอียดผู้ติดต่อ"
+		
+		{
+			"Phone" form member "Phone" 0,0,278(100),14 sidetag tagset(2)
+			"Fax" form member "Fax" 0,16,278(100),15 sidetag tagset(2)
+			"Mobile" form member "Mobile" 0,32,278(100),14 sidetag tagset(2)
+			"eMailAddress" form member "eMailAddress" 0,48,278(100),14 sidetag tagset(2)
+		}
+	}
+}
+
+modify form "stdPerson" for "stdUser" as "stdUser"
+{
+	before "Name" Height 14
+	{
+		"ID" edit member "ID" 0,0,210(100),14 sidetag tagset(1)
+		"IsAdmin" checkbox member "IsAdmin" 218(100),2,74(100),9 autosize
+	}
+	modify tabset "Tabs"
+	{
+		Insert "Groups"
+			ZHT "存取群組 ", 
+			ZHS "访问组", 
+			DEU "Zugangsgruppen", 
+			ELL "Ομάδες πρόσβασης", 
+			ENU "Access groups", 
+			ESP "Grupos de acceso", 
+			FRA "Groupes d'accès", 
+			ITA "Accesso gruppi", 
+			JPN "アクセスグループ ", 
+			KOR "액세스 그룹 ", 
+			PLK "Grupy dostępu", 
+			THA "กลุ่มการเข้าถึง"
+		
+		{
+			"ocxAccessGrps" control "Elk9.JoinSetList.1" 0,0,278(100),91(100)
+			{
+				"_cx" = "5080"
+				"_cy" = "5080"
+				"Enabled" = "-1"
+				"BackColor" = "2147483653"
+				"ForeColor" = "4294967295"
+				"FolderName" = "Groups"
+				"JoinMember" = "Group"
+			}
+		}
+	}
+}
+
+modify form "stdActivity" for "stdMeetingActivity" as "stdMeetingBase"
+{
+}
+
+form "stdCalendarYear" for "stdCalendarYear" 305,150
+{
+	"expYear" expression ENU "Key" 0,0,100,14 sidetag
+		text 
+			ZHS "年", 
+			DEU "Jahr", 
+			ELL "Έτος", 
+			ENU "Year", 
+			ESP "Año", 
+			FRA "Année", 
+			ITA "Anno", 
+			JPN "年", 
+			KOR "년", 
+			PLK "Rok", 
+			THA "ปี"
+	
+	"Tabset" tabset  0,15,305(100),135(100)
+	{
+	}
+}

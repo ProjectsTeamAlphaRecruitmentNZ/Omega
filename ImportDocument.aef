@@ -1,0 +1,46 @@
+﻿
+
+form "ChooseTo" 304,215
+{
+	"Chooser" control "Elk9.Chooser.1" 0,0,304(100),63 ENU "Chooser"
+	{
+		"_cx" = "6006"
+		"_cy" = "1640"
+		"HasSource" = "-1"
+		"Sources" = "3"
+		"HasSegments" = "0"
+		"HasSearch" = "-1"
+		"BackColor" = "4294967295"
+		"ForeColor" = "4294967295"
+		"ListControl" = "List"
+		"FolderSet" = ""
+	}
+	"List" control "Elk9.ListView.1" 0,68,304(100),146(100) ENU "List"
+	{
+		"_cx" = "5080"
+		"_cy" = "5080"
+		"ShowIcons" = "-1"
+		"MaxItems" = "0"
+		"FormControl" = ""
+		"BackColor" = "2147483653"
+		"BorderStyle" = "1"
+		"Enabled" = "-1"
+		"ForeColor" = "4294967295"
+		"ContextMenuEnabled" = "-1"
+		"ShowCount" = "-1"
+	}
+	OnInit "Form_Init"
+	Script VBScript
+<%
+Sub Form_Init()  
+	Chooser.Control.ListControl 	= Form.List.Control
+	Chooser.Control.FolderSet 	= "ImportDocument"
+
+End Sub
+%>
+}
+
+form "EnterDescription" 304,215
+{
+	"DocDescription" edit tag ENU "Description" 0,0,304(100),14 autohscroll sidetag
+}

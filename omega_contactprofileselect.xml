@@ -1,0 +1,20 @@
+<script id="{25565798-eac8-48e8-8d10-0126a247aa83}" version="1" description="Profile Selector" language="VBScript" startpage="{80c423d6-0e43-4da9-b334-018debcfd0cc}" allowdebug="False">
+   <notes/>
+   <pages>
+	<page id="{80c423d6-0e43-4da9-b334-018debcfd0cc}" pagetype="Form" form="ContactProfileChooser" title="Select the Profile Values" description="Select the Profile values, add them to the list and then press Finish." backenabled="false" nextenabled="false" canfinish="True">
+		<script>
+		Sub PageFinish
+			objArray = Script.ActiveForm.FormForm.Controls("Chooser").Control.ObjDictionary.Items
+			Script.ActiveForm.FormForm.Object.Properties("objArray").Value = objArray
+		End Sub
+		Sub PageCancel
+			Script.ActiveForm.FormForm.Object.Properties("objArray").Value = nothing
+			Script.ActiveForm.FormForm.Object.Properties("Cancelled").Value = true
+		End Sub
+		</script>
+		<branches>
+			<branch nextpage="{80c423d6-0e43-4da9-b334-018debcfd0cc}" expression="Script.Properties(&quot;SelectedOption&quot;)=False" />
+		</branches>
+	</page>
+   </pages>
+</script>

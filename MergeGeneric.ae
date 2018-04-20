@@ -1,0 +1,324 @@
+// Active Elk definition file generated from binary format
+// Date:	2003-02-13 16:23:02
+// User:	GJ
+
+library "MergeGeneric"
+{
+uses "Elk9", "stdbaseentities", "Utilities"
+aspect "Elk9.Aspect" "MergeGeneric"
+aspect "Ve9.ScriptAspect" "mergescripts.xml"
+
+class "MergeGeneric"
+{
+	title(Singular) ENZ "Merge generic"
+	members
+	{
+		"From" data VarChar(255)
+		{
+			/* Key of the Classinst merging from (can change) */
+			title(Singular) ENZ "From"
+		}
+		"To" data VarChar(255)
+		{
+			/* Key of the Classinst merging to (static once set) */
+			title(Singular) ENZ "To"
+			canmodify "IsNull(To)"
+		}
+		"stdRecordStamp" class "stdRecordStamp" embedded
+		{
+			title(Singular) ENZ "stdRecordStamp"
+		}
+		"FromClass" data VarChar(255)
+		{
+			title(Singular) ENZ "From class"
+			default "\"\""
+		}
+		"ToClass" data VarChar(255)
+		{
+			title(Singular) ENZ "To class"
+			default "\"\""
+		}
+	}
+	OnNew "OnNew"
+	OnValidate "OnValidate"
+	script VBScript
+<%
+Sub OnNew(hWnd)
+	DoDefault(hWnd)
+	
+	Property "ReadyToMerge", ""
+	Property "MergeError", ""
+	Property "MergedOK", False
+	Property "MergeCancelled", False
+End Sub
+
+' Setup and do the merge
+Sub Merge()
+	Dim objFromClass, objToClass
+	Set objFromClass 	= System.Classes(FromClass)
+	Set objToClass		= System.Classes(ToClass)
+
+	' Get From ClassInst
+	Dim oFromInst
+	Set oFromInst = objFromClass.GetInstance(This.From)
+	
+	If oFromInst Is Nothing Then
+		Property "MergeError", System.FormatString("#MergeNoFrom", FromClass)
+		Exit Sub
+	End If
+	
+	' Get To ClassInst
+	Dim oToInst
+	Set oToInst = objToClass.GetInstance(This.To)
+	
+	If oToInst Is Nothing Then
+		Property "MergeError", System.FormatString("#MergeNoTo", ToClass)
+		Exit Sub
+	End If
+	
+	' Check that To instance is derived from the class of the From instance
+	If Not oToInst.IsKindOf(oFromInst.Class.Name) Then
+		Property "MergeError", System.FormatString("#MergeNotCorrectKind", _
+			Array(oToInst.Prompt, oFromInst.Prompt))
+		Exit Sub
+	End If
+	
+	If oToInst.IsSameAs(oFromInst) Then
+		MergeError "MergeNeedDifferent"
+		Exit Sub
+	End If
+	
+	' If your class needs to do anything special to perform a merge
+	' (outside the generic stuff we do here), then implement GenericMergeFrom
+	' If your GenericMergeFrom returns True, then no further processing will be done
+	Dim bHandled: bHandled = False
+	On Error Resume Next
+	bHandled = oToInst.GenericMergeFrom(oFromInst, This)
+	On Error GoTo 0
+	
+	If bHandled Then
+		Property "MergedOK", True
+		Exit Sub
+	End If
+	
+	MergeGeneric oFromInst, oToInst
+End Sub
+
+' Return a string giving estimates of what will occur
+' If you implement your own GenericMergeFrom function, you may also
+' need to implement your own GenericMergeStats() function
+Function GetMergeStats()
+	Dim objFrom
+	Set objFrom = System.Classes(FromClass).GetInstance(From)
+	
+	If objFrom Is Nothing Then
+		GetMergeStats = System.FormatString("#MergeNoFromSelected", System.Folders(FromFolderName).Title)
+	Else
+		On Error Resume Next
+		GetMergeStats = objFrom.GenericMergeStats(This)
+		On Error GoTo 0
+	    
+	    If GetMergeStats = "" Then
+			Dim objFolder
+			For Each objFolder In objFrom.Folders
+				If CanMergeFolder(objFolder) Then
+					GetMergeStats = GetMergeStats & objFolder.Count & " " & objFolder.Title & Chr(13) & Chr(10)
+				End If
+			Next
+		End If
+	End If
+End Function
+
+Sub MergeError(SysString)
+	Property "MergeError", System.LoadString(SysString)
+End Sub
+
+Sub Property(Prop, Value)
+	This.Properties(Prop) = Value
+End Sub
+
+' Do the merge in a generic fashion. If you need any special handling, then implement
+' a method called "GenericMergeFrom" on your ClassInst
+Sub MergeGeneric(oFromInst, oToInst)
+	Dim objTrans
+	Set objTrans = System.BeginTransaction
+
+	Dim oProgressUI: Set oProgressUI = Nothing
+	On Error Resume Next
+	' for some reason some users cannot create this object
+	Set oProgressUI = CreateObject("ActivElk.ProgressDlg")
+    On Error GoTo 0
+    
+    If Not oProgressUI Is Nothing Then
+		oProgressUI.Visible = True	
+		oProgressUI.Initialize oFromInst.Folders.Count, System.LoadString("MergeMerging")
+	End If
+
+	Dim Cancelled, i
+	Cancelled = False
+	i = 0
+		
+	Dim objFolder
+	For Each objFolder In oFromInst.Folders
+		If Not oProgressUI Is Nothing Then
+			If oProgressUI.Cancelled Then
+				Cancelled = True
+				Exit For
+			End If
+		End If
+		
+		If CanMergeFolder(objFolder) Then
+			MergeFolderToObject objFolder, oToInst, objTrans, oProgressUI, Cancelled
+		End If
+		
+		i = i + 1
+		
+		If Not oProgressUI Is Nothing Then
+			oProgressUI.Update System.LoadString("MergeMerging") & " " & i, i
+		End If
+	Next
+
+    If Not oProgressUI Is Nothing Then
+		oProgressUI.Visible = False
+		Set oProgressUI = Nothing
+	End If
+	
+	If Not Cancelled Then	
+		If objTrans.Validate.Status <> 3 Then
+			objTrans.Commit
+			If oFromInst.DeleteStatus = 0 Then
+				' this will cause a permanent delete
+				oFromInst.Delete
+			End If
+			
+			Property "MergedOK", True
+		Else
+			Property "MergeError", _
+				System.FormatString("#MergeCouldNotMerge", Array(oFromInst.Prompt, _
+									oToInst.Prompt, objTrans.Validate.Result.Message))
+		End If
+	Else
+		Property "MergeCancelled", True
+	End If
+	
+	Set objTrans = Nothing
+End Sub
+
+' Determine if the given folder should be merged. Since the "From" instance
+' will be deleted, it may be necessary to have "Delete Children" turned on for
+' this member, if it is the only folder of that type. On the other hand, if you 
+' have several folders based on the same join, then you will probably
+' only want to merge one of them
+Function CanMergeFolder(objFolder)
+	CanMergeFolder = True
+	
+	If Not objFolder.Properties("CanMergeFolder") Is Nothing Then
+		If objFolder.Properties("CanMergeFolder") = False Then
+			CanMergeFolder = False
+			Exit Function
+		End If
+	End If
+End Function
+
+' Merge the given folder to the given object
+Sub MergeFolderToObject(objFolder, objMergeToObj, objTrans, oProgressUI, ByRef Cancelled)
+	Dim strMemberToMergeOn
+	strMemberToMergeOn = objFolder.JoinMember.Name
+
+	Dim objThisObject
+	For Each objThisObject In objFolder.Scan("", strMemberToMergeOn)
+		If Not oProgressUI Is Nothing Then
+			If oProgressUI.Cancelled Then
+				Cancelled = True
+				Exit For
+			End If
+		End If
+		
+		objThisObject.Members(strMemberToMergeOn) = objMergeToObj
+		objThisObject.Save objTrans
+		
+		Set objThisObject = Nothing
+	Next
+End Sub
+
+Sub OnValidate(Validation)
+	Validation.Add System.Load("MergeCannotSave", 3)
+End Sub
+%>
+}
+
+template "MergeGeneric::stdConfiguration_Mod" class "stdConfiguration"
+{
+	properties
+	{
+		"Forms" "'stdConfiguration'"
+	}
+}
+stringtable
+{
+	"MergeError" ENZ "An error occurred with the merge: %1."
+	"MergeUnexpectedError" ENZ "An unexpected error occurred with the merge: %1."
+	"MergeNeedTo" ENZ "You must select the object to merge to"
+	"MergeNeedFrom" ENZ "You must select the object to merge from"
+	"MergeSuccessful" ENZ "Merge was successful."
+	"MergeNoFrom" ENZ "Could not load the %1 to merge from"
+	"MergeNoTo" ENZ "Could not load the %1 to merge to"
+	"MergeNotCorrectKind" ENZ "'%1' is not the same kind as '%2'"
+	"MergeCouldNotMerge" ENZ "Could not merge from '%1' to '%2'. Errors are: %3."
+	"MergeNoFromSelected" ENZ "No %1 to merge from has been selected"
+	"MergeNeedDifferent" ENZ "You must select a different object to merge to"
+	"MergeUnexpectedError2" ENZ "An unexpected error occurred with the merge."
+	"MergeNoPermissions" ENZ "You do not have permissions to perform a merge. Contact your administrator."
+	"MergeMerging" ENZ "Merging..."
+	"MergeCannotSave" ENZ "Cannot save."
+}
+
+
+sysclass "MergeGeneric" from "MergeGeneric"
+{
+	
+	folder "MergeGeneric"
+	{
+		title(Singular) ENZ "MergeGeneric"
+		properties
+		{
+			"FolderSets" 0
+				properties
+				{
+					"User" 0
+				}
+			"Hidden" "TRUE"
+		}
+	}
+}
+
+systemplate "MergeGeneric::stdConfiguration_Mod" template "MergeGeneric::stdConfiguration_Mod"
+
+}
+layout
+<%
+<?xml version="1.0"?>
+
+<AeDesigner_doc version="3">
+	<workspace CurrentView="1">
+		<View Number="0" Type="Class diagram" Name="MergeGeneric"/>
+		<View Number="1" Type="Class script" Name="MergeGeneric"/>
+	</workspace>
+	<class_diagram name="MergeGeneric" width="1000" height="1000">
+		<Viewport magnificationX="100" magnificationY="100" originX="0" originY="0"/>
+		<class name="MergeGeneric" left="88" top="136" right="222" bottom="229">
+			<member name="From" type="data"/>
+			<member name="To" type="data"/>
+			<member name="stdRecordStamp" type="class"/>
+			<member name="FromClass" type="data"/>
+			<member name="ToClass" type="data"/>
+			<hide show_base_members="1">
+				<link_in_list name="stdRecordStamp" forced="0"/>
+			</hide>
+		</class>
+		<hide name="stdConfiguration" pos_x="400" pos_y="100" show_base_members="1"/>
+	</class_diagram>
+	<lang_used>1028,1036,1040,1041,1042,1033,0,5129
+	</lang_used>
+</AeDesigner_doc>
+%>

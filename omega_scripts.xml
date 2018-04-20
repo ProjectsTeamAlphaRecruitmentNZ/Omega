@@ -1,0 +1,6 @@
+<scripts>
+	<script file="omega_contactprofileselect.xml" id="omega_contactprofileselect" description="Selects Profiles for Contacts" persist="1" />  			<script file="omega_candprofileselect.xml" id="omega_candprofileselect" description="Selects Profiles for Candidates" persist="1" />  
+	<script file="omega_orgprofileselect.xml" id="omega_orgprofileselect" description="Selects Profiles for Organisations" persist="1" /> 
+	<script file="omega_jobprofileselect.xml" id="omega_jobprofileselect" description="Selects Profiles for Jobs" persist="1" /> 
+	<script file="omega_emailqcs.xml" id="omega_emailqcs" description="Emails QCs" persist="1" /> 
+</scripts>
